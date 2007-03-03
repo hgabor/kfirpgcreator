@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 # SharpDevelop 2.1.0.2376
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "KFI_Game_Core\Core.csproj", "{821A9B1B-00E8-45DD-B882-ED8AB93554C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{821A9B1B-00E8-45DD-B882-ED8AB93554C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
