@@ -1,4 +1,4 @@
-// Copyright (C) 2007 G�bor Hal�sz
+﻿// Copyright (C) 2007 Gábor Halász
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,13 +15,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using KFI_Game_Core.GameObjects;
 
-namespace KFI_Game_Core {
-    interface GameMap {
-        GameTile GetTile(int x, int y);
-
-        int Width { get;}
-        int Height { get;}
+namespace KFI_Game_Core.GameObjects
+{
+    class FileDoesNotExistException : GameException {
+        public FileDoesNotExistException(string fileName)
+            : base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName)) { }
+        public FileDoesNotExistException(string fileName, Exception cause)
+            : base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName), cause) { }
     }
 }

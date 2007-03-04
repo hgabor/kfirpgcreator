@@ -20,5 +20,7 @@ namespace KFI_Game_Core.GameObjects {
     class ObjectNotFoundException : GameException {
         public ObjectNotFoundException(string objectid)
             : base(System.String.Format("Nem találom az alábbi objektumot: {0}", objectid)) { }
+        public ObjectNotFoundException(string objectid, Exception cause)
+            : base(System.String.Format("Nem találom az alábbi objektumot: {0}", objectid), cause) { }
     }
 }

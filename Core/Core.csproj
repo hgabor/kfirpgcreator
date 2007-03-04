@@ -141,8 +141,11 @@
   -->
   <ItemGroup>
     <Compile Include="GameException.cs" />
+    <Compile Include="GameLevel.cs" />
     <Compile Include="GameMap.cs" />
+    <Compile Include="GameMapImpl.cs" />
     <Compile Include="GameObjects\AttributeDoesNotExistException.cs" />
+    <Compile Include="GameObjects\FileDoesNotExistException.cs" />
     <Compile Include="GameObjects\GameObjectImpl.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\ObjectLoader.cs" />
@@ -155,8 +158,13 @@
     <Compile Include="GameObjects\GameTileImpl.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\..\Programming\C#ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="nunit.framework" />
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

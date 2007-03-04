@@ -13,15 +13,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 using System;
-using KFI_Game_Core.GameObjects;
+using NUnit.Framework;
 
 namespace KFI_Game_Core {
-    interface GameMap {
-        GameTile GetTile(int x, int y);
-
-        int Width { get;}
-        int Height { get;}
+    /// <summary>
+    /// Szint, ami átjárást biztosít a térképet közt.
+    /// </summary>
+    public class GameLevel {
+        public GameLevel() {
+        }
     }
 }
