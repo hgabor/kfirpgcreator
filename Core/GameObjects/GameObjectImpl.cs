@@ -14,73 +14,85 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+using System;
 using NUnit.Framework;
 
-namespace KFI_Game_Core.GameObjects {
-    /// <summary>
-    /// Játékban használt objektum implementációja
-    /// </summary>
-    class GameObjectImpl : GameObject {
+namespace Core.GameObjects {
+	/// <summary>
+	/// Játékban használt objektum implementációja
+	/// </summary>
+	class GameObjectImpl : GameObject {
+		string id;
+		public string Id {
+			get {
+				return id;
+			}
+		}
 
-        bool walkable;
-        public virtual bool Walkable {
-            get { return walkable; }
-        }
+		bool walkable;
+		public virtual bool Walkable {
+			get { return walkable; }
+		}
 
-        bool swimmable;
-        public virtual bool Swimmable {
-            get { return swimmable; }
-        }
+		bool swimmable;
+		public virtual bool Swimmable {
+			get { return swimmable; }
+		}
 
-        internal GameObjectImpl(string id, ObjectLoader manager) {
-            walkable = (manager.GetAttribute(id, "walkable") == "1");
-            swimmable = (manager.GetAttribute(id, "swimmable") == "1");
-        }
-    }
+		internal GameObjectImpl(string id, ObjectLoader manager) {
+			this.id = id;
+			walkable = (manager.GetAttribute(id, "walkable") == "true");
+			swimmable = (manager.GetAttribute(id, "swimmable") == "true");
+		}
+	}
 
-    [TestFixture]
-    public class GameObject_Test {
-        ObjectLoader manager;
+	#if DEBUG
 
-        [SetUp]
-        public void SetUp() {
-            manager = new TestLoader();
-        }
+	[TestFixture]
+	public class GameObject_Test {
+		ObjectLoader manager;
 
-        //Normál elkészítés közben nincs-e hiba (kivétel)
-        [Test]
-        public void BasicCreation() {
-            GameObjectImpl g = new GameObjectImpl("valami", manager);
-        }
+		[SetUp]
+		public void SetUp() {
+			manager = new TestLoader();
+		}
 
-        [Test]
-        [ExpectedException(typeof(ObjectNotFoundException))]
-        public void CreateDoesNotExist() {
-            GameObjectImpl g = new GameObjectImpl("nonexistant", manager);
-        }
+		//Normál elkészítés közben nincs-e hiba (kivétel)
+		[Test]
+		public void BasicCreation() {
+			GameObjectImpl g = new GameObjectImpl("valami", manager);
+		}
 
-        [Test]
-        public void Walkability() {
-            GameObjectImpl g = new GameObjectImpl("járható", manager);
-            Assert.IsTrue(g.Walkable);
-        }
+		[Test]
+		[ExpectedException(typeof(ObjectNotFoundException))]
+		public void CreateDoesNotExist() {
+			GameObjectImpl g = new GameObjectImpl("nonexistant", manager);
+		}
 
-        [Test]
-        public void NotWalkability() {
-            GameObjectImpl g = new GameObjectImpl("úszható", manager);
-            Assert.IsFalse(g.Walkable);
-        }
+		[Test]
+		public void Walkability() {
+			GameObjectImpl g = new GameObjectImpl("járható", manager);
+			Assert.IsTrue(g.Walkable);
+		}
 
-        [Test]
-        public void Swimmability() {
-            GameObjectImpl g = new GameObjectImpl("úszható", manager);
-            Assert.IsTrue(g.Swimmable);
-        }
+		[Test]
+		public void NotWalkability() {
+			GameObjectImpl g = new GameObjectImpl("úszható", manager);
+			Assert.IsFalse(g.Walkable);
+		}
 
-        [Test]
-        public void NotSwimmability() {
-            GameObjectImpl g = new GameObjectImpl("járható", manager);
-            Assert.IsFalse(g.Swimmable);
-        }
-    }
+		[Test]
+		public void Swimmability() {
+			GameObjectImpl g = new GameObjectImpl("úszható", manager);
+			Assert.IsTrue(g.Swimmable);
+		}
+
+		[Test]
+		public void NotSwimmability() {
+			GameObjectImpl g = new GameObjectImpl("járható", manager);
+			Assert.IsFalse(g.Swimmable);
+		}
+	}
+
+	#endif
 }

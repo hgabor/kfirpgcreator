@@ -15,10 +15,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using KFI_Game_Core.GameObjects;
+using Core.GameObjects;
 
-namespace KFI_Game_Core {
-    interface GameMap {
+namespace Core {
+    public interface GameMap {
         GameTile GetTile(int x, int y);
 
         int Width { get;}

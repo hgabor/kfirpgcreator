@@ -16,22 +16,22 @@
 
 using System.IO;
 
-namespace KFI_Game_Core.GameObjects {
-    /// <summary>
-    /// Az objektumok innen nyerik a felépítésükhöz szükséges adatokat
-    /// </summary>
-    interface ObjectLoader {
-        /// <summary>
-        /// Az objektumhoz tartozó tulajdonságot adja vissza
-        /// </summary>
-        /// <param name="id">Az objektum azonosítója</param>
-        /// <param name="attribute">A kérdéses tulajdonság</param>
-        /// <returns>A tulajdonság értéke</returns>
-        /// <exception cref="ObjectNotFoundException">Ha az objektum nem létezik</exception>
-        /// <exception cref="AttributeDoesNotExistException">Ha a kérdéses tulajdonság nem létezik</exception>
-        string GetAttribute(string id, string attribute);
-        //bool AttributeExists(string id, string attribute);
-        Stream GetFile(string id, string filename);
-        //bool FileExists(string id, string filename);
-    }
+namespace Core.GameObjects {
+	/// <summary>
+	/// Az objektumok innen nyerik a felépítésükhöz szükséges adatokat
+	/// </summary>
+	public interface ObjectLoader {
+		/// <summary>
+		/// Az objektumhoz tartozó tulajdonságot adja vissza
+		/// </summary>
+		/// <param name="id">Az objektum azonosítója</param>
+		/// <param name="attribute">A kérdéses tulajdonság</param>
+		/// <returns>A tulajdonság értéke</returns>
+		/// <exception cref="ObjectNotFoundException">Ha az objektum nem létezik</exception>
+		/// <exception cref="AttributeDoesNotExistException">Ha a kérdéses tulajdonság nem létezik</exception>
+		string GetAttribute(string id, string attribute);
+		//bool AttributeExists(string id, string attribute);
+		Stream GetFile(string id, string filename);
+		//bool FileExists(string id, string filename);
+	}
 }

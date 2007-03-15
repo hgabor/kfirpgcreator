@@ -20,12 +20,11 @@ using System.Xml;
 using System.Collections.Generic;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     /// <summary>
     /// Betöltő, amely merevlemezről tölti be a szükséges adatokat
     /// </summary>
     class ObjectLoader_File: ObjectLoader {
-        //TODO: Test ObjectLoader_File
         class Data {
             internal Dictionary<string,string> attributes = new Dictionary<string,string>();
             internal Dictionary<string,MemoryStream> files = new Dictionary<string,MemoryStream>();
@@ -43,10 +42,19 @@ namespace KFI_Game_Core.GameObjects {
                     while ((size = zs.Read(buffer, 0, size)) > 0) {
                         m.Write(buffer, 0, size);
                     }
+                    m.Position = 0;
                     data.files.Add(entry.Name, m);
                 }
             }
-            foreach (KeyValuePair<string, MemoryStream> streams in data.files) {
+            if (data.files.ContainsKey("attributes.xml")) {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(data.files["attributes.xml"]);
+                XmlElement root = doc.DocumentElement;
+                foreach(XmlNode element in root.ChildNodes) {
+                    data.attributes.Add(element.Name, element.InnerText);
+                }
+            }
+            /*foreach (KeyValuePair<string, MemoryStream> streams in data.files) {
                 if (streams.Key == "attributes.xml") {
                     XmlDocument doc = new XmlDocument();
                     doc.Load(streams.Value);
@@ -55,7 +63,7 @@ namespace KFI_Game_Core.GameObjects {
                         data.attributes.Add(element.Name, element.InnerText);
                     }
                 }
-            }
+            }*/
             dataList.Add(id, data);
         }
         

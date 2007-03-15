@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     /// <summary>
     /// A játékmezõ implementációja
     /// </summary>
@@ -57,6 +57,8 @@ namespace KFI_Game_Core.GameObjects {
         public GameTileImpl(string id, ObjectLoader manager) : base(id, manager) { }
     }
 
+    #if DEBUG
+    
     [TestFixture]
     public class GameTile_Test {
         private ObjectLoader manager;
@@ -154,4 +156,6 @@ namespace KFI_Game_Core.GameObjects {
             Assert.IsFalse(t.Swimmable);
         }
     }
+    
+    #endif
 }

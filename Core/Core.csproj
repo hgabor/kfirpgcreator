@@ -6,16 +6,14 @@
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{821A9B1B-00E8-45DD-B882-ED8AB93554C3}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KFI_Game_Core</RootNamespace>
+    <RootNamespace>Core</RootNamespace>
     <AssemblyName>Core</AssemblyName>
-    <StartupObject>
-    </StartupObject>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <StartupObject>Core.Game</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,6 +36,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <RegisterForComInterop>True</RegisterForComInterop>
@@ -49,6 +48,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release - DotNet2' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|DotNet2' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,6 +112,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release - Mono2' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <TargetFrameworkVersion>Mono v2.0</TargetFrameworkVersion>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release - Mono2|DotNet2' ">
     <DebugType>PdbOnly</DebugType>
@@ -141,7 +142,7 @@
   -->
   <ItemGroup>
     <Compile Include="GameException.cs" />
-    <Compile Include="GameLevel.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GameMap.cs" />
     <Compile Include="GameMapImpl.cs" />
     <Compile Include="GameObjects\AttributeDoesNotExistException.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="GameObjects\TestLoader.cs" />
     <Compile Include="GameObjects\TestObject.cs" />
     <Compile Include="GameObjects\GameTileImpl.cs" />
+    <Compile Include="GraphicsPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">

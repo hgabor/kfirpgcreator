@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KFI_Game_Core.GameObjects
+namespace Core.GameObjects
 {
     class FileDoesNotExistException : GameException {
         public FileDoesNotExistException(string fileName)

@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KFI_Game_Core {
+namespace Core {
     class GameException : System.ApplicationException {
         public GameException(string text) : base(text) { }
         public GameException(string text, Exception cause) : base(text, cause) { }

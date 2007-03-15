@@ -14,11 +14,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     /// <summary>
     /// Játékban használt objektum
     /// </summary>
-    interface GameObject {
+    public interface GameObject {
         /// <summary>
         /// Az objektumra rá lehet-e lépni
         /// </summary>
@@ -27,5 +27,7 @@ namespace KFI_Game_Core.GameObjects {
         /// Az objektumon/ban/alatt lehet-e úszni
         /// </summary>
         bool Swimmable { get;}
+        
+        string Id { get;}
     }
 }

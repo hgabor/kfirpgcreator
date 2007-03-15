@@ -4,6 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # SharpDevelop 2.1.0.2376
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{821A9B1B-00E8-45DD-B882-ED8AB93554C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemDrawingPlugin", "Graphics\SystemDrawingPlugin\SystemDrawingPlugin.csproj", "{729DE91E-27A2-4287-9721-28510F87E06F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,12 @@ Global
 		{821A9B1B-00E8-45DD-B882-ED8AB93554C3}.Release - DotNet2|Any CPU.Build.0 = Release - DotNet2|Any CPU
 		{821A9B1B-00E8-45DD-B882-ED8AB93554C3}.Release - Mono2|Any CPU.Build.0 = Release - Mono2|Any CPU
 		{821A9B1B-00E8-45DD-B882-ED8AB93554C3}.Release - Mono2|Any CPU.ActiveCfg = Release - Mono2|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Release - DotNet2|Any CPU.Build.0 = Release|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Release - DotNet2|Any CPU.ActiveCfg = Release|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Release - Mono2|Any CPU.Build.0 = Release|Any CPU
+		{729DE91E-27A2-4287-9721-28510F87E06F}.Release - Mono2|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

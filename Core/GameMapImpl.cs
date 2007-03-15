@@ -16,9 +16,9 @@
 
 using System;
 using NUnit.Framework;
-using KFI_Game_Core.GameObjects;
+using Core.GameObjects;
 
-namespace KFI_Game_Core {
+namespace Core {
     /// <summary>
     /// A térkép, amin a mezõk találhatók
     /// </summary>

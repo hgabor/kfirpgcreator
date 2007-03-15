@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Gábor Halász
+ï»¿// Copyright (C) 2007 GÃ¡bor HalÃ¡sz
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,15 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-using System;
-using NUnit.Framework;
 
-namespace KFI_Game_Core {
-    /// <summary>
-    /// Szint, ami átjárást biztosít a térképet közt.
-    /// </summary>
-    public class GameLevel {
-        public GameLevel() {
-        }
-    }
+namespace Core {
+	/// <summary>
+	/// Description of GraphicsPlugin.
+	/// </summary>
+	public interface GraphicsPlugin {
+		void StartRendering();
+		Core.Game Game { set;}
+	}
 }

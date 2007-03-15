@@ -14,11 +14,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     /// <summary>
     /// Mezõ, amin a töbi objektum elhelyezkedik
     /// </summary>
-    interface GameTile : GameObject {
+    public interface GameTile : GameObject {
         /*Scripting.IScriptObject OnArrive { set;}
         void AddObject(IGameObject mo);
         void RemoveObject(IGameObject mo);

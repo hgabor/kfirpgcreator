@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     class TestLoader : ObjectLoader {
         public string GetAttribute(string id, string attribute) {
             if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");

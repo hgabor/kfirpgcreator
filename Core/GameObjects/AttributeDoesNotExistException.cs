@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KFI_Game_Core.GameObjects {
+namespace Core.GameObjects {
     class AttributeDoesNotExistException : GameException {
         public AttributeDoesNotExistException(string attribute)
             : base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdonság", attribute)) { }

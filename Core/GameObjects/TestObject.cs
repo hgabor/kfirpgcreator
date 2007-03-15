@@ -14,8 +14,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-namespace KFI_Game_Core.GameObjects {
+using System;
+
+namespace Core.GameObjects {
     class TestObject : GameObject {
+		string id;
+		public string Id {
+			get {
+				return "testobject";
+			}
+		}
+		
         bool w;
         public bool Walkable {
             get { return w; }
@@ -27,6 +36,7 @@ namespace KFI_Game_Core.GameObjects {
         public TestObject() {
         }
         public TestObject(string id, ObjectLoader m) {
+        	this.id = id;
             w = m.GetAttribute(id, "walkable") == "1";
             s = m.GetAttribute(id, "swimmable") == "1";
         }
