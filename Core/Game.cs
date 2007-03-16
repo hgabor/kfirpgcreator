@@ -40,12 +40,17 @@ namespace Core {
 		
 		public Game(GraphicsPlugin graphicsPlugin) {
 			loader = new ObjectLoader_File();
-			GameTile[,] tiles = new GameTileImpl[2,2];
+			GameTile[,] tiles = new GameTileImpl[3,3];
 			tiles[0,0] = new GameTileImpl("testtile", loader);
 			tiles[1,0] = new GameTileImpl("testtile", loader);
+			tiles[2,0] = new GameTileImpl("testtile2", loader);
 			tiles[0,1] = new GameTileImpl("testtile", loader);
 			tiles[1,1] = new GameTileImpl("testtile", loader);
 			currentMap = new GameMapImpl(tiles);
+			tiles[2,1] = new GameTileImpl("testtile2", loader);
+			tiles[0,2] = new GameTileImpl("testtile2", loader);
+			tiles[1,2] = new GameTileImpl("testtile2", loader);
+			tiles[2,2] = new GameTileImpl("testtile2", loader);
 			
 			this.graphicsPlugin = graphicsPlugin;
 			this.graphicsPlugin.Game = this;
@@ -55,15 +60,18 @@ namespace Core {
 		
 		public void Run() {
 			displayThread = new System.Threading.Thread(graphicsPlugin.StartRendering);
+			//displayThread.Name = "Display Thread";
 			displayThread.Start();
 			while(true) {
 			}
 		}
 
-		#if DEBUG
+		#if EXECUTABLE
 
 		public static void Main(string[] args) {
-			string fileName = System.IO.Path.GetFullPath("SystemDrawingPlugin.dll");
+			//System.Threading.Thread.CurrentThread.Name = "Main Thread";
+
+			string fileName = System.IO.Path.GetFullPath("SDLGraphicsPlugin.dll");
 			System.Reflection.Assembly pluginAssembly = System.Reflection.Assembly.LoadFile(fileName);
 			Type[] types = pluginAssembly.GetTypes();
 			GraphicsPlugin found = null;

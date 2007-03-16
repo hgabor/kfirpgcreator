@@ -20,7 +20,7 @@
     <DebugType>Full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;EXECUTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <DebugType>PdbOnly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release - DotNet2\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;EXECUTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
@@ -104,7 +104,7 @@
     <DebugType>PdbOnly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release - Mono2\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;EXECUTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
@@ -112,7 +112,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release - Mono2' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <TargetFrameworkVersion>Mono v2.0</TargetFrameworkVersion>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release - Mono2|DotNet2' ">
     <DebugType>PdbOnly</DebugType>
@@ -161,7 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\Programming\C#ZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="nunit.framework" />

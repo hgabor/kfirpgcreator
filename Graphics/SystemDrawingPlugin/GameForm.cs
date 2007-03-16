@@ -90,7 +90,12 @@ namespace SystemDrawingPlugin {
 		}
 
 		public void StartRendering() {
-			this.ShowDialog();
+			try {
+				this.ShowDialog();
+			}
+			catch(Exception e) {
+				Console.Error.WriteLine(e.Message);
+			}
 		}
 
 		
