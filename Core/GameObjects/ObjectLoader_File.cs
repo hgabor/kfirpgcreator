@@ -25,6 +25,8 @@ namespace Core.GameObjects {
     /// Betöltő, amely merevlemezről tölti be a szükséges adatokat
     /// </summary>
     class ObjectLoader_File: ObjectLoader {
+		const string AttributesFileName = "data.xml";
+		
         class Data {
             internal Dictionary<string,string> attributes = new Dictionary<string,string>();
             internal Dictionary<string,MemoryStream> files = new Dictionary<string,MemoryStream>();
@@ -46,16 +48,16 @@ namespace Core.GameObjects {
                     data.files.Add(entry.Name, m);
                 }
             }
-            if (data.files.ContainsKey("attributes.xml")) {
+            if (data.files.ContainsKey(AttributesFileName)) {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(data.files["attributes.xml"]);
+                doc.Load(data.files[AttributesFileName]);
                 XmlElement root = doc.DocumentElement;
                 foreach(XmlNode element in root.ChildNodes) {
                     data.attributes.Add(element.Name, element.InnerText);
                 }
             }
             /*foreach (KeyValuePair<string, MemoryStream> streams in data.files) {
-                if (streams.Key == "attributes.xml") {
+                if (streams.Key == AttributesFileName) {
                     XmlDocument doc = new XmlDocument();
                     doc.Load(streams.Value);
                     XmlElement root = doc.DocumentElement;
