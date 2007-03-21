@@ -17,8 +17,8 @@
 using System;
 
 namespace Core {
-    class GameException : System.ApplicationException {
-        public GameException(string text) : base(text) { }
-        public GameException(string text, Exception cause) : base(text, cause) { }
-    }
+	class GameException : System.ApplicationException {
+		public GameException(string text) : base(text) { }
+		public GameException(string text, Exception cause) : base(text, cause) { }
+	}
 }

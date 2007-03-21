@@ -40,18 +40,18 @@ namespace Core {
 		
 		public Game(GraphicsPlugin graphicsPlugin) {
 			loader = new ObjectLoader_File();
-			GameTile[,] tiles = new GameTileImpl[3,3];
-			tiles[0,0] = new GameTileImpl("testtile", loader);
-			tiles[1,0] = new GameTileImpl("testtile", loader);
-			tiles[2,0] = new GameTileImpl("testtile2", loader);
-			tiles[0,1] = new GameTileImpl("testtile", loader);
-			tiles[1,1] = new GameTileImpl("testtile", loader);
+			GameObject[,] tiles = new GameObjectImpl[3,3];
+			tiles[0,0] = new GameObjectImpl("testtile", loader);
+			tiles[1,0] = new GameObjectImpl("testtile", loader);
+			tiles[2,0] = new GameObjectImpl("testtile2", loader);
+			tiles[0,1] = new GameObjectImpl("testtile", loader);
+			tiles[1,1] = new GameObjectImpl("testtile", loader);
+			tiles[2,1] = new GameObjectImpl("testtile2", loader);
+			tiles[0,2] = new GameObjectImpl("testtile2", loader);
+			tiles[1,2] = new GameObjectImpl("testtile2", loader);
+			tiles[2,2] = new GameObjectImpl("testtile2", loader);
 			currentMap = new GameMapImpl(tiles);
-			tiles[2,1] = new GameTileImpl("testtile2", loader);
-			tiles[0,2] = new GameTileImpl("testtile2", loader);
-			tiles[1,2] = new GameTileImpl("testtile2", loader);
-			tiles[2,2] = new GameTileImpl("testtile2", loader);
-			
+
 			this.graphicsPlugin = graphicsPlugin;
 			this.graphicsPlugin.Game = this;
 		}

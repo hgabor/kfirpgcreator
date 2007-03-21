@@ -18,10 +18,10 @@ using System;
 
 namespace Core.GameObjects
 {
-    class FileDoesNotExistException : GameException {
-        public FileDoesNotExistException(string fileName)
-            : base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName)) { }
-        public FileDoesNotExistException(string fileName, Exception cause)
-            : base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName), cause) { }
-    }
+	class FileDoesNotExistException : GameException {
+		public FileDoesNotExistException(string fileName)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName)) { }
+		public FileDoesNotExistException(string fileName, Exception cause)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName), cause) { }
+	}
 }

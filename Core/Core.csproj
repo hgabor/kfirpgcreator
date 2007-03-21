@@ -151,12 +151,9 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameObjects\ObjectLoader.cs" />
     <Compile Include="GameObjects\ObjectLoader_File.cs" />
-    <Compile Include="GameObjects\GameTile.cs" />
     <Compile Include="GameObjects\ObjectNotFoundException.cs">
     </Compile>
     <Compile Include="GameObjects\TestLoader.cs" />
-    <Compile Include="GameObjects\TestObject.cs" />
-    <Compile Include="GameObjects\GameTileImpl.cs" />
     <Compile Include="GraphicsPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +163,7 @@
     </Reference>
     <Reference Include="nunit.framework" />
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>

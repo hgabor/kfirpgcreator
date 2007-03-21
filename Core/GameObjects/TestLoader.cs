@@ -17,49 +17,36 @@
 using System;
 
 namespace Core.GameObjects {
-    class TestLoader : ObjectLoader {
-        public string GetAttribute(string id, string attribute) {
-            if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
+	class TestLoader : ObjectLoader {
+		public string GetAttribute(string id, string attribute) {
+			if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
 
-            switch (attribute) {
-            case "name":
-                return "TesztNév";
+			switch (attribute) {
+			case "name":
+				return "TestName";
 
-            case "walkable":
-                if (id.Contains("járható"))
-                    return "1";
-                else
-                    return "0";
+			case "walkable":
+				if (id.Contains("walkable"))
+					return "true";
+				else
+					return "false";
 
-            case "swimmable":
-                if (id.Contains("úszható"))
-                    return "1";
-                else
-                    return "0";
+			case "swimmable":
+				if (id.Contains("swimmable"))
+					return "true";
+				else
+					return "false";
 
-            default:
-                throw new AttributeDoesNotExistException(attribute);
-            }
-        }
-        /*public bool AttributeExists(string id, string attribute) {
-            if (id == "nonexistant") throw new ObjectNotFoundException(id);
-            switch (attribute) {
-            case "name":
-            case "walkable":
-            case "swimmable":
-                return true;
-            default:
-                return false;
-            }
-        }*/
+			default:
+				throw new AttributeDoesNotExistException(attribute);
+			}
+		}
 
-        public System.IO.Stream GetFile(string id, string filename) {
-            if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
-            throw new NotImplementedException();
-        }
+		public System.IO.Stream GetFile(string id, string filename) {
+			if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
+			if (filename == "nonexistant") throw new FileDoesNotExistException("nonexistant");
+			return new System.IO.MemoryStream();
+		}
 
-        /*public bool FileExists(string id, string filename) {
-            throw new Exception("The method or operation is not implemented.");
-        }*/
-    }
+	}
 }

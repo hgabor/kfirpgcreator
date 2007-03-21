@@ -21,84 +21,84 @@ using System.Collections.Generic;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace Core.GameObjects {
-    /// <summary>
-    /// Betöltő, amely merevlemezről tölti be a szükséges adatokat
-    /// </summary>
-    class ObjectLoader_File: ObjectLoader {
+	/// <summary>
+	/// Betöltő, amely merevlemezről tölti be a szükséges adatokat
+	/// </summary>
+	class ObjectLoader_File: ObjectLoader {
 		const string AttributesFileName = "data.xml";
 		
-        class Data {
-            internal Dictionary<string,string> attributes = new Dictionary<string,string>();
-            internal Dictionary<string,MemoryStream> files = new Dictionary<string,MemoryStream>();
-        }
+		class Data {
+			internal Dictionary<string,string> attributes = new Dictionary<string,string>();
+			internal Dictionary<string,MemoryStream> files = new Dictionary<string,MemoryStream>();
+		}
 
-        void LoadFromFile(string id) {
-            string fileName = id.Replace('.', Path.DirectorySeparatorChar)+".kfiobject";
-            Data data = new Data();
-            using (ZipInputStream zs = new ZipInputStream(File.OpenRead(fileName))) {
-                ZipEntry entry;
-                while ((entry = zs.GetNextEntry()) != null) {
-                    MemoryStream m = new MemoryStream();
-                    int size = 2048;
-                    byte[] buffer = new byte[size];
-                    while ((size = zs.Read(buffer, 0, size)) > 0) {
-                        m.Write(buffer, 0, size);
-                    }
-                    m.Position = 0;
-                    data.files.Add(entry.Name, m);
-                }
-            }
-            if (data.files.ContainsKey(AttributesFileName)) {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(data.files[AttributesFileName]);
-                XmlElement root = doc.DocumentElement;
-                foreach(XmlNode element in root.ChildNodes) {
-                    data.attributes.Add(element.Name, element.InnerText);
-                }
-            }
-            /*foreach (KeyValuePair<string, MemoryStream> streams in data.files) {
-                if (streams.Key == AttributesFileName) {
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(streams.Value);
-                    XmlElement root = doc.DocumentElement;
-                    foreach(XmlNode element in root.ChildNodes) {
-                        data.attributes.Add(element.Name, element.InnerText);
-                    }
-                }
-            }*/
-            dataList.Add(id, data);
-        }
-        
-        Dictionary<string, Data> dataList = new Dictionary<string, Data>();
+		void LoadFromFile(string id) {
+			string fileName = id.Replace('.', Path.DirectorySeparatorChar)+".kfiobject";
+			Data data = new Data();
+			using (ZipInputStream zs = new ZipInputStream(File.OpenRead(fileName))) {
+				ZipEntry entry;
+				while ((entry = zs.GetNextEntry()) != null) {
+					MemoryStream m = new MemoryStream();
+					int size = 2048;
+					byte[] buffer = new byte[size];
+					while ((size = zs.Read(buffer, 0, size)) > 0) {
+						m.Write(buffer, 0, size);
+					}
+					m.Position = 0;
+					data.files.Add(entry.Name, m);
+				}
+			}
+			if (data.files.ContainsKey(AttributesFileName)) {
+				XmlDocument doc = new XmlDocument();
+				doc.Load(data.files[AttributesFileName]);
+				XmlElement root = doc.DocumentElement;
+				foreach(XmlNode element in root.ChildNodes) {
+					data.attributes.Add(element.Name, element.InnerText);
+				}
+			}
+			/*foreach (KeyValuePair<string, MemoryStream> streams in data.files) {
+				if (streams.Key == AttributesFileName) {
+					XmlDocument doc = new XmlDocument();
+					doc.Load(streams.Value);
+					XmlElement root = doc.DocumentElement;
+					foreach(XmlNode element in root.ChildNodes) {
+						data.attributes.Add(element.Name, element.InnerText);
+					}
+				}
+			}*/
+			dataList.Add(id, data);
+		}
+		
+		Dictionary<string, Data> dataList = new Dictionary<string, Data>();
 
-        void TryToLoad(string id) {
-            try {
-                LoadFromFile(id);
-            }
-            catch(FileNotFoundException ex) {
-                throw new ObjectNotFoundException(id, ex);
-            }
-        }
-        
-        public string GetAttribute(string id, string attribute) {
-            if (!dataList.ContainsKey(id)) {
-                TryToLoad(id);
-            }
-            if (!(dataList[id].attributes.ContainsKey(attribute))) {
-                throw new AttributeDoesNotExistException(attribute);
-            }
-            return dataList[id].attributes[attribute];
-        }
+		void TryToLoad(string id) {
+			try {
+				LoadFromFile(id);
+			}
+			catch(FileNotFoundException ex) {
+				throw new ObjectNotFoundException(id, ex);
+			}
+		}
+		
+		public string GetAttribute(string id, string attribute) {
+			if (!dataList.ContainsKey(id)) {
+				TryToLoad(id);
+			}
+			if (!(dataList[id].attributes.ContainsKey(attribute))) {
+				throw new AttributeDoesNotExistException(attribute);
+			}
+			return dataList[id].attributes[attribute];
+		}
 
-        public Stream GetFile(string id, string fileName) {
-            if (!dataList.ContainsKey(id)) {
-                TryToLoad(id);
-            }
-            if (!(dataList[id].files.ContainsKey(fileName))) {
-                throw new FileDoesNotExistException(fileName);
-            }
-            dataList[id].files[fileName].Position = 0;
-            return dataList[id].files[fileName];
-        }
-    }
+		public Stream GetFile(string id, string fileName) {
+			if (!dataList.ContainsKey(id)) {
+				TryToLoad(id);
+			}
+			if (!(dataList[id].files.ContainsKey(fileName))) {
+				throw new FileDoesNotExistException(fileName);
+			}
+			dataList[id].files[fileName].Position = 0;
+			return dataList[id].files[fileName];
+		}
+	}
 }

@@ -15,19 +15,19 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace Core.GameObjects {
-    /// <summary>
-    /// Játékban használt objektum
-    /// </summary>
-    public interface GameObject {
-        /// <summary>
-        /// Az objektumra rá lehet-e lépni
-        /// </summary>
-        bool Walkable { get;}
-        /// <summary>
-        /// Az objektumon/ban/alatt lehet-e úszni
-        /// </summary>
-        bool Swimmable { get;}
-        
-        string Id { get;}
-    }
+	/// <summary>
+	/// Játékban használt objektum
+	/// </summary>
+	public interface GameObject {
+		/// <summary>
+		/// Az objektumra rá lehet-e lépni
+		/// </summary>
+		bool Walkable { get;}
+		/// <summary>
+		/// Az objektumon/ban/alatt lehet-e úszni
+		/// </summary>
+		bool Swimmable { get;}
+		
+		string Id { get;}
+	}
 }

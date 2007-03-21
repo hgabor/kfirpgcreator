@@ -17,10 +17,10 @@
 using System;
 
 namespace Core.GameObjects {
-    class AttributeDoesNotExistException : GameException {
-        public AttributeDoesNotExistException(string attribute)
-            : base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdonság", attribute)) { }
-        public AttributeDoesNotExistException(string attribute, Exception cause)
-            : base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdonság", attribute), cause) { }
-    }
+	class AttributeDoesNotExistException : GameException {
+		public AttributeDoesNotExistException(string attribute)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdonság", attribute)) { }
+		public AttributeDoesNotExistException(string attribute, Exception cause)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdonság", attribute), cause) { }
+	}
 }

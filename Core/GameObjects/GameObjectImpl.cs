@@ -59,38 +59,31 @@ namespace Core.GameObjects {
 
 		//Normál elkészítés közben nincs-e hiba (kivétel)
 		[Test]
-		public void BasicCreation() {
-			GameObjectImpl g = new GameObjectImpl("valami", manager);
+		public void CreatingNormallySucceeds() {
+			GameObjectImpl g = new GameObjectImpl("something", manager);
+			Assert.IsTrue(g.Id == "something");
 		}
 
 		[Test]
 		[ExpectedException(typeof(ObjectNotFoundException))]
-		public void CreateDoesNotExist() {
+		public void CreatingNonexistantThrows() {
 			GameObjectImpl g = new GameObjectImpl("nonexistant", manager);
 		}
 
 		[Test]
-		public void Walkability() {
-			GameObjectImpl g = new GameObjectImpl("járható", manager);
-			Assert.IsTrue(g.Walkable);
+		public void WalkableProperty() {
+			GameObjectImpl walk = new GameObjectImpl("walkable", manager);
+			GameObjectImpl nonwalk = new GameObjectImpl("swimmable", manager);
+			Assert.IsTrue(walk.Walkable);
+			Assert.IsFalse(nonwalk.Walkable);
 		}
 
 		[Test]
-		public void NotWalkability() {
-			GameObjectImpl g = new GameObjectImpl("úszható", manager);
-			Assert.IsFalse(g.Walkable);
-		}
-
-		[Test]
-		public void Swimmability() {
-			GameObjectImpl g = new GameObjectImpl("úszható", manager);
-			Assert.IsTrue(g.Swimmable);
-		}
-
-		[Test]
-		public void NotSwimmability() {
-			GameObjectImpl g = new GameObjectImpl("járható", manager);
-			Assert.IsFalse(g.Swimmable);
+		public void SwimmableProperty() {
+			GameObjectImpl swim = new GameObjectImpl("swimmable", manager);
+			GameObjectImpl nonswim = new GameObjectImpl("walkable", manager);
+			Assert.IsTrue(swim.Swimmable);
+			Assert.IsFalse(nonswim.Swimmable);
 		}
 	}
 
