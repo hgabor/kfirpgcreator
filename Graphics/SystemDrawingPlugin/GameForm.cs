@@ -63,7 +63,6 @@ namespace SystemDrawingPlugin {
 			
 			for (int j = 0; j < height; ++j) {
 				for (int i = 0; i < width; ++i) {
-					//TODO: lookup correct algorithm for isometric calculations
 					int coordX = (width * 32) + (i * 32) - (j * 32);
 					int coordY = i * 15 + j * 15;
 					Bitmap bmp = new Bitmap(game.Loader.GetFile(game.CurrentMap.GetTile(i, j).Id, "Still1.png"));

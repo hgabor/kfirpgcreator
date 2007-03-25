@@ -51,6 +51,7 @@ namespace Core {
 			tiles[1,2] = new GameObjectImpl("testtile2", loader);
 			tiles[2,2] = new GameObjectImpl("testtile2", loader);
 			currentMap = new GameMapImpl(tiles);
+			currentMap.AddObject(20, 20, new GameObjectImpl("Gray ball", 20, 20, loader));
 
 			this.graphicsPlugin = graphicsPlugin;
 			this.graphicsPlugin.Game = this;

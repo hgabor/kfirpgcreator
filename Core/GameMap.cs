@@ -20,6 +20,9 @@ using Core.GameObjects;
 namespace Core {
 	public interface GameMap {
 		GameObject GetTile(int x, int y);
+		GameObject[] GetAllObjects();
+		
+		void AddObject(int x, int y, GameObject o);
 
 		int Width { get;}
 		int Height { get;}

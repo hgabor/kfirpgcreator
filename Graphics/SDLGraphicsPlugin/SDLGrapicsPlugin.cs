@@ -41,14 +41,35 @@ namespace SDLGraphicsPlugin {
 			int height = game.CurrentMap.Height;
 			int width = game.CurrentMap.Width;
 			
+			//TODO: Replace MemoryStream with Stream
 			for (int j = 0; j < height; ++j) {
 				for (int i = 0; i < width; ++i) {
 					int coordX = (width * 32) + (i * 32) - (j * 32);
 					int coordY = i * 16 + j * 16;
 					System.IO.Stream bitmapStream = game.Loader.GetFile(game.CurrentMap.GetTile(i, j).Id, "Still1.png");
-					Surface s = new Surface(bitmapStream as System.IO.MemoryStream);
+//					Surface s = new Surface(bitmapStream as System.IO.MemoryStream);
+					Surface s = new Surface(new System.Drawing.Bitmap(bitmapStream));
 					screen.Blit(s, new System.Drawing.Point(coordX, coordY));
 				}
+			}
+			foreach (Core.GameObjects.GameObject o in game.CurrentMap.GetAllObjects()) {
+				System.IO.Stream bitmapStream = game.Loader.GetFile(o.Id, "Still1.png");
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream);
+				int centerX = (width * 32) + (o.X * 32 - o.Y * 32) / 100 + 32;
+				int centerY = (o.X * 32 + o.Y * 32) / 100;
+				int leftX = centerX - (bitmap.Width / 2);
+				int topY = centerY - bitmap.Height + (bitmap.Width / 4);
+				Surface s = new Surface(bitmap);
+				screen.Blit(s, new System.Drawing.Point(leftX, topY));
+				screen.Draw(
+					new SdlDotNet.Graphics.Primitives.Line(
+						(short)centerX,
+						(short)centerY,
+						(short)centerX,
+						(short)centerY
+					),
+					System.Drawing.Color.Red
+				);
 			}
 			screen.Update();
 		}

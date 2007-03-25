@@ -28,6 +28,9 @@ namespace Core.GameObjects {
 		/// </summary>
 		bool Swimmable { get;}
 		
+		int X { get; set;}
+		int Y { get; set;}
+		
 		string Id { get;}
 	}
 }

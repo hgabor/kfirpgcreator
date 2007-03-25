@@ -38,50 +38,65 @@ namespace Core.GameObjects {
 		public virtual bool Swimmable {
 			get { return swimmable; }
 		}
-
-		internal GameObjectImpl(string id, ObjectLoader manager) {
-			this.id = id;
-			walkable = (manager.GetAttribute(id, "walkable") == "true");
-			swimmable = (manager.GetAttribute(id, "swimmable") == "true");
+		
+		int x;
+		public int X {
+			get { return x; }
+			set { x = value; }
 		}
+		int y;
+		public int Y {
+			get { return y; }
+			set { y = value; }
+		}
+
+		internal GameObjectImpl(string id, int x, int y, ObjectLoader loader) {
+			this.id = id;
+			walkable = (loader.GetAttribute(id, "walkable") == "true");
+			swimmable = (loader.GetAttribute(id, "swimmable") == "true");
+			this.x = x;
+			this.y = y;
+		}
+		
+		internal GameObjectImpl(string id, ObjectLoader loader) : this(id, 0, 0, loader) {}
 	}
 
 	#if DEBUG
 
 	[TestFixture]
 	public class GameObject_Test {
-		ObjectLoader manager;
+		ObjectLoader loader;
 
 		[SetUp]
 		public void SetUp() {
-			manager = new TestLoader();
+			loader = new TestLoader();
 		}
 
 		//Normál elkészítés közben nincs-e hiba (kivétel)
 		[Test]
 		public void CreatingNormallySucceeds() {
-			GameObjectImpl g = new GameObjectImpl("something", manager);
+			GameObjectImpl g = new GameObjectImpl("something", loader);
 			Assert.IsTrue(g.Id == "something");
 		}
 
 		[Test]
 		[ExpectedException(typeof(ObjectNotFoundException))]
 		public void CreatingNonexistantThrows() {
-			GameObjectImpl g = new GameObjectImpl("nonexistant", manager);
+			GameObjectImpl g = new GameObjectImpl("nonexistant", loader);
 		}
 
 		[Test]
 		public void WalkableProperty() {
-			GameObjectImpl walk = new GameObjectImpl("walkable", manager);
-			GameObjectImpl nonwalk = new GameObjectImpl("swimmable", manager);
+			GameObjectImpl walk = new GameObjectImpl("walkable", loader);
+			GameObjectImpl nonwalk = new GameObjectImpl("swimmable", loader);
 			Assert.IsTrue(walk.Walkable);
 			Assert.IsFalse(nonwalk.Walkable);
 		}
 
 		[Test]
 		public void SwimmableProperty() {
-			GameObjectImpl swim = new GameObjectImpl("swimmable", manager);
-			GameObjectImpl nonswim = new GameObjectImpl("walkable", manager);
+			GameObjectImpl swim = new GameObjectImpl("swimmable", loader);
+			GameObjectImpl nonswim = new GameObjectImpl("walkable", loader);
 			Assert.IsTrue(swim.Swimmable);
 			Assert.IsFalse(nonswim.Swimmable);
 		}
