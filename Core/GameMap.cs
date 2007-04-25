@@ -18,11 +18,10 @@ using System;
 using Core.GameObjects;
 
 namespace Core {
-	public interface GameMap {
-		GameObject GetTile(int x, int y);
+	internal interface GameMap {
 		GameObject[] GetAllObjects();
 		
-		void AddObject(int x, int y, GameObject o);
+		void AddObject(GameObject o);
 
 		int Width { get;}
 		int Height { get;}

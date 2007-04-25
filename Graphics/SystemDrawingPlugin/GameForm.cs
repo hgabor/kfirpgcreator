@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Core;
+using Core.GameObjects;
 
 namespace SystemDrawingPlugin {
 	/// <summary>
@@ -45,36 +46,31 @@ namespace SystemDrawingPlugin {
 		}
 		
 		System.DateTime lastUpdate = DateTime.Now;
+		int tickCounter = 0;
+		double fps = 0;
 		
 		protected override void OnPaint(PaintEventArgs e) {
-			//base.OnPaint(e);
-			System.DateTime now = System.DateTime.Now;
-			System.TimeSpan timeSpan = now - lastUpdate;
-			double fps;
-			if (timeSpan.Milliseconds == 0) {
-				fps = 0;
-			}
-			else {
-				fps = 1d / timeSpan.Milliseconds * 1000;
+			e.Graphics.Clear(Color.Black);
+			if (++tickCounter == 10) {
+				System.DateTime now = System.DateTime.Now;
+				System.TimeSpan timeSpan = now - lastUpdate;
+				fps = 10d / timeSpan.TotalMilliseconds * 1000;
+				tickCounter = 0;
+				lastUpdate = now;
 			}
 			
-			int height = game.CurrentMap.Height;
-			int width = game.CurrentMap.Width;
+			int height = game.MapHeight;
+			int width = game.MapWidth;
 			
-			for (int j = 0; j < height; ++j) {
-				for (int i = 0; i < width; ++i) {
-					int coordX = (width * 32) + (i * 32) - (j * 32);
-					int coordY = i * 15 + j * 15;
-					Bitmap bmp = new Bitmap(game.Loader.GetFile(game.CurrentMap.GetTile(i, j).Id, "Still1.png"));
-					e.Graphics.DrawImage(bmp, coordX, coordY);
-					e.Graphics.DrawString(
-						String.Format("({0}; {1})", i, j),
-						new System.Drawing.Font("Arial", 10),
-						System.Drawing.Brushes.Black,
-						coordX+10,
-						coordY+10
-					);
-				}
+			foreach (GameObject o in game.VisibleObjects) {
+				System.IO.Stream bitmapStream = game.Loader.GetFile(o.Id, "Still1.png");
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream);
+				int centerX = (height + o.X - o.Y) * 32 / 100;
+				int centerY = (o.X + o.Y) * 16 / 100 + 16;
+				int leftX = centerX - (bitmap.Width / 2);
+				int topY = centerY - bitmap.Height + (bitmap.Width / 4);
+				
+				e.Graphics.DrawImage(bitmap, leftX, topY);
 			}
 			
 			e.Graphics.DrawString(
@@ -84,27 +80,34 @@ namespace SystemDrawingPlugin {
 				3,
 				3
 			);
-			lastUpdate = now;
-			this.Invalidate();
 		}
+		
+		const int FramesPerSec = 50;
+		const int MillisecPerFrame = 1000 / FramesPerSec;
 
 		public void StartRendering() {
 			try {
-				this.ShowDialog();
+				#if DEBUG
+				Console.WriteLine("Showing dialog");
+				this.Shown += delegate { Console.WriteLine("Shown"); };
+				#endif
+				
+				using (System.Threading.Timer fpsTimer = new System.Threading.Timer(
+					delegate { Invoke( new MethodInvoker(Invalidate) ); },
+					null,
+					System.Threading.Timeout.Infinite,
+					System.Threading.Timeout.Infinite)
+				) {
+					this.Shown += delegate { fpsTimer.Change(0, MillisecPerFrame); };
+					this.ShowDialog();
+				}
+				#if DEBUG
+				Console.WriteLine("Finished dialog");
+				#endif
 			}
 			catch(Exception e) {
 				Console.Error.WriteLine(e.Message);
 			}
 		}
-
-		
-		#if DEBUG
-		/*
-		public static void Main(string[] args) {
-			Core.GameLevel level = new Core.GameLevel("SystemDrawingPlugin.dll");
-			level.Run();
-		}
-		*/
-		#endif
 	}
 }

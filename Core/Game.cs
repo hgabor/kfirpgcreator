@@ -23,10 +23,20 @@ namespace Core {
 	/// </summary>
 	public class Game {
 		GameMap currentMap;
-		public GameMap CurrentMap {
+		/*public GameMap CurrentMap {
 			get {
 				return currentMap;
 			}
+		}*/
+		public int MapWidth {
+			get { return currentMap.Width; }
+		}
+		public int MapHeight {
+			get { return currentMap.Height; }
+		}
+		
+		public GameObject[] VisibleObjects {
+			get { return currentMap.GetAllObjects(); }
 		}
 		
 		ObjectLoader loader;
@@ -41,38 +51,33 @@ namespace Core {
 		public Game(GraphicsPlugin graphicsPlugin) {
 			loader = new ObjectLoader_File();
 			GameObject[,] tiles = new GameObjectImpl[3,3];
-			tiles[0,0] = new GameObjectImpl("testtile", loader);
-			tiles[1,0] = new GameObjectImpl("testtile", loader);
-			tiles[2,0] = new GameObjectImpl("testtile2", loader);
-			tiles[0,1] = new GameObjectImpl("testtile", loader);
-			tiles[1,1] = new GameObjectImpl("testtile", loader);
-			tiles[2,1] = new GameObjectImpl("testtile2", loader);
-			tiles[0,2] = new GameObjectImpl("testtile2", loader);
-			tiles[1,2] = new GameObjectImpl("testtile2", loader);
-			tiles[2,2] = new GameObjectImpl("testtile2", loader);
-			currentMap = new GameMapImpl(tiles);
-			currentMap.AddObject(20, 20, new GameObjectImpl("Gray ball", 20, 20, loader));
+			currentMap = new GameMapImpl(300, 400);
+			currentMap.AddObject(new GameObjectImpl("testtile", 0, 0, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile", 100, 0, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile", 200, 0, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile", 0, 100, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile", 100, 100, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 100, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile", 0, 200, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 100, 200, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 200, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 0, 300, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 100, 300, loader));
+			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 300, loader));
+			currentMap.AddObject(new GameObjectImpl("Gray ball", 20, 20, loader));
 
 			this.graphicsPlugin = graphicsPlugin;
 			this.graphicsPlugin.Game = this;
 		}
 		
-		System.Threading.Thread displayThread;
-		
 		public void Run() {
-			displayThread = new System.Threading.Thread(graphicsPlugin.StartRendering);
-			//displayThread.Name = "Display Thread";
-			displayThread.Start();
-			while(true) {
-			}
+			graphicsPlugin.StartRendering();
 		}
 
 		#if EXECUTABLE
 
 		public static void Main(string[] args) {
-			//System.Threading.Thread.CurrentThread.Name = "Main Thread";
-
-			string fileName = System.IO.Path.GetFullPath("SDLGraphicsPlugin.dll");
+			string fileName = System.IO.Path.GetFullPath("SystemDrawingPlugin.dll");
 			System.Reflection.Assembly pluginAssembly = System.Reflection.Assembly.LoadFile(fileName);
 			Type[] types = pluginAssembly.GetTypes();
 			GraphicsPlugin found = null;

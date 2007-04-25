@@ -19,6 +19,8 @@
     <Optimize>False</Optimize>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <StartAction>Program</StartAction>
+    <StartProgram>mono.exe "bin/Debug/Core.exe"</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release - DotNet2' ">
     <OutputPath>bin\Release - DotNet2\</OutputPath>

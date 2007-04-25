@@ -25,8 +25,6 @@ namespace Core {
 	/// A térkép, amin a mezõk találhatók
 	/// </summary>
 	class GameMapImpl: GameMap {
-		GameObject[,] tiles;
-
 		int width;
 		/// <summary>
 		/// A térkép szélessége
@@ -42,33 +40,19 @@ namespace Core {
 			get { return height; }
 		}
 
-		/// <summary>
-		/// A megadott koordinátájú mezõt adja vissza
-		/// </summary>
-		/// <param name="x">A mezõ x koordinátája</param>
-		/// <param name="y">A mezõ y koordinátája</param>
-		/// <returns>A mezõ</returns>
-		public GameObject GetTile(int x, int y) {
-			return tiles[x, y];
+		internal GameMapImpl(int width, int height) {
+			this.width = width;
+			this.height = height;
 		}
-
-		/// <summary>
-		/// Új térképet készít
-		/// </summary>
-		/// <param name="tiles">A térkép mezõit tartalmazó mátrix</param>
-		internal GameMapImpl(GameObject[,] tiles) {
-			width = tiles.GetLength(0);
-			height = tiles.GetLength(1);
-			this.tiles = tiles;
-		}
-		
 		
 		Dictionary<Point, List<GameObject>> objectsByCoords = new Dictionary<Point, List<GameObject>>();
 		List<GameObject> objects = new List<GameObject>();
 		
-		
-		public void AddObject(int x, int y, GameObject o) {
-			Point p = new Point(x, y);
+		public void AddObject(GameObject o) {
+			if (o.X < 0 || o.X >= this.width || o.Y < 0 || o.Y >= this.Height) {
+				throw new ArgumentOutOfRangeException("Tried to place object outside the map");
+			}
+			Point p = new Point(o.X, o.Y);
 			if (!(objectsByCoords.ContainsKey(p))) {
 				objectsByCoords.Add(p, new List<GameObject>());
 			}
@@ -125,39 +109,34 @@ namespace Core {
 		}
 
 		GameMapImpl CreateMap(int width, int height, string id) {
-			GameObject[,] tiles = new GameObjectImpl[width, height];
+			GameMapImpl map = new GameMapImpl(width * 100, height * 100);
+			
 			for (int i = 0; i < width; ++i) {
 				for (int j = 0; j < height; ++j) {
-					tiles[i, j] = new GameObjectImpl(id, loader);
+					map.AddObject(new GameObjectImpl(id, i*100, j*100, loader));
 				}
 			}
-			return new GameMapImpl(tiles);
+			return map;
 		}
 
 		[Test]
-		public void Create1x1Map() {
+		public void Create100x100Map() {
 			GameMapImpl m = CreateMap(1, 1, "walkable");
-			Assert.AreEqual(m.Width, 1);
-			Assert.AreEqual(m.Height, 1);
+			Assert.AreEqual(m.Width, 100);
+			Assert.AreEqual(m.Height, 100);
 		}
 
 		[Test]
-		public void Create3x5Map() {
+		public void Create300x500Map() {
 			GameMapImpl m = CreateMap(3, 5, "walkable");
-			Assert.AreEqual(3, m.Width);
-			Assert.AreEqual(5, m.Height);
-		}
-
-		[Test]
-		public void GetTile() {
-			GameMapImpl m = CreateMap(1, 1, "walkable");
-			Assert.IsTrue(m.GetTile(0, 0).Id == "walkable");
+			Assert.AreEqual(300, m.Width);
+			Assert.AreEqual(500, m.Height);
 		}
 
 		[Test]
 		public void GetObjectAtSpecificPosition() {
 			GameMapImpl m = CreateMap(2, 2, "walkable");
-			m.AddObject(1, 1, new GameObjectImpl("walkable", loader));
+			m.AddObject(new GameObjectImpl("walkable", 1, 1, loader));
 			Assert.IsTrue(m.GetObjects(1, 1)[0].Id == "walkable");
 		}
 		
@@ -170,13 +149,15 @@ namespace Core {
 		[Test]
 		public void GetListOfObjectsAndCheckIfTheyAreTheOnlyObjectsOnMap() {
 			GameMapImpl m = CreateMap(2, 2, "walkable");
-			m.AddObject(1, 1, new GameObjectImpl("obj(1,1)", loader));
-			m.AddObject(2, 1, new GameObjectImpl("obj(2,1)", loader));
-			m.AddObject(10, 10, new GameObjectImpl("obj(10,10)", loader));
+			m.AddObject(new GameObjectImpl("obj(1,1)", 1, 1, loader));
+			m.AddObject(new GameObjectImpl("obj(2,1)", 2, 1, loader));
+			m.AddObject(new GameObjectImpl("obj(10,10)", 10, 10, loader));
 			GameObject[] list = m.GetAllObjects();
 			bool firstFound, secondFound, thirdFound, otherFound;
 			firstFound = secondFound = thirdFound = otherFound = false;
 			foreach(GameObject o in list) {
+				if (o.Id == "walkable") continue; // do not count tiles
+				
 				if (o.Id == "obj(1,1)") firstFound = true;
 				else if (o.Id == "obj(2,1)") secondFound = true;
 				else if (o.Id == "obj(10,10)") thirdFound = true;
@@ -188,7 +169,7 @@ namespace Core {
 		[Test]
 		public void RemoveAllObjectsFromPosition() {
 			GameMapImpl m = CreateMap(2, 2, "walkable");
-			m.AddObject(2, 2, new GameObjectImpl("obj", loader));
+			m.AddObject(new GameObjectImpl("obj", 2, 2, loader));
 			m.RemoveObjects(2, 2);
 			Assert.IsNull(m.GetObjects(2, 2));
 		}
@@ -196,16 +177,19 @@ namespace Core {
 		[Test]
 		public void RemoveSpecificObjectFromPosition() {
 			GameMapImpl m = CreateMap(2, 2, "walkable");
-			m.AddObject(2, 2, new GameObjectImpl("obj", loader));
-			m.AddObject(2, 2, new GameObjectImpl("obj2", loader));
+			m.AddObject(new GameObjectImpl("obj", 2, 2, loader));
+			m.AddObject(new GameObjectImpl("obj2", 2, 2, loader));
 			m.RemoveObject(2, 2, "obj");
 			Assert.IsTrue(m.GetObjects(2, 2).Length == 1);
 		}
 		
-		/*
-		 * TODO: TEST: remove non-existant object
-		 * TODO: TEST: place object outside bounds
-		 */
+		[Test]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void PlaceObjectOutOfBounds() {
+			GameMapImpl m = CreateMap(2, 2, "walkable");
+			m.AddObject(new GameObjectImpl("obj", 300, 200, loader));
+		}
+		
 	}
 	
 	#endif
