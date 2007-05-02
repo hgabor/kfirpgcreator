@@ -15,42 +15,37 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Collections.Generic;
 using Core;
 using Core.GameObjects;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
 
-namespace SystemDrawingPlugin {
+namespace SDLPlugin {
+	public class Factory: GraphicsPluginFactory {
+		public GraphicsPlugin Create(Game game) {
+			return new Graphics(game);
+		}
+	}
+
 	/// <summary>
-	/// Description of GameForm.
+	/// Description of Graphics.
 	/// </summary>
-	public partial class GameForm : Form, GraphicsPlugin {
+	public class Graphics: GraphicsPlugin {
 		Game game;
 		
-		public Core.Game Game {
-			set {
-				game = value;
-			}
-		}
+		Surface screen;
 		
-		public GameForm() {
-			InitializeComponent();
-			SetStyle(
-				ControlStyles.AllPaintingInWmPaint |
-				ControlStyles.DoubleBuffer |
-				ControlStyles.Opaque |
-				ControlStyles.UserPaint,
-				true
-			);
+		internal Graphics(Game game) {
+			this.game = game;
+			//screen = Video.SetVideoMode(1024, 768, false, false, true);
+			screen = Video.SetVideoMode(640, 480);
 		}
-		
+
 		System.DateTime lastUpdate = DateTime.Now;
 		int tickCounter = 0;
 		double fps = 0;
-		
-		protected override void OnPaint(PaintEventArgs e) {
-			e.Graphics.Clear(Color.Black);
+
+		private void Paint() {
 			if (++tickCounter == 10) {
 				System.DateTime now = System.DateTime.Now;
 				System.TimeSpan timeSpan = now - lastUpdate;
@@ -58,10 +53,7 @@ namespace SystemDrawingPlugin {
 				tickCounter = 0;
 				lastUpdate = now;
 			}
-			
 			int height = game.MapHeight;
-			int width = game.MapWidth;
-			
 			foreach (GameObject o in game.VisibleObjects) {
 				System.IO.Stream bitmapStream = game.Loader.GetFile(o.Id, "Still1.png");
 				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream);
@@ -69,45 +61,16 @@ namespace SystemDrawingPlugin {
 				int centerY = (o.X + o.Y) * 16 / 100 + 16;
 				int leftX = centerX - (bitmap.Width / 2);
 				int topY = centerY - bitmap.Height + (bitmap.Width / 4);
-				
-				e.Graphics.DrawImage(bitmap, leftX, topY);
+				Surface s = new Surface(bitmap);
+				screen.Blit(s, new System.Drawing.Point(leftX, topY));
 			}
-			
-			e.Graphics.DrawString(
-				String.Format("FPS: {0}", fps),
-				new System.Drawing.Font("Arial", 10),
-				System.Drawing.Brushes.White,
-				3,
-				3
-			);
+			screen.Update();
 		}
 		
-		const int FramesPerSec = 50;
-		const int MillisecPerFrame = 1000 / FramesPerSec;
-
-		public void StartRendering() {
-			try {
-				#if DEBUG
-				Console.WriteLine("Showing dialog");
-				this.Shown += delegate { Console.WriteLine("Shown"); };
-				#endif
-				
-				using (System.Threading.Timer fpsTimer = new System.Threading.Timer(
-					delegate { Invoke( new MethodInvoker(Invalidate) ); },
-					null,
-					System.Threading.Timeout.Infinite,
-					System.Threading.Timeout.Infinite)
-				) {
-					this.Shown += delegate { fpsTimer.Change(0, MillisecPerFrame); };
-					this.ShowDialog();
-				}
-				#if DEBUG
-				Console.WriteLine("Finished dialog");
-				#endif
-			}
-			catch(Exception e) {
-				Console.Error.WriteLine(e.Message);
-			}
+		public void Render() {
+			//throw new NotImplementedException();
+			Events.Poll();
+			this.Paint();
 		}
 	}
 }

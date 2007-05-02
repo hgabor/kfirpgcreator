@@ -19,7 +19,10 @@ namespace Core {
 	/// Description of GraphicsPlugin.
 	/// </summary>
 	public interface GraphicsPlugin {
-		void StartRendering();
-		Core.Game Game { set;}
+		void Render();
+	}
+	
+	public interface GraphicsPluginFactory {
+		GraphicsPlugin Create(Game g);
 	}
 }

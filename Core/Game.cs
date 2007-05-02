@@ -47,8 +47,9 @@ namespace Core {
 		}
 		
 		GraphicsPlugin graphicsPlugin;
+		Controller.Controller controller;
 		
-		public Game(GraphicsPlugin graphicsPlugin) {
+		public Game(GraphicsPluginFactory graphicsPluginFactory, Controller.ControllerFactory controllerFactory) {
 			loader = new ObjectLoader_File();
 			GameObject[,] tiles = new GameObjectImpl[3,3];
 			currentMap = new GameMapImpl(300, 400);
@@ -66,36 +67,48 @@ namespace Core {
 			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 300, loader));
 			currentMap.AddObject(new GameObjectImpl("Gray ball", 20, 20, loader));
 
-			this.graphicsPlugin = graphicsPlugin;
-			this.graphicsPlugin.Game = this;
+			this.graphicsPlugin = graphicsPluginFactory.Create(this);
+			this.controller = controllerFactory.Create();
 		}
 		
+		
 		public void Run() {
-			graphicsPlugin.StartRendering();
+			while(!controller.Poll(Controller.Button.BACK)) {
+				graphicsPlugin.Render();
+			}
 		}
 
 		#if EXECUTABLE
 
 		public static void Main(string[] args) {
-			string fileName = System.IO.Path.GetFullPath("SystemDrawingPlugin.dll");
+			string fileName = System.IO.Path.GetFullPath("SDLPlugin.dll");
 			System.Reflection.Assembly pluginAssembly = System.Reflection.Assembly.LoadFile(fileName);
 			Type[] types = pluginAssembly.GetTypes();
-			GraphicsPlugin found = null;
+			GraphicsPluginFactory graphicsPluginFactory = null;
+			Controller.ControllerFactory controllerFactory = null;
 			foreach(Type type in types) {
-				System.Type pluginInterface = type.GetInterface("Core.GraphicsPlugin");
+				System.Type pluginInterface = type.GetInterface("Core.GraphicsPluginFactory");
 				System.Reflection.ConstructorInfo pluginCtor = type.GetConstructor(Type.EmptyTypes);
 				if(
 					pluginInterface != null &&
 					pluginCtor != null
 				)  {
-					found = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as GraphicsPlugin);
+					graphicsPluginFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as GraphicsPluginFactory);
+				}
+				
+				pluginInterface = type.GetInterface("Core.Controller.ControllerFactory");
+				if(
+					pluginInterface != null &&
+					pluginCtor != null
+				) {
+					controllerFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as Controller.ControllerFactory);
 				}
 			}
-			if (found == null) {
+			if (graphicsPluginFactory == null) {
 				Console.Error.WriteLine("A megadott grafikai plugin nem megfelelõ");
 			}
 			else {
-				Game g = new Game(found);
+				Game g = new Game(graphicsPluginFactory, controllerFactory);
 				g.Run();
 			}
 		}

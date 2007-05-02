@@ -141,6 +141,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Controller\Controller.cs" />
     <Compile Include="GameException.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameMap.cs" />
@@ -170,4 +171,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Controller" />
+  </ItemGroup>
 </Project>
