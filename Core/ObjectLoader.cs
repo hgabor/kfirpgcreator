@@ -16,22 +16,28 @@
 
 using System.IO;
 
-namespace Core.GameObjects {
+namespace KFI_RPG_Creator.Core {
 	/// <summary>
-	/// Az objektumok innen nyerik a felépítésükhöz szükséges adatokat
+	/// The source of data for object creation
 	/// </summary>
 	public interface ObjectLoader {
 		/// <summary>
-		/// Az objektumhoz tartozó tulajdonságot adja vissza
+		/// Returns the value of an attribute for an object.
 		/// </summary>
-		/// <param name="id">Az objektum azonosítója</param>
-		/// <param name="attribute">A kérdéses tulajdonság</param>
-		/// <returns>A tulajdonság értéke</returns>
-		/// <exception cref="ObjectNotFoundException">Ha az objektum nem létezik</exception>
-		/// <exception cref="AttributeDoesNotExistException">Ha a kérdéses tulajdonság nem létezik</exception>
+		/// <param name="id">The ID of the object.</param>
+		/// <param name="attribute">The attribute in question.</param>
+		/// <returns>The vaue of the attribute.</returns>
+		/// <exception cref="ObjectNotFoundException">The object does not exist in the data source.</exception>
+		/// <exception cref="AttributeDoesNotExistException">The attrbute is not specified for the object.</exception>
 		string GetAttribute(string id, string attribute);
-		//bool AttributeExists(string id, string attribute);
+		
+		/// <summary>
+		/// Returns a System.Stream for a file in the object.
+		/// </summary>
+		/// <param name="id">The ID of the object.</param>
+		/// <param name="filename">The name of the file.</param>
+		/// <returns>The stream for the file.</returns>
+		/// <exception cref="ObjectNotFoundException">The object does not exist in the data source.</exception>
 		Stream GetFile(string id, string filename);
-		//bool FileExists(string id, string filename);
 	}
 }

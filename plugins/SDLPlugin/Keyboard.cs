@@ -15,10 +15,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using Core.Controller;
+using KFI_RPG_Creator.Core;
 using SdlDotNet.Input;
 
-namespace SDLPlugin {
+namespace KFI_RPG_Creator.SDLPlugin {
 	
 	public class KeyboardFactory: ControllerFactory {
 		public Controller Create() {

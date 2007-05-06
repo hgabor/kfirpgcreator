@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDLPlugin", "plugins\SDLPlugin\SDLPlugin.csproj", "{E0CD2208-8FC0-47D8-8024-69F2CAB0039D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "plugins\Logic\Logic.csproj", "{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,12 @@ Global
 		{E0CD2208-8FC0-47D8-8024-69F2CAB0039D}.Release - DotNet2|Any CPU.ActiveCfg = Release - DotNet2|Any CPU
 		{E0CD2208-8FC0-47D8-8024-69F2CAB0039D}.Release - Mono2|Any CPU.Build.0 = Release - Mono2|Any CPU
 		{E0CD2208-8FC0-47D8-8024-69F2CAB0039D}.Release - Mono2|Any CPU.ActiveCfg = Release - Mono2|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Release - DotNet2|Any CPU.Build.0 = Release - DotNet2|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Release - DotNet2|Any CPU.ActiveCfg = Release - DotNet2|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Release - Mono2|Any CPU.Build.0 = Release - Mono2|Any CPU
+		{52E6DF24-4FA0-4DB5-BFAD-6500CCECE6E7}.Release - Mono2|Any CPU.ActiveCfg = Release - Mono2|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

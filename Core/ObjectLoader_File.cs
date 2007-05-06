@@ -20,7 +20,7 @@ using System.Xml;
 using System.Collections.Generic;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace Core.GameObjects {
+namespace KFI_RPG_Creator.Core {
 	/// <summary>
 	/// Betöltő, amely merevlemezről tölti be a szükséges adatokat
 	/// </summary>

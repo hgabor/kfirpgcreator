@@ -16,8 +16,11 @@
 
 using System;
 
-namespace Core {
-	class GameException : System.ApplicationException {
+namespace KFI_RPG_Creator.Core {
+	/// <summary>
+	/// Base class for all KFI RPG Creator-related exceptions.
+	/// </summary>
+	public class GameException : Exception {
 		public GameException(string text) : base(text) { }
 		public GameException(string text, Exception cause) : base(text, cause) { }
 	}

@@ -16,8 +16,11 @@
 
 using System;
 
-namespace Core.GameObjects {
-	class ObjectNotFoundException : GameException {
+namespace KFI_RPG_Creator.Core {
+	/// <summary>
+	/// Thrown when an ObjectLoader cannot find an object with the specified ID.
+	/// </summary>
+	public class ObjectNotFoundException : GameException {
 		public ObjectNotFoundException(string objectid)
 			: base(System.String.Format("Nem találom az alábbi objektumot: {0}", objectid)) { }
 		public ObjectNotFoundException(string objectid, Exception cause)

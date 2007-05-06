@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2007 Gábor Halász
+// Copyright (C) 2007 G�bor Hal�sz
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -16,12 +16,14 @@
 
 using System;
 
-namespace Core.GameObjects
-{
-	class FileDoesNotExistException : GameException {
-		public FileDoesNotExistException(string fileName)
-			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName)) { }
-		public FileDoesNotExistException(string fileName, Exception cause)
-			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName), cause) { }
+namespace KFI_RPG_Creator.Core {
+	/// <summary>
+	/// Thrown when an object does not have a specified attribute.
+	/// </summary>
+	public class AttributeDoesNotExistException : GameException {
+		public AttributeDoesNotExistException(string attribute)
+			: base(System.String.Format("The object does not contain attrbute \"{0}\" ", attribute)) { }
+		public AttributeDoesNotExistException(string attribute, Exception cause)
+			: base(System.String.Format("The object does not contain attrbute \"{0}\" ", attribute), cause) { }
 	}
 }

@@ -14,15 +14,41 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-namespace Core {
+using System;
+
+namespace KFI_RPG_Creator.Core {
+	
 	/// <summary>
-	/// Description of GraphicsPlugin.
+	/// The buttons the game can use.
 	/// </summary>
-	public interface GraphicsPlugin {
-		void Render();
+	public enum Button {
+		SELECT,
+		BACK,
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	}
+
+	/// <summary>
+	/// Represents a game controller (keyboard, joystic etc.).
+	/// </summary>
+	public interface Controller {
+		/// <summary>
+		/// Check if a button is activated.
+		/// </summary>
+		/// <param name="b">The button to check</param>
+		/// <returns>The state of the button</returns>
+		bool Poll(Button b);
 	}
 	
-	public interface GraphicsPluginFactory {
-		GraphicsPlugin Create(Game g);
+	/// <summary>
+	/// A factory that creates game controller-related objects.
+	/// </summary>
+	public interface ControllerFactory {
+		/// <summary>
+		/// Creates Controlles objects.
+		/// </summary>
+		Controller Create();
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2007 G·bor Hal·sz
+Ôªø// Copyright (C) 2007 G√°bor Hal√°sz
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,13 +14,21 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-using System;
-
-namespace Core.GameObjects {
-	class AttributeDoesNotExistException : GameException {
-		public AttributeDoesNotExistException(string attribute)
-			: base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdons·g", attribute)) { }
-		public AttributeDoesNotExistException(string attribute, Exception cause)
-			: base(System.String.Format("Az objektumhoz nem tartozik {0} tulajdons·g", attribute), cause) { }
+namespace KFI_RPG_Creator.Core {
+	public interface Sprite {
+		int X {get;}
+		int Y {get;}
+		string TypeID {get;}
+	}
+	
+	/// <summary>
+	/// Description of GraphicsPlugin.
+	/// </summary>
+	public interface GraphicsPlugin {
+		void Render();
+	}
+	
+	public interface GraphicsPluginFactory {
+		GraphicsPlugin Create(Game g);
 	}
 }

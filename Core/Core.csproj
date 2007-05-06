@@ -7,13 +7,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{821A9B1B-00E8-45DD-B882-ED8AB93554C3}</ProjectGuid>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core</RootNamespace>
+    <RootNamespace>KFI_RPG_Creator.Core</RootNamespace>
     <AssemblyName>Core</AssemblyName>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <StartupObject>Core.Game</StartupObject>
+    <StartupObject>KFI_RPG_Creator.Core.Game</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -141,21 +141,17 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Controller\Controller.cs" />
+    <Compile Include="AttributeDoesNotExistException.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="FileDoesNotExistException.cs" />
     <Compile Include="GameException.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameMap.cs" />
-    <Compile Include="GameMapImpl.cs" />
-    <Compile Include="GameObjects\AttributeDoesNotExistException.cs" />
-    <Compile Include="GameObjects\FileDoesNotExistException.cs" />
-    <Compile Include="GameObjects\GameObjectImpl.cs" />
-    <Compile Include="GameObjects\GameObject.cs" />
-    <Compile Include="GameObjects\ObjectLoader.cs" />
-    <Compile Include="GameObjects\ObjectLoader_File.cs" />
-    <Compile Include="GameObjects\ObjectNotFoundException.cs">
-    </Compile>
-    <Compile Include="GameObjects\TestLoader.cs" />
-    <Compile Include="GraphicsPlugin.cs" />
+    <Compile Include="ObjectLoader.cs" />
+    <Compile Include="ObjectLoader_File.cs" />
+    <Compile Include="ObjectNotFoundException.cs" />
+    <Compile Include="Rendering.cs" />
+    <Compile Include="Logic.cs" />
+    <Compile Include="TestLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -164,14 +160,10 @@
     </Reference>
     <Reference Include="nunit.framework" />
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Controller" />
-  </ItemGroup>
 </Project>

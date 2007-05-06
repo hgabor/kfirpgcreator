@@ -15,12 +15,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using Core;
-using Core.GameObjects;
+using KFI_RPG_Creator.Core;
 using SdlDotNet.Core;
 using SdlDotNet.Graphics;
 
-namespace SDLPlugin {
+namespace KFI_RPG_Creator.SDLPlugin {
 	public class Factory: GraphicsPluginFactory {
 		public GraphicsPlugin Create(Game game) {
 			return new Graphics(game);
@@ -53,9 +52,9 @@ namespace SDLPlugin {
 				tickCounter = 0;
 				lastUpdate = now;
 			}
-			int height = game.MapHeight;
-			foreach (GameObject o in game.VisibleObjects) {
-				System.IO.Stream bitmapStream = game.Loader.GetFile(o.Id, "Still1.png");
+			int height = game.Logic.Height;
+			foreach (Sprite o in game.Logic.VisibleScreen.VisibleSprites) {
+				System.IO.Stream bitmapStream = game.Loader.GetFile(o.TypeID, "Still1.png");
 				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream);
 				int centerX = (height + o.X - o.Y) * 32 / 100;
 				int centerY = (o.X + o.Y) * 16 / 100 + 16;

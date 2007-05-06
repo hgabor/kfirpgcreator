@@ -1,4 +1,4 @@
-// Copyright (C) 2007 G�bor Hal�sz
+﻿// Copyright (C) 2007 Gábor Halász
 // 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,15 +15,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using Core.GameObjects;
 
-namespace Core {
-	internal interface GameMap {
-		GameObject[] GetAllObjects();
-		
-		void AddObject(GameObject o);
-
-		int Width { get;}
-		int Height { get;}
+namespace KFI_RPG_Creator.Core
+{
+	public class FileDoesNotExistException : GameException {
+		public FileDoesNotExistException(string fileName)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName)) { }
+		public FileDoesNotExistException(string fileName, Exception cause)
+			: base(System.String.Format("Az objektumhoz nem tartozik {0} nevű fájl", fileName), cause) { }
 	}
 }

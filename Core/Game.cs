@@ -15,65 +15,47 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
-using Core.GameObjects;
 
-namespace Core {
+namespace KFI_RPG_Creator.Core {
 	/// <summary>
-	/// Szint, ami átjárást biztosít a térképet közt.
+	/// The main class that ties the plugins together, and contains the game loop.
 	/// </summary>
 	public class Game {
-		GameMap currentMap;
-		/*public GameMap CurrentMap {
-			get {
-				return currentMap;
-			}
-		}*/
-		public int MapWidth {
-			get { return currentMap.Width; }
-		}
-		public int MapHeight {
-			get { return currentMap.Height; }
-		}
-		
-		public GameObject[] VisibleObjects {
-			get { return currentMap.GetAllObjects(); }
-		}
-		
 		ObjectLoader loader;
 		public ObjectLoader Loader {
 			get {
 				return loader;
 			}
 		}
-		
 		GraphicsPlugin graphicsPlugin;
-		Controller.Controller controller;
+		public GraphicsPlugin Graphics {
+			get {
+				return graphicsPlugin;
+			}
+		}
+		Controller controller;
+		public Controller Controller {
+			get {
+				return Controller;
+			}
+		}
+		Logic gameLogic;
+		public Logic Logic {
+			get {
+				return gameLogic;
+			}
+		}
 		
-		public Game(GraphicsPluginFactory graphicsPluginFactory, Controller.ControllerFactory controllerFactory) {
+		public Game(GraphicsPluginFactory graphicsPluginFactory, ControllerFactory controllerFactory, LogicFactory logicFactory) {
 			loader = new ObjectLoader_File();
-			GameObject[,] tiles = new GameObjectImpl[3,3];
-			currentMap = new GameMapImpl(300, 400);
-			currentMap.AddObject(new GameObjectImpl("testtile", 0, 0, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile", 100, 0, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile", 200, 0, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile", 0, 100, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile", 100, 100, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 100, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile", 0, 200, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 100, 200, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 200, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 0, 300, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 100, 300, loader));
-			currentMap.AddObject(new GameObjectImpl("testtile2", 200, 300, loader));
-			currentMap.AddObject(new GameObjectImpl("Gray ball", 20, 20, loader));
-
 			this.graphicsPlugin = graphicsPluginFactory.Create(this);
 			this.controller = controllerFactory.Create();
+			this.gameLogic = logicFactory.CreateLogic(loader);
 		}
 		
 		
 		public void Run() {
-			while(!controller.Poll(Controller.Button.BACK)) {
+			while(!controller.Poll(Button.BACK)) {
 				graphicsPlugin.Render();
 			}
 		}
@@ -81,13 +63,16 @@ namespace Core {
 		#if EXECUTABLE
 
 		public static void Main(string[] args) {
+			GraphicsPluginFactory graphicsPluginFactory = null;
+			ControllerFactory controllerFactory = null;
+			LogicFactory logicFactory = null;
+			
 			string fileName = System.IO.Path.GetFullPath("SDLPlugin.dll");
 			System.Reflection.Assembly pluginAssembly = System.Reflection.Assembly.LoadFile(fileName);
 			Type[] types = pluginAssembly.GetTypes();
-			GraphicsPluginFactory graphicsPluginFactory = null;
-			Controller.ControllerFactory controllerFactory = null;
+			
 			foreach(Type type in types) {
-				System.Type pluginInterface = type.GetInterface("Core.GraphicsPluginFactory");
+				System.Type pluginInterface = type.GetInterface("KFI_RPG_Creator.Core.GraphicsPluginFactory");
 				System.Reflection.ConstructorInfo pluginCtor = type.GetConstructor(Type.EmptyTypes);
 				if(
 					pluginInterface != null &&
@@ -96,19 +81,39 @@ namespace Core {
 					graphicsPluginFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as GraphicsPluginFactory);
 				}
 				
-				pluginInterface = type.GetInterface("Core.Controller.ControllerFactory");
+				pluginInterface = type.GetInterface("KFI_RPG_Creator.Core.ControllerFactory");
 				if(
 					pluginInterface != null &&
 					pluginCtor != null
 				) {
-					controllerFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as Controller.ControllerFactory);
+					controllerFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as ControllerFactory);
+				}
+			}
+			
+			fileName = System.IO.Path.GetFullPath("Logic.dll");
+			pluginAssembly = System.Reflection.Assembly.LoadFile(fileName);
+			types = pluginAssembly.GetTypes();
+			foreach(Type type in types) {
+				System.Type pluginInterface = type.GetInterface("KFI_RPG_Creator.Core.LogicFactory");
+				System.Reflection.ConstructorInfo pluginCtor = type.GetConstructor(Type.EmptyTypes);
+				if(
+					pluginInterface != null &&
+					pluginCtor != null
+				) {
+					logicFactory = (type.GetConstructor(Type.EmptyTypes).Invoke(null) as LogicFactory);
 				}
 			}
 			if (graphicsPluginFactory == null) {
 				Console.Error.WriteLine("A megadott grafikai plugin nem megfelelõ");
 			}
+			else if (controllerFactory == null) {
+				Console.Error.WriteLine("Amegadott controller-plugin nem megfelelõ");
+			}
+			else if (logicFactory == null) {
+				Console.Error.WriteLine("A megadott logikai plugin nem megfelelõ");
+			}
 			else {
-				Game g = new Game(graphicsPluginFactory, controllerFactory);
+				Game g = new Game(graphicsPluginFactory, controllerFactory, logicFactory);
 				g.Run();
 			}
 		}
