@@ -36,7 +36,7 @@ namespace KFI_RPG_Creator.Core {
 		Controller controller;
 		public Controller Controller {
 			get {
-				return Controller;
+				return controller;
 			}
 		}
 		Logic gameLogic;
@@ -46,17 +46,49 @@ namespace KFI_RPG_Creator.Core {
 			}
 		}
 		
+		/*static class FpsCounter {
+			static int tickCounter = 0;
+			static double fps;
+			static System.DateTime lastUpdate = DateTime.Now;
+			static public void Tick() {
+				if (++tickCounter == 50) {
+					System.TimeSpan timeSpan = System.DateTime.Now - lastUpdate;
+					fps = 50d / timeSpan.TotalMilliseconds * 1000;
+					tickCounter = 0;
+					lastUpdate = System.DateTime.Now;
+				}
+			}
+			static public double Fps {
+				get {
+					return fps;
+				}
+			}
+		}
+		
+		public double Fps {
+			get {
+				return FpsCounter.Fps;
+			}
+		}*/
+		
+		const int desiredMillisecondsPerFrame = 15;
+		
 		public Game(GraphicsPluginFactory graphicsPluginFactory, ControllerFactory controllerFactory, LogicFactory logicFactory) {
 			loader = new ObjectLoader_File();
 			this.graphicsPlugin = graphicsPluginFactory.Create(this);
 			this.controller = controllerFactory.Create();
-			this.gameLogic = logicFactory.CreateLogic(loader);
+			this.gameLogic = logicFactory.CreateLogic(this);
 		}
 		
-		
+		System.DateTime lastUpdate = System.DateTime.Now;
 		public void Run() {
 			while(!controller.Poll(Button.BACK)) {
+				lastUpdate = System.DateTime.Now;
+				
+				gameLogic.Work();
+				
 				graphicsPlugin.Render();
+				while ((System.DateTime.Now - lastUpdate).TotalMilliseconds <= desiredMillisecondsPerFrame);
 			}
 		}
 

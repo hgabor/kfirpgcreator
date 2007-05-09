@@ -38,6 +38,15 @@ namespace KFI_RPG_Creator.Core {
 		/// <param name="filename">The name of the file.</param>
 		/// <returns>The stream for the file.</returns>
 		/// <exception cref="ObjectNotFoundException">The object does not exist in the data source.</exception>
+		/// <exception cref="FileDoesNotExistException">The file does not exist in the object.</exception>
 		Stream GetFile(string id, string filename);
+		
+		/// <summary>
+		/// Checks if a file exist in the object.
+		/// </summary>
+		/// <param name="id">The ID of the object.</param>
+		/// <param name="filename">The name of the file.</param>
+		/// <returns>True if the file exists, false otherwise.</returns>
+		bool FileExists(string id, string filename);
 	}
 }

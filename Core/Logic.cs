@@ -17,6 +17,8 @@
 using System;
 
 namespace KFI_RPG_Creator.Core {
+	//TODO: Refactor screen types for different usages
+	
 	public enum ScreenType {
 		MAP,
 		BATTLE
@@ -30,7 +32,6 @@ namespace KFI_RPG_Creator.Core {
 		/// Gets the currently visible objects on the screen.
 		/// </summary>
 		Sprite[] VisibleSprites {get;}
-		
 		ScreenType Type {get;}
 	}
 	
@@ -45,6 +46,11 @@ namespace KFI_RPG_Creator.Core {
 		
 		int Width {get;}
 		int Height {get;}
+		
+		int CenterX {get;}
+		int CenterY {get;}
+		
+		void Work();
 	}
 	
 	/// <summary>
@@ -56,6 +62,6 @@ namespace KFI_RPG_Creator.Core {
 		/// </summary>
 		/// <param name="loader">An ObjectLoader to load the objects from.</param>
 		/// <returns>A Logic object.</returns>
-		Logic CreateLogic(ObjectLoader loader);
+		Logic CreateLogic(Game game);
 	}
 }

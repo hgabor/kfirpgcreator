@@ -100,5 +100,10 @@ namespace KFI_RPG_Creator.Core {
 			dataList[id].files[fileName].Position = 0;
 			return dataList[id].files[fileName];
 		}
+		
+		public bool FileExists(string id, string filename) {
+			if (!dataList.ContainsKey(id)) TryToLoad(id);
+			return dataList[id].files.ContainsKey(filename);
+		}
 	}
 }

@@ -60,6 +60,16 @@ namespace KFI_RPG_Creator.Logic {
 		}
 		
 		internal GameObject(string id, ObjectLoader loader) : this(id, 0, 0, loader) {}
+		
+		string facing = "W";
+		public string Facing {
+			get {
+				return facing;
+			}
+			set {
+				facing = value;
+			}
+		}
 	}
 
 	#if DEBUG

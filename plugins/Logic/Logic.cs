@@ -19,26 +19,32 @@ using KFI_RPG_Creator.Core;
 
 namespace KFI_RPG_Creator.Logic {
 	class Logic: KFI_RPG_Creator.Core.Logic {
-		ObjectLoader loader;
+		//ObjectcurrentGame.Loader currentGame.Loader;
+		Game currentGame;
 		MapScreen mapScreen;
 		Map currentMap;
 		
-		public Logic(ObjectLoader loader) {
-			this.loader = loader;
+		GameObject protagonist;
+		
+		public Logic(Game currentGame) {
+			this.currentGame = currentGame;
+			protagonist = new GameObject("Redarrow", 200, 200, currentGame.Loader);
+			
 			currentMap = new Map(300, 400);
-			currentMap.AddObject(new GameObject("testtile", 0, 0, loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 0, loader));
-			currentMap.AddObject(new GameObject("testtile", 200, 0, loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 100, loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 100, loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 100, loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 200, loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 200, loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 200, loader));
-			currentMap.AddObject(new GameObject("testtile2", 0, 300, loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 300, loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 300, loader));
-			currentMap.AddObject(new GameObject("Gray ball", 20, 20, loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 100, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 100, 100, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 100, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 200, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 100, 200, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 200, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 0, 300, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 100, 300, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 300, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Gray ball", 20, 20, currentGame.Loader));
+			currentMap.AddObject(protagonist);
 			mapScreen = new MapScreen(currentMap);
 		}
 		
@@ -59,11 +65,75 @@ namespace KFI_RPG_Creator.Logic {
 				return currentMap.Height;
 			}
 		}
+		
+		public int CenterX {
+			get {
+				return protagonist.X;
+			}
+		}
+		
+		public int CenterY {
+			get {
+				return protagonist.Y;
+			}
+		}
+		
+		const int StraightSpeed = 7;
+		const int DiagonalSpeed = 10;
+		
+		public void Work() {
+			int moveX = 0;
+			int moveY = 0;
+			bool up = currentGame.Controller.Poll(Button.UP);
+			bool down = currentGame.Controller.Poll(Button.DOWN);
+			bool left = currentGame.Controller.Poll(Button.LEFT);
+			bool right = currentGame.Controller.Poll(Button.RIGHT);
+			if (up && down) up = down = false;
+			if (left && right) left = right = false;
+			if (up && left) {
+				moveX -= DiagonalSpeed;
+				protagonist.Facing = "NW";
+			}
+			else if (up && right) {
+				moveY -= DiagonalSpeed;
+				protagonist.Facing = "NE";
+			}
+			else if (down && left) {
+				moveY += DiagonalSpeed;
+				protagonist.Facing = "SW";
+			}
+			else if (down && right) {
+				moveX += DiagonalSpeed;
+				protagonist.Facing = "SE";
+			}
+			else if (up) {
+				moveX -= StraightSpeed;
+				moveY -= StraightSpeed;
+				protagonist.Facing = "N";
+			}
+			else if (down) {
+				moveX += StraightSpeed;
+				moveY += StraightSpeed;
+				protagonist.Facing = "S";
+			}
+			else if (left) {
+				moveX -= StraightSpeed;
+				moveY += StraightSpeed;
+				protagonist.Facing = "W";
+			}
+			else if (right) {
+				moveX += StraightSpeed;
+				moveY -= StraightSpeed;
+				protagonist.Facing = "E";
+			}
+			protagonist.X += moveX;
+			protagonist.Y += moveY;
+		}
 	}
 	
 	public class LogicFactory: KFI_RPG_Creator.Core.LogicFactory {
-		public KFI_RPG_Creator.Core.Logic CreateLogic(ObjectLoader loader) {
-			return new Logic(loader);
+		public KFI_RPG_Creator.Core.Logic CreateLogic(Game currentGame) {
+			return new Logic(currentGame);
 		}
 	}
 }

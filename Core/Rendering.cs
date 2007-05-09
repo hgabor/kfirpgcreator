@@ -19,6 +19,7 @@ namespace KFI_RPG_Creator.Core {
 		int X {get;}
 		int Y {get;}
 		string TypeID {get;}
+		string Facing {get;}
 	}
 	
 	/// <summary>

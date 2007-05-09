@@ -48,5 +48,10 @@ namespace KFI_RPG_Creator.Core {
 			return new System.IO.MemoryStream();
 		}
 
+		
+		public bool FileExists(string id, string filename) {
+			if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
+			return (filename != "nonexistant");
+		}
 	}
 }
