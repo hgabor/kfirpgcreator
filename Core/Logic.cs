@@ -49,6 +49,7 @@ namespace KFI_RPG_Creator.Core {
 		
 		int CenterX {get;}
 		int CenterY {get;}
+		int CenterZ {get;}
 		
 		void Work();
 	}

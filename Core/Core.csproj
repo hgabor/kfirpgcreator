@@ -143,6 +143,7 @@
   <ItemGroup>
     <Compile Include="AttributeDoesNotExistException.cs" />
     <Compile Include="Controller.cs" />
+    <Compile Include="Directions.cs" />
     <Compile Include="FileDoesNotExistException.cs" />
     <Compile Include="GameException.cs" />
     <Compile Include="Game.cs" />
@@ -158,8 +159,8 @@
       <HintPath>..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="nunit.framework" />
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>

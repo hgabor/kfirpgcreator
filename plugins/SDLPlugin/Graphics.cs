@@ -64,8 +64,13 @@ namespace KFI_RPG_Creator.SDLPlugin {
 			//textsprite.Text = game.Fps.ToString();
 			textsprite.Text = fps.ToString();
 			int height = game.Logic.Height;
+			//Magick constants:
+			// 64 - Width of a tile bitmap
+			// 32 - Half width of a tile
+			// 16 - Half height of a tile (it's actuall 15.5, but tiles overlap)
+			// 36 - Length (in pixels) of the 100*100*100 cube's edges - SQRT(32^2 + 16^2)
 			int pcenterX = (height + game.Logic.CenterX - game.Logic.CenterY) * 32 / 100;
-			int pcenterY = (game.Logic.CenterX + game.Logic.CenterY) * 16 / 100 + 16;
+			int pcenterY = (game.Logic.CenterX + game.Logic.CenterY) * 16 / 100 + 16 - game.Logic.CenterZ * 36 / 100;
 			int pX = ScreenWidth/2 - pcenterX;
 			int pY = ScreenHeight/2 - pcenterY;
 			foreach (Sprite o in game.Logic.VisibleScreen.VisibleSprites) {
@@ -80,7 +85,7 @@ namespace KFI_RPG_Creator.SDLPlugin {
 				bitmapStream = game.Loader.GetFile(o.TypeID, bitmapFileName);
 				using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream)) {
 					int centerX = (height + o.X - o.Y) * 32 / 100 + pX;
-					int centerY = (o.X + o.Y) * 16 / 100 + 16+ pY;
+					int centerY = (o.X + o.Y) * 16 / 100 + 16+ pY - o.Z;
 					int leftX = centerX - (bitmap.Width / 2);
 					int topY = centerY - bitmap.Height + (bitmap.Width / 4);
 					screen.Blit(GetSurface(o.TypeID, bitmapFileName, bitmap), new System.Drawing.Point(leftX, topY));

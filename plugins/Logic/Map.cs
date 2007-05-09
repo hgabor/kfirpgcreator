@@ -94,7 +94,6 @@ namespace KFI_RPG_Creator.Logic {
 				objects.Remove(toRemove);
 			}
 		}
-
 	}
 
 	#if DEBUG
@@ -113,7 +112,7 @@ namespace KFI_RPG_Creator.Logic {
 			
 			for (int i = 0; i < width; ++i) {
 				for (int j = 0; j < height; ++j) {
-					map.AddObject(new GameObject(id, i*100, j*100, loader));
+					map.AddObject(new GameObject(id, i*100, j*100, 0, loader));
 				}
 			}
 			return map;
@@ -136,7 +135,7 @@ namespace KFI_RPG_Creator.Logic {
 		[Test]
 		public void GetObjectAtSpecificPosition() {
 			Map m = CreateMap(2, 2, "walkable");
-			m.AddObject(new GameObject("walkable", 1, 1, loader));
+			m.AddObject(new GameObject("walkable", 1, 1, 1, loader));
 			Assert.IsTrue(m.GetObjects(1, 1)[0].TypeID == "walkable");
 		}
 		
@@ -149,9 +148,9 @@ namespace KFI_RPG_Creator.Logic {
 		[Test]
 		public void GetListOfObjectsAndCheckIfTheyAreTheOnlyObjectsOnMap() {
 			Map m = CreateMap(2, 2, "walkable");
-			m.AddObject(new GameObject("obj(1,1)", 1, 1, loader));
-			m.AddObject(new GameObject("obj(2,1)", 2, 1, loader));
-			m.AddObject(new GameObject("obj(10,10)", 10, 10, loader));
+			m.AddObject(new GameObject("obj(1,1)", 1, 1, 1, loader));
+			m.AddObject(new GameObject("obj(2,1)", 2, 1, 1, loader));
+			m.AddObject(new GameObject("obj(10,10)", 10, 10, 1, loader));
 			GameObject[] list = m.GetAllObjects();
 			bool firstFound, secondFound, thirdFound, otherFound;
 			firstFound = secondFound = thirdFound = otherFound = false;
@@ -169,7 +168,7 @@ namespace KFI_RPG_Creator.Logic {
 		[Test]
 		public void RemoveAllObjectsFromPosition() {
 			Map m = CreateMap(2, 2, "walkable");
-			m.AddObject(new GameObject("obj", 2, 2, loader));
+			m.AddObject(new GameObject("obj", 2, 2, 1, loader));
 			m.RemoveObjects(2, 2);
 			Assert.IsNull(m.GetObjects(2, 2));
 		}
@@ -177,8 +176,8 @@ namespace KFI_RPG_Creator.Logic {
 		[Test]
 		public void RemoveSpecificObjectFromPosition() {
 			Map m = CreateMap(2, 2, "walkable");
-			m.AddObject(new GameObject("obj", 2, 2, loader));
-			m.AddObject(new GameObject("obj2", 2, 2, loader));
+			m.AddObject(new GameObject("obj", 2, 2, 1, loader));
+			m.AddObject(new GameObject("obj2", 2, 2, 1, loader));
 			m.RemoveObject(2, 2, "obj");
 			Assert.IsTrue(m.GetObjects(2, 2).Length == 1);
 		}
@@ -187,7 +186,7 @@ namespace KFI_RPG_Creator.Logic {
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void PlaceObjectOutOfBounds() {
 			Map m = CreateMap(2, 2, "walkable");
-			m.AddObject(new GameObject("obj", 300, 200, loader));
+			m.AddObject(new GameObject("obj", 300, 200, 1, loader));
 		}
 		
 	}

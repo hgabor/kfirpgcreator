@@ -18,8 +18,9 @@ namespace KFI_RPG_Creator.Core {
 	public interface Sprite {
 		int X {get;}
 		int Y {get;}
+		int Z {get;}
 		string TypeID {get;}
-		string Facing {get;}
+		Direction Facing {get;}
 	}
 	
 	/// <summary>

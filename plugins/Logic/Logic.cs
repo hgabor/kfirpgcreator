@@ -28,22 +28,22 @@ namespace KFI_RPG_Creator.Logic {
 		
 		public Logic(Game currentGame) {
 			this.currentGame = currentGame;
-			protagonist = new GameObject("Redarrow", 200, 200, currentGame.Loader);
+			protagonist = new GameObject("Redarrow", 200, 200, 100, currentGame.Loader);
 			
 			currentMap = new Map(300, 400);
-			currentMap.AddObject(new GameObject("testtile", 0, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 200, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 100, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 100, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 100, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 200, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 200, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 200, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 0, 300, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 300, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 300, currentGame.Loader));
-			currentMap.AddObject(new GameObject("Gray ball", 20, 20, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 100, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 200, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 100, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile", 0, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 100, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 0, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 100, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("testtile2", 200, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Gray ball", 20, 20, 0, currentGame.Loader));
 			currentMap.AddObject(protagonist);
 			mapScreen = new MapScreen(currentMap);
 		}
@@ -78,56 +78,58 @@ namespace KFI_RPG_Creator.Logic {
 			}
 		}
 		
-		const int StraightSpeed = 7;
-		const int DiagonalSpeed = 10;
+		public int CenterZ {
+			get {
+				return protagonist.Z;
+			}
+		}
+		
+		//const int StraightSpeed = 7;
+		//const int DiagonalSpeed = 10;
+		const int speed = 10;
 		
 		public void Work() {
-			int moveX = 0;
-			int moveY = 0;
 			bool up = currentGame.Controller.Poll(Button.UP);
 			bool down = currentGame.Controller.Poll(Button.DOWN);
 			bool left = currentGame.Controller.Poll(Button.LEFT);
 			bool right = currentGame.Controller.Poll(Button.RIGHT);
-			if (up && down) up = down = false;
-			if (left && right) left = right = false;
-			if (up && left) {
-				moveX -= DiagonalSpeed;
-				protagonist.Facing = "NW";
+			if (up || down || left || right) {
+				if (up && down) up = down = false;
+				if (left && right) left = right = false;
+				if (up && left) {
+					protagonist.Facing = Direction.West;
+				}
+				else if (up && right) {
+					protagonist.Facing = Direction.North;
+				}
+				else if (down && left) {
+					protagonist.Facing = Direction.South;
+				}
+				else if (down && right) {
+					protagonist.Facing = Direction.East;
+				}
+				else if (up) {
+					protagonist.Facing = Direction.NorthWest;
+				}
+				else if (down) {
+					protagonist.Facing = Direction.SouthEast;
+				}
+				else if (left) {
+					protagonist.Facing = Direction.SouthWest;
+				}
+				else if (right) {
+					protagonist.Facing = Direction.NorthEast;
+				}
+				protagonist.MovementSpeed = speed;
 			}
-			else if (up && right) {
-				moveY -= DiagonalSpeed;
-				protagonist.Facing = "NE";
+			else {
+				protagonist.MovementSpeed = 0;
 			}
-			else if (down && left) {
-				moveY += DiagonalSpeed;
-				protagonist.Facing = "SW";
+			protagonist.Move();
+			
+			foreach(GameObject o in currentMap.GetAllObjects()) {
+				o.Fall();
 			}
-			else if (down && right) {
-				moveX += DiagonalSpeed;
-				protagonist.Facing = "SE";
-			}
-			else if (up) {
-				moveX -= StraightSpeed;
-				moveY -= StraightSpeed;
-				protagonist.Facing = "N";
-			}
-			else if (down) {
-				moveX += StraightSpeed;
-				moveY += StraightSpeed;
-				protagonist.Facing = "S";
-			}
-			else if (left) {
-				moveX -= StraightSpeed;
-				moveY += StraightSpeed;
-				protagonist.Facing = "W";
-			}
-			else if (right) {
-				moveX += StraightSpeed;
-				moveY -= StraightSpeed;
-				protagonist.Facing = "E";
-			}
-			protagonist.X += moveX;
-			protagonist.Y += moveY;
 		}
 	}
 	

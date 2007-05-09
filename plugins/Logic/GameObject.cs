@@ -15,6 +15,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 using System;
+using System.Drawing;
 using KFI_RPG_Creator.Core;
 using NUnit.Framework;
 
@@ -50,24 +51,59 @@ namespace KFI_RPG_Creator.Logic {
 			get { return y; }
 			set { y = value; }
 		}
+		int z;
+		public int Z {
+			get { return z; }
+			set { z = value; }
+		}
 
-		internal GameObject(string id, int x, int y, ObjectLoader loader) {
+		internal GameObject(string id, int x, int y, int z, ObjectLoader loader) {
 			this.id = id;
 			walkable = (loader.GetAttribute(id, "walkable") == "true");
 			swimmable = (loader.GetAttribute(id, "swimmable") == "true");
 			this.x = x;
 			this.y = y;
+			this.z = z;
 		}
 		
-		internal GameObject(string id, ObjectLoader loader) : this(id, 0, 0, loader) {}
+		internal GameObject(string id, ObjectLoader loader) : this(id, 0, 0, 0, loader) {}
 		
-		string facing = "W";
-		public string Facing {
+		Direction facing = Direction.West;
+		public Direction Facing {
 			get {
 				return facing;
 			}
 			set {
 				facing = value;
+			}
+		}
+		
+		int movementSpeed = 0;
+		public int MovementSpeed {
+			get { return movementSpeed; }
+			set { movementSpeed = value; }
+		}
+		
+		int fallingSpeed = 0;
+		public int FallingSpeed {
+			get { return fallingSpeed; }
+			set { fallingSpeed = value; }
+		}
+		
+		public void Move() {
+			Move(facing);
+		}
+		
+		public void Move(Direction d) {
+			if (movementSpeed != 0) {
+				Point p = d.CalculateNewCoords(new Point(x,y), movementSpeed);
+				x = p.X;
+				y = p.Y;
+			}
+		}
+		public void Fall() {
+			if (fallingSpeed != 0) {
+				z -= fallingSpeed;
 			}
 		}
 	}
@@ -110,6 +146,37 @@ namespace KFI_RPG_Creator.Logic {
 			GameObject nonswim = new GameObject("walkable", loader);
 			Assert.IsTrue(swim.Swimmable);
 			Assert.IsFalse(nonswim.Swimmable);
+		}
+		
+		[Test]
+		public void MovesStraight() {
+			GameObject o = new GameObject("something", 0, 0, 0, loader);
+			o.MovementSpeed = 20;
+			o.Move(Direction.South);
+			Assert.IsTrue(o.X == 0);
+			Assert.IsTrue(o.Y == 20);
+			Assert.IsTrue(o.Z == 0);
+		}
+		
+		[Test]
+		public void MovesDiagonally() {
+			GameObject o = new GameObject("something", 100, 100, 10, loader);
+			o.MovementSpeed = 50;
+			o.Move(Direction.NorthWest);
+			// SQRT(2) / 2 * 50 = 35.355339059327376220042218105242
+			Assert.IsTrue(o.X == 65);
+			Assert.IsTrue(o.Y == 65);
+			Assert.IsTrue(o.Z == 10);
+		}
+		
+		[Test]
+		public void Falls() {
+			GameObject o = new GameObject("something", 0, 0, 0, loader);
+			o.FallingSpeed = 10;
+			o.Fall();
+			Assert.IsTrue(o.X == 0);
+			Assert.IsTrue(o.Y == 0);
+			Assert.IsTrue(o.Z == -10);
 		}
 	}
 
