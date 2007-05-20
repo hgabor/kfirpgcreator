@@ -40,6 +40,9 @@ namespace KFI_RPG_Creator.Core {
 			case "collision.height":
 				return "70";
 
+			case "affectedbygravity":
+				return "true";
+				
 			default:
 				throw new AttributeDoesNotExistException(attribute);
 			}
