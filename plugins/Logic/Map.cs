@@ -99,7 +99,7 @@ namespace KFI_RPG_Creator.Logic {
 	#if DEBUG
 	
 	[TestFixture]
-	public class GameMap_Test {
+	public class GameMapTest {
 		KFI_RPG_Creator.Core.ObjectLoader loader;
 
 		[SetUp]

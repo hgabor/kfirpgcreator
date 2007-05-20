@@ -85,7 +85,7 @@ namespace KFI_RPG_Creator.SDLPlugin {
 				bitmapStream = game.Loader.GetFile(o.TypeID, bitmapFileName);
 				using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(bitmapStream)) {
 					int centerX = (height + o.X - o.Y) * 32 / 100 + pX;
-					int centerY = (o.X + o.Y) * 16 / 100 + 16+ pY - o.Z;
+					int centerY = (o.X + o.Y) * 16 / 100 + 16+ pY - o.Z * 36 / 100;
 					int leftX = centerX - (bitmap.Width / 2);
 					int topY = centerY - bitmap.Height + (bitmap.Width / 4);
 					screen.Blit(GetSurface(o.TypeID, bitmapFileName, bitmap), new System.Drawing.Point(leftX, topY));

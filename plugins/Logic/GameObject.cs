@@ -30,40 +30,43 @@ namespace KFI_RPG_Creator.Logic {
 				return id;
 			}
 		}
-
-		bool walkable;
-		public virtual bool Walkable {
-			get { return walkable; }
+		
+		ThreeDeePoint prevCenter;
+		Direction prevDirection;
+		
+		public int X {
+			get { return collision.Center.X; }
 		}
-
-		bool swimmable;
-		public virtual bool Swimmable {
-			get { return swimmable; }
+		public int Y {
+			get { return collision.Center.Y; }
+		}
+		public int Z {
+			get { return collision.Center.Z; }
 		}
 		
-		int x;
-		public int X {
-			get { return x; }
-			set { x = value; }
-		}
-		int y;
-		public int Y {
-			get { return y; }
-			set { y = value; }
-		}
-		int z;
-		public int Z {
-			get { return z; }
-			set { z = value; }
-		}
+		bool ethereal;
+		Collision collision;
 
+		int size;
+		int height;
+		
+		bool affectedByGravity;
+		
+		public bool AffectedByGravity {
+			get { return affectedByGravity; }
+		}
+		
 		internal GameObject(string id, int x, int y, int z, ObjectLoader loader) {
 			this.id = id;
-			walkable = (loader.GetAttribute(id, "walkable") == "true");
-			swimmable = (loader.GetAttribute(id, "swimmable") == "true");
-			this.x = x;
-			this.y = y;
-			this.z = z;
+			ThreeDeePoint center = new ThreeDeePoint(x, y, z);
+			this.prevCenter = center;
+			this.ethereal = (loader.GetAttribute(id, "ethereal") == "true");
+			int collideSize = Convert.ToInt32(loader.GetAttribute(id, "collision.size"));
+			size = collideSize;
+			string type = loader.GetAttribute(id, "collision.type");
+			height = Convert.ToInt32(loader.GetAttribute(id, "collision.height"));
+			this.collision = Collision.Create(type, center, collideSize, height);
+			this.affectedByGravity = (loader.GetAttribute(id, "affectedbygravity") == "true");
 		}
 		
 		internal GameObject(string id, ObjectLoader loader) : this(id, 0, 0, 0, loader) {}
@@ -78,48 +81,96 @@ namespace KFI_RPG_Creator.Logic {
 			}
 		}
 		
-		int movementSpeed = 0;
+		int movementSpeed;
 		public int MovementSpeed {
-			get { return movementSpeed; }
+			//get { return movementSpeed; }
 			set { movementSpeed = value; }
 		}
 		
-		int fallingSpeed = 0;
+		int fallingSpeed;
 		public int FallingSpeed {
-			get { return fallingSpeed; }
+			//get { return fallingSpeed; }
 			set { fallingSpeed = value; }
 		}
 		
 		public void Move() {
-			Move(facing);
+			Move(facing, movementSpeed);
+		}
+		public void Move(Direction d) {
+			Move(d, movementSpeed);
+		}
+		private void Move(Direction d, int speed) {
+			prevCenter = collision.Center;
+			prevDirection = d;
+			if (movementSpeed != 0) {
+				Point p = d.CalculateNewCoords((Point)collision.Center, speed);
+				collision.Center = new ThreeDeePoint(p, collision.Center.Z);
+			}
 		}
 		
-		public void Move(Direction d) {
-			if (movementSpeed != 0) {
-				Point p = d.CalculateNewCoords(new Point(x,y), movementSpeed);
-				x = p.X;
-				y = p.Y;
+		public void Fall() {
+			Fall(fallingSpeed);
+		}
+		public void Fall(int speed) {
+			prevCenter = collision.Center;
+			if (fallingSpeed != 0) {
+				Collision c = Collision.Create("box", collision.Center, this.size, this.height);
+				Collision d = Collision.Create("box", collision.Center.Translate(0, 0, -speed), this.size, this.height);
+				collision.Offset(0, 0, -speed);
 			}
 		}
-		public void Fall() {
-			if (fallingSpeed != 0) {
-				z -= fallingSpeed;
-			}
+		
+		public override string ToString() {
+			return string.Format(
+				"({0};{1};{2}) mspeed={3} facing={4} size={5} height={6}",
+				collision.Center.X, collision.Center.Y, collision.Center.Z, movementSpeed, facing, size, height
+			);
+		}
+		
+		
+		public void AvoidMovementCollision(GameObject other) {
+			if (movementSpeed == 0) return; //throw new GameException("Called AvoidMovementCollision on a still object.");
+			int speed = movementSpeed;
+			do {
+				--speed;
+				collision.Center = prevCenter;
+				Move(prevDirection, speed);
+			} while(speed > 0 && this.CollidesWith(other));
+		}
+		
+		public void AvoidFallingCollision(GameObject other) {
+			if (fallingSpeed == 0) return; //throw new GameException("Called AvoidFallingCollision on a still object.");
+			int speed = fallingSpeed;
+			do {
+				--speed;
+				collision.Center = prevCenter;
+				Fall(speed);
+			} while(speed > 0 && this.CollidesWith(other));
+		}
+	
+		public bool CollidesWith(GameObject that) {
+			if (this.ethereal || that.ethereal) return false;
+			else return this.collision.CollidesWith(that.collision);
 		}
 	}
 
 	#if DEBUG
 
 	[TestFixture]
-	public class GameObject_Test {
+	public class GameObjectTest {
 		ObjectLoader loader;
+		const int size = 50;
+		const int height = 70;
 
 		[SetUp]
 		public void SetUp() {
 			loader = new TestLoader();
 		}
 
-		//Normál elkészítés közben nincs-e hiba (kivétel)
+		#region Creation
+		
+		//Sanity Checks
+		
 		[Test]
 		public void CreatingNormallySucceeds() {
 			GameObject g = new GameObject("something", loader);
@@ -131,22 +182,9 @@ namespace KFI_RPG_Creator.Logic {
 		public void CreatingNonexistantThrows() {
 			GameObject g = new GameObject("nonexistant", loader);
 		}
-
-		[Test]
-		public void WalkableProperty() {
-			GameObject walk = new GameObject("walkable", loader);
-			GameObject nonwalk = new GameObject("swimmable", loader);
-			Assert.IsTrue(walk.Walkable);
-			Assert.IsFalse(nonwalk.Walkable);
-		}
-
-		[Test]
-		public void SwimmableProperty() {
-			GameObject swim = new GameObject("swimmable", loader);
-			GameObject nonswim = new GameObject("walkable", loader);
-			Assert.IsTrue(swim.Swimmable);
-			Assert.IsFalse(nonswim.Swimmable);
-		}
+		
+		#endregion
+		#region Movement
 		
 		[Test]
 		public void MovesStraight() {
@@ -178,6 +216,68 @@ namespace KFI_RPG_Creator.Logic {
 			Assert.IsTrue(o.Y == 0);
 			Assert.IsTrue(o.Z == -10);
 		}
+		
+		#endregion
+		#region Collision
+		
+		[Test]
+		public void EtherealObjectDoesNotCollide() {
+			GameObject one = new GameObject("ethereal", 0, 0, 0, loader);
+			GameObject two = new GameObject("something", 0, 0, 0, loader);
+			Assert.IsFalse(one.CollidesWith(two));
+			Assert.IsFalse(two.CollidesWith(one));
+		}
+		
+		[Test]
+		public void NonEtherealObjectCollides() {
+			GameObject one = new GameObject("something", 0, 0, 0, loader);
+			GameObject two = new GameObject("something", 0, 0, 0, loader);
+			Assert.IsTrue(one.CollidesWith(two));
+			Assert.IsTrue(two.CollidesWith(one));
+		}
+		
+		[Test]
+		public void BackTrackToAvoidCollisionDuringMovement() {
+			GameObject moving = new GameObject("something", 0, 0, 0, loader);
+			GameObject standing = new GameObject("something", size*2 + 10, 0, 0, loader);
+			moving.MovementSpeed = 30;
+			Assert.IsFalse(moving.CollidesWith(standing));
+			moving.Move(Direction.East);
+			Assert.IsTrue(moving.CollidesWith(standing));
+			moving.AvoidMovementCollision(standing);
+			Assert.IsTrue(moving.X == 9);
+			Assert.IsTrue(moving.Y == 0);
+			Assert.IsTrue(moving.Z == 0);
+		}
+		
+		[Test]
+		public void BackTrackMovementDiagonally() {
+			GameObject moving = new GameObject("something", 0, 0, 0, loader);
+			GameObject standing = new GameObject("something", size*2 + 10, size*2 + 10, 0, loader);
+			moving.MovementSpeed = 30;
+			moving.Move(Direction.SouthEast);
+			moving.AvoidMovementCollision(standing);
+			Assert.IsTrue(moving.X == 9);
+			Assert.IsTrue(moving.Y == 9);
+			Assert.IsTrue(moving.Z == 0);
+		}
+		
+		[Test]
+		public void BackTrackToAvoidCollisionDuringFall() {
+			GameObject falling = new GameObject("something", 0, 0, height + 10, loader);
+			GameObject standing = new GameObject("something", 0, 0, 0, loader);
+			falling.FallingSpeed = 30;
+			Assert.IsFalse(falling.CollidesWith(standing));
+			falling.Fall();
+			Assert.IsTrue(falling.CollidesWith(standing));
+			falling.AvoidFallingCollision(standing);
+			Assert.IsTrue(falling.X == 0);
+			Assert.IsTrue(falling.Y == 0);
+			Console.WriteLine(falling.Z);
+			Assert.IsTrue(falling.Z == height+1);
+		}
+		
+		#endregion
 	}
 
 	#endif

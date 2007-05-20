@@ -28,21 +28,21 @@ namespace KFI_RPG_Creator.Logic {
 		
 		public Logic(Game currentGame) {
 			this.currentGame = currentGame;
-			protagonist = new GameObject("Redarrow", 200, 200, 100, currentGame.Loader);
+			protagonist = new GameObject("Redarrow", 200, 200, 10, currentGame.Loader);
 			
 			currentMap = new Map(300, 400);
-			currentMap.AddObject(new GameObject("testtile", 0, 0, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 0, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 200, 0, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 100, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 100, 100, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 100, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile", 0, 200, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 200, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 200, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 0, 300, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 100, 300, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("testtile2", 200, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 0, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 100, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 200, 0, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 0, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 100, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 200, 100, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Grass", 0, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 100, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 200, 200, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 0, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 100, 300, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Lush Grass", 200, 300, 0, currentGame.Loader));
 			currentMap.AddObject(new GameObject("Gray ball", 20, 20, 0, currentGame.Loader));
 			currentMap.AddObject(protagonist);
 			mapScreen = new MapScreen(currentMap);
@@ -128,14 +128,27 @@ namespace KFI_RPG_Creator.Logic {
 			protagonist.Move();
 			
 			foreach(GameObject o in currentMap.GetAllObjects()) {
-				o.Fall();
+				if (o.AffectedByGravity) {
+					o.FallingSpeed = 1;
+					o.Fall();
+					foreach(GameObject o2 in currentMap.GetAllObjects()) {
+						if (o != o2 && o.CollidesWith(o2)) {
+							o.AvoidFallingCollision(o2);
+						}
+					}
+				}
+				if (o != protagonist && o.CollidesWith(protagonist)) {
+					protagonist.AvoidMovementCollision(o);
+				}
 			}
+			
+			//TODO: If cannot move, try diagonally...
 		}
 	}
 	
 	public class LogicFactory: KFI_RPG_Creator.Core.LogicFactory {
-		public KFI_RPG_Creator.Core.Logic CreateLogic(Game currentGame) {
-			return new Logic(currentGame);
+		public KFI_RPG_Creator.Core.Logic CreateLogic(Game game) {
+			return new Logic(game);
 		}
 	}
 }

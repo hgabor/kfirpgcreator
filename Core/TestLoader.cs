@@ -22,20 +22,23 @@ namespace KFI_RPG_Creator.Core {
 			if (id == "nonexistant") throw new ObjectNotFoundException("nonexistant");
 
 			switch (attribute) {
-			case "name":
-				return "TestName";
-
-			case "walkable":
-				if (id.Contains("walkable"))
+				
+			case "ethereal":
+				if (id.Contains("ethereal"))
 					return "true";
 				else
 					return "false";
-
-			case "swimmable":
-				if (id.Contains("swimmable"))
-					return "true";
-				else
-					return "false";
+			
+			case "collision.size":
+				return "50";
+				
+			case "collision.type":
+				return (id.Contains("cylinder"))
+					? "cylinder"
+					: "box";
+				
+			case "collision.height":
+				return "70";
 
 			default:
 				throw new AttributeDoesNotExistException(attribute);

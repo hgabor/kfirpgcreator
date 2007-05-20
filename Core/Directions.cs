@@ -57,12 +57,6 @@ namespace KFI_RPG_Creator.Core {
 		}
 		private class NorthWestD: Direction {
 			public override Point CalculateNewCoords(Point oldPoint, int distance) {
-				double d;
-				d = distance * SQRT2DIV2;
-				System.Console.WriteLine(d);
-				d = oldPoint.X - d;
-				System.Console.WriteLine(d);
-				System.Console.WriteLine((int)System.Math.Round(d));
 				return new Point((int)System.Math.Round(oldPoint.X - distance * SQRT2DIV2), (int)System.Math.Round(oldPoint.Y - distance * SQRT2DIV2));
 			}
 			public override string ToString() {
