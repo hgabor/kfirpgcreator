@@ -43,7 +43,7 @@ namespace KFI_RPG_Creator.Logic {
 			currentMap.AddObject(new GameObject("Lush Grass", 0, 300, 0, currentGame.Loader));
 			currentMap.AddObject(new GameObject("Lush Grass", 100, 300, 0, currentGame.Loader));
 			currentMap.AddObject(new GameObject("Lush Grass", 200, 300, 0, currentGame.Loader));
-			currentMap.AddObject(new GameObject("Gray ball", 20, 20, 0, currentGame.Loader));
+			currentMap.AddObject(new GameObject("Gray ball", 20, 20, 1, currentGame.Loader));
 			currentMap.AddObject(protagonist);
 			mapScreen = new MapScreen(currentMap);
 		}

@@ -73,7 +73,16 @@ namespace KFI_RPG_Creator.SDLPlugin {
 			int pcenterY = (game.Logic.CenterX + game.Logic.CenterY) * 16 / 100 + 16 - game.Logic.CenterZ * 36 / 100;
 			int pX = ScreenWidth/2 - pcenterX;
 			int pY = ScreenHeight/2 - pcenterY;
-			foreach (Sprite o in game.Logic.VisibleScreen.VisibleSprites) {
+			Sprite[] visibleSprites = game.Logic.VisibleScreen.VisibleSprites;
+			Array.Sort(
+				visibleSprites,
+				delegate (Sprite one, Sprite two) {
+					if (one.Equals(two)) return 0;
+					else if (one.Z != two.Z) return one.Z - two.Z;
+					else return (one.X + one.Y) - (two.X - two.Y);
+				}
+			);
+			foreach (Sprite o in visibleSprites) {
 				System.IO.Stream bitmapStream;
 				string bitmapFileName;
 				if (game.Loader.FileExists(o.TypeID, "Still1"+o.Facing+".png")) {
