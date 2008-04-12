@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "corelib", "corelib\corelib.csproj", "{F38AEFA8-5B0F-45AE-958F-42176B0A399C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "editor", "editor\editor.csproj", "{39C91657-E23D-4850-A567-D4A8CF378643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runner", "runner\runner.csproj", "{169C6F45-D000-4E36-883B-3AB7CAF217FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F38AEFA8-5B0F-45AE-958F-42176B0A399C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F38AEFA8-5B0F-45AE-958F-42176B0A399C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F38AEFA8-5B0F-45AE-958F-42176B0A399C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F38AEFA8-5B0F-45AE-958F-42176B0A399C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39C91657-E23D-4850-A567-D4A8CF378643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C91657-E23D-4850-A567-D4A8CF378643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39C91657-E23D-4850-A567-D4A8CF378643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39C91657-E23D-4850-A567-D4A8CF378643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

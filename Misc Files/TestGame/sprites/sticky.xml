@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<sprite>
+  <img>img/stickman.png</img>
+  <ext>
+    <name>Sticky</name>
+    <bio>Sticky is the main character.</bio>
+  </ext>
+</sprite>

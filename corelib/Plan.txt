@@ -1,0 +1,14 @@
+﻿Screens:
+
+Game World - displays the terrain, characters, visible objects etc.
+Camera is focused on the main character.
+
+Game World With Debugging - displays the Game World, with an option to turn on special tiles (passability, entry points etc.).
+Camera is in freeroam mode.
+
+Battle Mode - battle between two parties.
+
+
+Load/Save (straightforward)
+Character info - items, skills, stats, active party...
+Quest info
