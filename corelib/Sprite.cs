@@ -4,21 +4,90 @@ using System.Text;
 using System.Xml;
 
 namespace KFIRPG.corelib {
-	public class Sprite: Object {
+	class Sprite: Entity {
+		Graphic baseGraphic;
 		Graphic graphic;
 
 		public Sprite(string spriteId, Game game) {
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = new Graphic(doc.SelectSingleNode("sprite/img").InnerText, 0, game.TileSize, game);
+			graphic = baseGraphic = new Graphic(doc.SelectSingleNode("sprite/img").InnerText, 1, game.TileSize, game);
+			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
 
 			foreach (XmlNode node in doc.SelectNodes("sprite/ext")) {
 				this[node.LocalName] = node.InnerText;
 			}
+
+			this.size = game.TileSize;
 		}
 
-		public override void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
-			graphic.Blit(x, y, surface);
+		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
+			graphic.Blit(x + movingX, y + movingY, surface);
+		}
+
+		int size;
+		int x = 0;
+		public int X { get { return x; } }
+		int y = 0;
+		public int Y { get { return y; } }
+		int layer = 0;
+		public int Layer { get { return layer; } }
+		public void UpdateCoords(int x, int y, int layer) {
+			this.x = x;
+			this.y = y;
+			this.layer = layer;
+		}
+		int speed;
+		public int Speed {
+			get { return speed; }
+			set { speed = value; }
+		}
+
+		MovementAI movementAI = new NotMovingAI();
+		public MovementAI MovementAI {
+			set { movementAI = value; }
+		}
+
+		int movingX = 0;
+		int movingY = 0;
+		//TODO: Remove magic numbers
+		public void MoveDown() {
+			movingY = -size;
+			graphic = baseGraphic.getState(0);
+		}
+		public void MoveUp() {
+			movingY = size;
+			graphic = baseGraphic.getState(1);
+		}
+		public void MoveLeft() {
+			movingX = size;
+			graphic = baseGraphic.getState(2);
+		}
+		public void MoveRight() {
+			movingX = -size;
+			graphic = baseGraphic.getState(3);
+		}
+
+		public void Think(Map map) {
+			if (movingX == 0 && movingY == 0) {
+				movementAI.TryDoingSomething(this, map);
+			}
+			if (movingX > 0) {
+				movingX -= speed;
+				if (movingX < 0) movingX = 0;
+			}
+			if (movingX < 0) {
+				movingX += speed;
+				if (movingX > 0) movingX = 0;
+			}
+			if (movingY > 0) {
+				movingY -= speed;
+				if (movingY < 0) movingY = 0;
+			}
+			if (movingY < 0) {
+				movingY += speed;
+				if (movingY > 0) movingY = 0;
+			}
 		}
 	}
 }

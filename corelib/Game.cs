@@ -25,13 +25,15 @@ namespace KFIRPG.corelib {
 			Map defaultMap = new Map(globalSettings.SelectSingleNode("/settings/defaultmap").InnerText, this);
 			int startX = int.Parse(globalSettings.SelectSingleNode("/settings/startx").InnerText);
 			int startY = int.Parse(globalSettings.SelectSingleNode("/settings/starty").InnerText);
+			int startL = int.Parse(globalSettings.SelectSingleNode("/settings/startl").InnerText);
 
 			party = new Party();
 			foreach (XmlNode node in globalSettings.SelectNodes("/settings/party")) {
 				party.Add(new Sprite(node.InnerText, this));
 			}
+			party.Leader.MovementAI = new PlayerMovementController();
 
-			screen = new MapScreen(defaultMap, startX, startY, this);
+			screen = new MapScreen(defaultMap, startX, startY, startL, this);
 		}
 
 		internal ScriptVM vm;
@@ -44,7 +46,7 @@ namespace KFIRPG.corelib {
 		public int TileSize { get { return tileSize; } }
 		Screen screen;
 		Party party;
-		public Party Party { get { return party; } }
+		internal Party Party { get { return party; } }
 
 		public class SettingsException: Exception {
 			public SettingsException(string msg) : base("The settings file is malformed: " + msg) { }
@@ -76,7 +78,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public void Advance() {
-			//NOOP
+			screen.Think();
 		}
 
 		public void Render(SdlDotNet.Graphics.Surface surface) {

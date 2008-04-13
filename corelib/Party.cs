@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
-	public class Party: Object {
+	class Party {
 		List<Sprite> members = new List<Sprite>();
 		Sprite leader;
 		public Sprite Leader { get { return leader; } }
@@ -16,7 +16,7 @@ namespace KFIRPG.corelib {
 			this.members.Add(member);
 		}
 
-		public override void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
+		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
 			leader.Draw(x, y, surface);
 		}
 	}

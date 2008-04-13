@@ -7,6 +7,7 @@
   <defaultmap>world</defaultmap>
   <startx>1</startx>
   <starty>0</starty>
+  <startl>1</startl>
   <party>
     <character>sticky</character>
   </party>

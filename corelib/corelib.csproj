@@ -45,7 +45,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="LuaInterface, Version=1.5.3.0, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=MSIL">
+    <Reference Include="LuaInterface, Version=2.0.0.29971, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\LuaInterface.dll</HintPath>
     </Reference>
@@ -66,6 +66,7 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Game.cs" />
@@ -75,13 +76,13 @@
     <Compile Include="LuaVM.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapScreen.cs" />
-    <Compile Include="Object.cs" />
+    <Compile Include="NotMovingAI.cs" />
     <Compile Include="Party.cs" />
+    <Compile Include="PlayerMovementController.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptVM.cs" />
     <Compile Include="Sprite.cs" />
-    <Compile Include="Tile.cs" />
     <Compile Include="ZipLoader.cs" />
   </ItemGroup>
 </Project>

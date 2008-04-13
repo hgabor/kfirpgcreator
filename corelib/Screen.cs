@@ -5,5 +5,6 @@ using System.Text;
 namespace KFIRPG.corelib {
 	public abstract class Screen {
 		public abstract void Draw(SdlDotNet.Graphics.Surface surface);
+		public abstract void Think();
 	}
 }
