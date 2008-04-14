@@ -8,7 +8,7 @@ using KFIRPG.corelib;
 namespace KFIRPG.runner {
 	public class Program {
 		public static void Main() {
-			try {
+			//try {
 				Game game = Game.LoadFromFile("game.xml");
 				Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(800, 600);
 				bool quit = false;
@@ -35,10 +35,10 @@ namespace KFIRPG.runner {
 					game.Render(screen);
 					Video.Update();
 				}
-			}
-			catch(Exception ex) {
-				System.Windows.Forms.MessageBox.Show(ex.ToString(), "Exception");
-			}
+			//}
+			//catch(Exception ex) {
+			//	System.Windows.Forms.MessageBox.Show(ex.ToString(), "Exception");
+			//}
 		}
 	}
 }

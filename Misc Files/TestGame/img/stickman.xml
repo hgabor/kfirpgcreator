@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<spritesheet>
+  <image type="still">
+    <start>1</start>
+    <count>1</count>
+    <interval>1</interval>
+    <timeout>1</timeout>
+  </image>
+  <image type="moveup">
+    <start>9</start>
+    <count>4</count>
+    <interval>8</interval>
+    <timeout>25</timeout>
+  </image>
+  <image type="movedown">
+    <start>9</start>
+    <count>4</count>
+    <interval>8</interval>
+    <timeout>25</timeout>
+  </image>
+  <image type="moveleft">
+    <start>9</start>
+    <count>2</count>
+    <interval>8</interval>
+    <timeout>25</timeout>
+  </image>
+  <image type="moveright">
+    <start>9</start>
+    <count>2</count>
+    <interval>8</interval>
+    <timeout>25</timeout>
+  </image>
+</spritesheet>

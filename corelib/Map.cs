@@ -7,14 +7,14 @@ namespace KFIRPG.corelib {
 	public class Map {
 		class Layer {
 			public List<Sprite>[,] objects;
-			public Graphic[,] tiles;
+			public Animation[,] tiles;
 			public bool[,] passable;
 			public Layer(int width, int height, string path, Game game) {
 				string[] tileLines = game.loader.LoadText(string.Format(path, "tiles")).Split('\n');
 				string[] passLines = game.loader.LoadText(string.Format(path, "passability")).Split('\n');
 				//TODO: Sprites
 				objects = new List<Sprite>[width, height];
-				tiles = new Graphic[width, height];
+				tiles = new Animation[width, height];
 				passable = new bool[width, height];
 
 				for (int j = 0; j < height; ++j) {
@@ -22,7 +22,8 @@ namespace KFIRPG.corelib {
 					string[] passLine = passLines[j].Split(' ');
 					for (int i = 0; i < width; ++i) {
 						objects[i, j] = new List<Sprite>();
-						tiles[i, j] = new Graphic("img/tiles.png", int.Parse(tileLine[i]), game.TileSize, game);
+						tiles[i, j] = new Animation("tiles", game.TileSize, game);
+						tiles[i, j].SetState("still", int.Parse(tileLine[i]) - 1);
 						passable[i, j] = int.Parse(passLine[i]) == 1;
 					}
 				}

@@ -5,13 +5,13 @@ using System.Xml;
 
 namespace KFIRPG.corelib {
 	class Sprite: Entity {
-		Graphic baseGraphic;
-		Graphic graphic;
+		Animation baseGraphic;
+		Animation graphic;
 
 		public Sprite(string spriteId, Game game) {
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = baseGraphic = new Graphic(doc.SelectSingleNode("sprite/img").InnerText, 1, game.TileSize, game);
+			graphic = baseGraphic = new Animation(doc.SelectSingleNode("sprite/img").InnerText, game.TileSize, game);
 			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
 
 			foreach (XmlNode node in doc.SelectNodes("sprite/ext")) {
@@ -53,19 +53,19 @@ namespace KFIRPG.corelib {
 		//TODO: Remove magic numbers
 		public void MoveDown() {
 			movingY = -size;
-			graphic = baseGraphic.getState(0);
+			graphic.SetState("movedown", 0);
 		}
 		public void MoveUp() {
 			movingY = size;
-			graphic = baseGraphic.getState(1);
+			graphic.SetState("moveup", 1);
 		}
 		public void MoveLeft() {
 			movingX = size;
-			graphic = baseGraphic.getState(2);
+			graphic.SetState("moveleft", 2);
 		}
 		public void MoveRight() {
 			movingX = -size;
-			graphic = baseGraphic.getState(3);
+			graphic.SetState("moveright", 3);
 		}
 
 		public void Think(Map map) {

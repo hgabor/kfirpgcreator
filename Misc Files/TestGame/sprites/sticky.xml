@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sprite>
-  <img>img/stickman.png</img>
+  <img>stickman</img>
   <speed>2</speed>
   <ext>
     <name>Sticky</name>
