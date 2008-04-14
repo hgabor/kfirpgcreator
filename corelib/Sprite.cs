@@ -22,7 +22,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
-			graphic.Blit(x + movingX, y + movingY, surface);
+			graphic.Blit(x + corrX, y + corrY, surface);
 		}
 
 		int size;
@@ -48,46 +48,114 @@ namespace KFIRPG.corelib {
 			set { movementAI = value; }
 		}
 
-		int movingX = 0;
-		int movingY = 0;
+
+		int corrX = 0;
+		int corrY = 0;
 		//TODO: Remove magic numbers
-		public void MoveDown() {
-			movingY = -size;
-			graphic.SetState("movedown", 0);
+		public enum Dir: int {
+			None = -1,
+			Down = 0,
+			Up = 1,
+			Left = 2,
+			Right = 3
 		}
-		public void MoveUp() {
-			movingY = size;
-			graphic.SetState("moveup", 1);
-		}
-		public void MoveLeft() {
-			movingX = size;
-			graphic.SetState("moveleft", 2);
-		}
-		public void MoveRight() {
-			movingX = -size;
-			graphic.SetState("moveright", 3);
+
+		Dir moving = Dir.None;
+		Dir nextMove = Dir.None;
+		Dir facing = Dir.Up;
+
+		public void PlanMove(Dir direction) {
+			nextMove = direction;
 		}
 
 		public void Think(Map map) {
-			if (movingX == 0 && movingY == 0) {
-				movementAI.TryDoingSomething(this, map);
+			movementAI.TryDoingSomething(this, map);
+			Dir oldMoving = moving;
+
+			if (moving == Dir.None) {
+				moving = nextMove;
+				if (moving != Dir.None) facing = moving;
 			}
-			if (movingX > 0) {
-				movingX -= speed;
-				if (movingX < 0) movingX = 0;
+
+			switch (moving) {
+				case Dir.Left:
+					if (corrX > 0) {
+						corrX -= speed;
+					}
+					else if (corrX <= 0) {
+						if (nextMove != Dir.Left) {
+							corrX = 0;
+							moving = Dir.None;
+						}
+						else {
+							corrX += size;
+							map.Move(this, x, y, layer, x - 1, y, layer);
+						}
+					}
+					break;
+				case Dir.Right:
+					if (corrX < 0) {
+						corrX += speed;
+					}
+					else if (corrX >= 0) {
+						if (nextMove != Dir.Right) {
+							corrX = 0;
+							moving = Dir.None;
+						}
+						else {
+							corrX -= size;
+							map.Move(this, x, y, layer, x + 1, y, layer);
+						}
+					}
+					break;
+				case Dir.Up:
+					if (corrY > 0) {
+						corrY -= speed;
+					}
+					else if (corrY <= 0) {
+						if (nextMove != Dir.Up) {
+							corrX = 0;
+							moving = Dir.None;
+						}
+						else {
+							corrY += size;
+							map.Move(this, x, y, layer, x, y - 1, layer);
+						}
+					}
+					break;
+				case Dir.Down:
+					if (corrY < 0) {
+						corrY += speed;
+					}
+					else if (corrY >= 0) {
+						if (nextMove != Dir.Down) {
+							corrX = 0;
+							moving = Dir.None;
+						}
+						else {
+							corrY -= size;
+							map.Move(this, x, y, layer, x, y + 1, layer);
+						}
+					}
+					break;
 			}
-			if (movingX < 0) {
-				movingX += speed;
-				if (movingX > 0) movingX = 0;
+
+			if (moving == Dir.None) {
+				moving = nextMove;
+				if (moving != Dir.None) facing = moving;
 			}
-			if (movingY > 0) {
-				movingY -= speed;
-				if (movingY < 0) movingY = 0;
+
+			if (moving != oldMoving) {
+				switch (moving) {
+					case Dir.Up: graphic.SetState("moveup", 0); break;
+					case Dir.Down: graphic.SetState("movedown", 0); break;
+					case Dir.Left: graphic.SetState("moveleft", 0); break;
+					case Dir.Right: graphic.SetState("moveright", 0); break;
+					case Dir.None: graphic.SetState("still", (int)facing); break;
+				}
 			}
-			if (movingY < 0) {
-				movingY += speed;
-				if (movingY > 0) movingY = 0;
-			}
+			nextMove = Dir.None;
+			graphic.Advance();
 		}
 	}
 }
