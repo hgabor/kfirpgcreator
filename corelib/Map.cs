@@ -7,14 +7,14 @@ namespace KFIRPG.corelib {
 	public class Map {
 		class Layer {
 			public List<Sprite>[,] objects;
-			public Animation[,] tiles;
+			public Graphics[,] tiles;
 			public bool[,] passable;
 			public Layer(int width, int height, string path, Game game) {
 				string[] tileLines = game.loader.LoadText(string.Format(path, "tiles")).Split('\n');
 				string[] passLines = game.loader.LoadText(string.Format(path, "passability")).Split('\n');
 				//TODO: Sprites
 				objects = new List<Sprite>[width, height];
-				tiles = new Animation[width, height];
+				tiles = new Graphics[width, height];
 				passable = new bool[width, height];
 
 				for (int j = 0; j < height; ++j) {
@@ -22,8 +22,15 @@ namespace KFIRPG.corelib {
 					string[] passLine = passLines[j].Split(' ');
 					for (int i = 0; i < width; ++i) {
 						objects[i, j] = new List<Sprite>();
-						tiles[i, j] = new Animation("tiles", game.TileSize, game);
-						tiles[i, j].SetState("still", int.Parse(tileLine[i]) - 1);
+						int tileID = int.Parse(tileLine[i]);
+						if (tileID == 0) {
+							tiles[i, j] = new NoGraphics();
+						}
+						else {
+							Animation anim = new Animation("tiles", game.TileSize, game);
+							anim.SetState("still", tileID - 1);
+							tiles[i, j] = anim;
+						}
 						passable[i, j] = int.Parse(passLine[i]) == 1;
 					}
 				}
@@ -71,19 +78,19 @@ namespace KFIRPG.corelib {
 
 		internal bool IsPassable(int x, int y, int layer) {
 			//Check for collision
-			return x >= 0 && y >= 0 && x < rows && y < cols && layers[layer].passable[x, y];
+			return x >= 0 && y >= 0 && x < cols && y < rows && layers[layer].passable[x, y];
 		}
 
 		internal void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
 			for (int layer = 0; layer < layers.Length; ++layer) {
 				for (int i = 0; i < cols; ++i) {
 					for (int j = 0; j < rows; ++j) {
-						layers[layer].tiles[i, j].Blit((i - x) * tileSize, (j - y) * tileSize, surface);
+						layers[layer].tiles[i, j].Blit(i * tileSize - x, j * tileSize - y, surface);
 					}
 				}
 				for (int i = 0; i < cols; ++i) {
 					for (int j = 0; j < rows; ++j) {
-						layers[layer].objects[i, j].ForEach((a) => a.Draw((i - x) * tileSize, (j - y) * tileSize, surface));
+						layers[layer].objects[i, j].ForEach((a) => a.Draw(i * tileSize - x, j * tileSize - y, surface));
 					}
 				}
 			}

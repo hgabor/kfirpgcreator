@@ -6,7 +6,7 @@ using System.Xml;
 using SdlDotNet.Graphics;
 
 namespace KFIRPG.corelib {
-	public class Animation {
+	class Animation: Graphics {
 		Surface sheet;
 		class State {
 			public int start;
@@ -23,9 +23,9 @@ namespace KFIRPG.corelib {
 
 		public Animation(string sheetName, int size, Game game) {
 			this.size = size;
-			sheet = new Surface(game.loader.LoadBitmap("img/"+sheetName+".png"));
+			sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
 			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(game.loader.LoadText("img/"+sheetName+".xml"));
+			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
 			foreach (XmlNode node in doc.SelectNodes("spritesheet/image")) {
 				State current = new State();
 				string name = node.Attributes["type"].InnerText;
@@ -45,6 +45,8 @@ namespace KFIRPG.corelib {
 			currentState = states[stateName];
 			this.subState = subState;
 			frame = 0;
+			time = 0;
+			CalculateRows();
 		}
 
 		int time = 0;
@@ -69,7 +71,7 @@ namespace KFIRPG.corelib {
 			col = id % columnsInRow;
 		}
 
-		public void Blit(int x, int y, Surface dest) {
+		public override void Blit(int x, int y, Surface dest) {
 			dest.Blit(sheet, new Point(x, y), new Rectangle(col * size, row * size, size, size));
 		}
 	}

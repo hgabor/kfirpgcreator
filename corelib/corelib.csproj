@@ -66,6 +66,7 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics.cs" />
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="LuaVM.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapScreen.cs" />
+    <Compile Include="NoGraphics.cs" />
     <Compile Include="NotMovingAI.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="PlayerMovementController.cs" />

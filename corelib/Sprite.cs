@@ -26,6 +26,8 @@ namespace KFIRPG.corelib {
 		}
 
 		int size;
+		public int Height { get { return size; } }
+		public int Width { get { return size; } }
 		int x = 0;
 		public int X { get { return x; } }
 		int y = 0;
@@ -50,7 +52,9 @@ namespace KFIRPG.corelib {
 
 
 		int corrX = 0;
+		public int CorrX { get { return corrX; } }
 		int corrY = 0;
+		public int CorrY { get { return corrY; } }
 		//TODO: Remove magic numbers
 		public enum Dir: int {
 			None = -1,
