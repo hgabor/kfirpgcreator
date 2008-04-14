@@ -46,7 +46,7 @@ namespace KFIRPG.corelib {
 		int tileSize;
 
 		public Map(string mapName, Game game) {
-			onEnter = game.vm.LoadScript(game.loader.LoadText(string.Concat("maps/", mapName ,"/onenter")));
+			onEnter = game.vm.LoadScript(game.loader.LoadText(string.Concat("maps/", mapName, "/onenter")));
 			onLeave = game.vm.LoadScript(game.loader.LoadText(string.Concat("maps/", mapName, "/onleave")));
 			XmlDocument info = new XmlDocument();
 			info.LoadXml(game.loader.LoadText(string.Concat("maps/", mapName, "/info.xml")));
@@ -58,6 +58,16 @@ namespace KFIRPG.corelib {
 			layers = new Layer[numLayers];
 			for (int i = 0; i < numLayers; ++i) {
 				layers[i] = new Layer(cols, rows, "maps/" + mapName + "/layers/{0}." + i.ToString(), game);
+				string[] objectLines = game.loader.LoadText("maps/" + mapName + "/layers/objects." + i.ToString()).Split('\n');
+				if (!(objectLines.Length == 1 && string.IsNullOrEmpty(objectLines[0].Trim()))) {
+					foreach (string line in objectLines) {
+						string[] sline = line.Split(' ');
+						Sprite sp = new Sprite(sline[0].Trim(), game);
+						int x = int.Parse(sline[1]);
+						int y = int.Parse(sline[2]);
+						this.Place(sp, x, y, i);
+					}
+				}
 			}
 		}
 
@@ -77,8 +87,8 @@ namespace KFIRPG.corelib {
 		}
 
 		internal bool IsPassable(int x, int y, int layer) {
-			//Check for collision
-			return x >= 0 && y >= 0 && x < cols && y < rows && layers[layer].passable[x, y];
+			return x >= 0 && y >= 0 && x < cols && y < rows && layers[layer].passable[x, y] &&
+				layers[layer].objects[x, y].Count == 0;
 		}
 
 		internal void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {

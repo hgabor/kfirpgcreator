@@ -68,8 +68,34 @@ namespace KFIRPG.corelib {
 		Dir nextMove = Dir.None;
 		Dir facing = Dir.Up;
 
-		public void PlanMove(Dir direction) {
-			nextMove = direction;
+		public void PlanMove(Dir direction, Map map) {
+			nextMove = Dir.None;
+			if (moving == Dir.None && direction != Dir.None) {
+				facing = direction;
+				graphic.SetState("still", (int)facing);
+			}
+			switch (direction) {
+				case Dir.Up:
+					if (map.IsPassable(x, y - 1, layer)) {
+						nextMove = Dir.Up;
+					}
+					break;
+				case Dir.Down:
+					if (map.IsPassable(x, y + 1, layer)) {
+						nextMove = Dir.Down;
+					}
+					break;
+				case Dir.Left:
+					if (map.IsPassable(x - 1, y, layer)) {
+						nextMove = Dir.Left;
+					}
+					break;
+				case Dir.Right:
+					if (map.IsPassable(x + 1, y, layer)) {
+						nextMove = Dir.Right;
+					}
+					break;
+			}
 		}
 
 		public void Think(Map map) {
