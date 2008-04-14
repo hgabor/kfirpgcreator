@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<dialog>
+  <border>10</border>
+  <background>
+    <red>0</red>
+    <green>128</green>
+    <blue>0</blue>
+    <alpha>192</alpha>
+  </background>
+</dialog>

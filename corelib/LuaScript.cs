@@ -4,7 +4,7 @@ using System.Text;
 using LuaInterface;
 
 namespace KFIRPG.corelib {
-	public class LuaScript: Script {
+	class LuaScript: Script {
 		Lua vm;
 		string script;
 

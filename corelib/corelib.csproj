@@ -66,7 +66,9 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs.cs" />
     <Compile Include="Graphics.cs" />
+    <Compile Include="MessageBox.cs" />
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
@@ -83,8 +85,10 @@
     <Compile Include="PlayerMovementController.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Script.cs" />
+    <Compile Include="ScriptLib.cs" />
     <Compile Include="ScriptVM.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="UserInput.cs" />
     <Compile Include="ZipLoader.cs" />
   </ItemGroup>
 </Project>

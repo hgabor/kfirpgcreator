@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 
 namespace KFIRPG.corelib {
-	public class Map {
+	class Map {
 		class Layer {
 			public List<Sprite>[,] objects;
 			public Graphics[,] tiles;

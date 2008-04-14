@@ -10,7 +10,7 @@ namespace KFIRPG.runner {
 		public static void Main() {
 			//try {
 			Game game = Game.LoadFromFile("game.xml");
-			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(800, 600);
+			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height);
 			bool quit = false;
 			Events.Quit += (sender, args) => { quit = true; };
 			int counter = 0;
@@ -22,6 +22,14 @@ namespace KFIRPG.runner {
 			int targetMSpM = 20; // ms/movement
 			while (!quit) {
 				Events.Poll();
+				UserInput.Buttons buttons = UserInput.Buttons.None;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.UpArrow)) buttons |= UserInput.Buttons.Up;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.DownArrow)) buttons |= UserInput.Buttons.Down;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.LeftArrow)) buttons |= UserInput.Buttons.Left;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.RightArrow)) buttons |= UserInput.Buttons.Right;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Space)) buttons |= UserInput.Buttons.Action;
+				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Escape)) buttons |= UserInput.Buttons.Back;
+				game.Input.Set(buttons);
 				ticks = SdlDotNet.Core.Timer.TicksElapsed;
 				if ((ticks - lastMovement) > targetMSpM) {
 					lastMovement = ticks;

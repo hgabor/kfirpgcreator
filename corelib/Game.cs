@@ -13,7 +13,7 @@ namespace KFIRPG.corelib {
 			string scriptvm = globalSettings.SelectSingleNode("/settings/scriptvm").InnerText;
 			switch (scriptvm) {
 				case "lua":
-					vm = new LuaVM();
+					vm = new LuaVM(this);
 					break;
 				default:
 					throw new InvalidValueException("Script VM", scriptvm);
@@ -31,9 +31,12 @@ namespace KFIRPG.corelib {
 			foreach (XmlNode node in globalSettings.SelectNodes("/settings/party")) {
 				party.Add(new Sprite(node.InnerText, this));
 			}
-			party.Leader.MovementAI = new PlayerMovementController();
+			party.Leader.MovementAI = new PlayerMovementController(this);
 
-			screen = new MapScreen(defaultMap, startX, startY, startL, this);
+			PushScreen(new MapScreen(defaultMap, startX, startY, startL, this));
+
+			startupScript = vm.LoadScript(loader.LoadText("startup.lua"));
+			startupScript.Run();
 		}
 
 		internal ScriptVM vm;
@@ -44,9 +47,18 @@ namespace KFIRPG.corelib {
 		public int Height { get { return height; } }
 		int tileSize;
 		public int TileSize { get { return tileSize; } }
-		Screen screen;
+		List<Screen> screens = new List<Screen>();
+		internal void PushScreen(Screen sc) {
+			screens.Add(sc);
+		}
+		internal void PopScreen() {
+			screens.RemoveAt(screens.Count - 1);
+		}
+
 		Party party;
 		internal Party Party { get { return party; } }
+
+		Script startupScript;
 
 		public class SettingsException: Exception {
 			public SettingsException(string msg) : base("The settings file is malformed: " + msg) { }
@@ -78,11 +90,15 @@ namespace KFIRPG.corelib {
 		}
 
 		public void Advance() {
-			screen.Think();
+			screens[screens.Count - 1].Think();
 		}
 
 		public void Render(SdlDotNet.Graphics.Surface surface) {
-			screen.Draw(surface);
+			foreach (Screen screen in screens) {
+				screen.Draw(surface);
+			}
 		}
+
+		public readonly UserInput Input = new UserInput();
 	}
 }

@@ -1,0 +1,1 @@
+Message("Welcome to the wonderful world of KFI!")
