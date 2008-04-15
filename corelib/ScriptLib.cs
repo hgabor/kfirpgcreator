@@ -4,13 +4,15 @@ using System.Text;
 
 namespace KFIRPG.corelib {
 	[AttributeUsage(AttributeTargets.Method)]
-	class RegisterScriptAttribute: Attribute { }
+	class ScriptAttribute: Attribute { }
+	[AttributeUsage(AttributeTargets.Method)]
+	class AsyncScriptAttribute: Attribute { }
 
 	class ScriptLib {
 		Dialogs dialogs;
 		Game game;
 
-		[RegisterScript]
+		[AsyncScript]
 		public void Message(string message) {
 			dialogs.Message(message);
 		}

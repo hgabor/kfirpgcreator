@@ -5,5 +5,6 @@ using System.Text;
 namespace KFIRPG.corelib {
 	interface ScriptVM {
 		Script LoadScript(string script);
+		void ContinueWithValue(object value);
 	}
 }

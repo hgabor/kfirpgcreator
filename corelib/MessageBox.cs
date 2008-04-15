@@ -28,6 +28,7 @@ namespace KFIRPG.corelib {
 		public override void Think() {
 			if (game.Input.IsPressed(UserInput.Buttons.Action)) {
 				game.PopScreen();
+				game.vm.ContinueWithValue(null);
 			}
 		}
 	}
