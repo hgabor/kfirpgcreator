@@ -11,6 +11,7 @@ namespace KFIRPG.corelib {
 		int width;
 		int height;
 		Surface textSurface;
+		bool wasPressed;
 
 		//TODO: Loader should load the Fonts
 		public MessageBox(string text, Dialogs dialogs, Game game) {
@@ -18,6 +19,7 @@ namespace KFIRPG.corelib {
 			this.dialogs = dialogs;
 			SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font("TestGame\\dialog\\DejaVuSans.ttf", 12);
 			textSurface = font.Render(text, Color.White, true);
+			wasPressed = game.Input.IsPressed(UserInput.Buttons.Action);
 		}
 
 		public override void Draw(SdlDotNet.Graphics.Surface surface) {
@@ -27,8 +29,13 @@ namespace KFIRPG.corelib {
 
 		public override void Think() {
 			if (game.Input.IsPressed(UserInput.Buttons.Action)) {
-				game.PopScreen();
-				game.vm.ContinueWithValue(null);
+				if (!wasPressed) {
+					game.PopScreen();
+					game.vm.ContinueWithValue(null);
+				}
+			}
+			else {
+				wasPressed = false;
 			}
 		}
 	}
