@@ -1,2 +1,2 @@
-Message("Welcome to the wonderful world of KFI!")
+Message("Welcome to the wonderful world of KFI!\nPress the action key to close this window. This is a really long string that should be broken into little pieces, one by one.")
 Message("You can start moving around using the arrow keys!")
