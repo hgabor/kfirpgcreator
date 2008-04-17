@@ -20,6 +20,15 @@ namespace KFIRPG.corelib {
 			return File.ReadAllText(Path.Combine(basePath, path));
 		}
 
+		public byte[] LoadRaw(string path) {
+			string fileName = Path.Combine(basePath, path);
+			using (FileStream fs = File.OpenRead(fileName)) {
+				byte[] bytes = new byte[fs.Length];
+				fs.Read(bytes, 0, (int)fs.Length);
+				return bytes;
+			}
+		}
+
 		#endregion
 	}
 }

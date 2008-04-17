@@ -18,6 +18,8 @@ namespace KFIRPG.corelib {
 				default:
 					throw new InvalidValueException("Script VM", scriptvm);
 			}
+			audio = new Audio(this);
+
 			width = int.Parse(globalSettings.SelectSingleNode("/settings/screenwidth").InnerText);
 			height = int.Parse(globalSettings.SelectSingleNode("/settings/screenheight").InnerText);
 			tileSize = int.Parse(globalSettings.SelectSingleNode("/settings/tilesize").InnerText);
@@ -35,12 +37,13 @@ namespace KFIRPG.corelib {
 
 			PushScreen(new MapScreen(defaultMap, startX, startY, startL, this));
 
-			startupScript = vm.LoadScript(loader.LoadText("startup.lua"));
+			startupScript = vm.LoadScript(loader.LoadText("scripts/" + globalSettings.SelectSingleNode("/settings/startscript").InnerText));
 			startupScript.Run();
 		}
 
 		internal ScriptVM vm;
 		internal Loader loader;
+		internal Audio audio;
 		int width;
 		public int Width { get { return width; } }
 		int height;

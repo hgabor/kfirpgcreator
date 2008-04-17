@@ -8,6 +8,7 @@
   <startx>1</startx>
   <starty>0</starty>
   <startl>1</startl>
+  <startscript>startup</startscript>
   <party>
     <character>sticky</character>
   </party>

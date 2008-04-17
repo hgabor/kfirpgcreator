@@ -16,6 +16,10 @@ namespace KFIRPG.corelib {
 			throw new NotImplementedException();
 		}
 
+		public byte[] LoadRaw(string path) {
+			throw new NotImplementedException();
+		}
+
 		#endregion
 	}
 }

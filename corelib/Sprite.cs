@@ -13,6 +13,7 @@ namespace KFIRPG.corelib {
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
 			graphic = baseGraphic = new Animation(doc.SelectSingleNode("sprite/img").InnerText, game.TileSize, game);
 			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
+			noclip = int.Parse(doc.SelectSingleNode("sprite/noclip").InnerText) == 1;
 
 			foreach (XmlNode node in doc.SelectNodes("sprite/ext")) {
 				this[node.LocalName] = node.InnerText;
@@ -44,6 +45,8 @@ namespace KFIRPG.corelib {
 			get { return speed; }
 			set { speed = value; }
 		}
+		bool noclip;
+		public bool Noclip { get { return noclip; } }
 
 		MovementAI movementAI = new NotMovingAI();
 		public MovementAI MovementAI {

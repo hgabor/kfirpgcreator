@@ -6,7 +6,7 @@ namespace KFIRPG.corelib {
 	interface Loader {
 		System.Drawing.Bitmap LoadBitmap(string path);
 		string LoadText(string path);
-
+		byte[] LoadRaw(string path);
 	}
 	public class ResourceNotFoundException: Exception {
 		public ResourceNotFoundException(string resource) :

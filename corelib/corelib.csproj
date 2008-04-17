@@ -66,6 +66,7 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="MessageBox.cs" />

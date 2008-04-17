@@ -2,6 +2,7 @@
 <sprite>
   <img>stickman</img>
   <speed>2</speed>
+  <noclip>0</noclip>
   <ext>
     <name>Sticky</name>
     <bio>Sticky is the main character.</bio>

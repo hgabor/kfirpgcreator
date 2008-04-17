@@ -17,7 +17,13 @@ namespace KFIRPG.corelib {
 			dialogs.Message(message);
 		}
 
+		[Script]
+		public void StartMusic(string fileName) {
+			game.audio.StartMusic(fileName);
+		}
+
 		public ScriptLib(Game game) {
+			this.game = game;
 			dialogs = new Dialogs(game);
 		}
 	}

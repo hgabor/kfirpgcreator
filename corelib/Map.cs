@@ -9,6 +9,8 @@ namespace KFIRPG.corelib {
 			public List<Sprite>[,] objects;
 			public Graphics[,] tiles;
 			public bool[,] passable;
+			public List<Script> onStep = new List<Script>();
+			public List<Script> onAction = new List<Script>();
 			public Layer(int width, int height, string path, Game game) {
 				string[] tileLines = game.loader.LoadText(string.Format(path, "tiles")).Split('\n');
 				string[] passLines = game.loader.LoadText(string.Format(path, "passability")).Split('\n');
@@ -86,9 +88,13 @@ namespace KFIRPG.corelib {
 			sprite.UpdateCoords(toX, toY, toLayer);
 		}
 
+		private bool ObjectPassable(Sprite obj) {
+			return obj.Noclip;
+		}
+
 		internal bool IsPassable(int x, int y, int layer) {
 			return x >= 0 && y >= 0 && x < cols && y < rows && layers[layer].passable[x, y] &&
-				layers[layer].objects[x, y].Count == 0;
+				layers[layer].objects[x, y].TrueForAll(ObjectPassable);
 		}
 
 		internal void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
