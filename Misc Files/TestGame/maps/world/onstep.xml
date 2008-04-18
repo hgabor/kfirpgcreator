@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<events>
+  <event>
+    <x>1</x>
+    <y>3</y>
+    <layer>1</layer>
+    <script>bridgecreaks</script>
+  </event>
+</events>

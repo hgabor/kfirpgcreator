@@ -4,15 +4,23 @@ using System.Text;
 
 namespace KFIRPG.corelib {
 	class Party {
+		Game game;
 		List<Sprite> members = new List<Sprite>();
 		Sprite leader;
-		public Sprite Leader { get { return leader; } }
+		public Sprite Leader {
+			get { return leader; }
+			private set {
+				leader = value;
+				game.vm["player"] = leader;
+			}
+		}
 
-		public Party() {
+		public Party(Game game) {
+			this.game = game;
 		}
 
 		public void Add(Sprite member) {
-			if (leader == null) leader = member;
+			if (Leader == null) Leader = member;
 			this.members.Add(member);
 		}
 

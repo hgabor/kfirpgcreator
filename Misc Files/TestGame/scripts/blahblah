@@ -1,0 +1,9 @@
+local times = math.random(1, 30)
+local s = "Blah"
+for i = 1, times do
+  s = s .. " blah"
+end
+s = s .. "..."
+
+Turn(self, player)
+Message(s)

@@ -9,21 +9,21 @@ namespace KFIRPG.corelib {
 			public List<Sprite>[,] objects;
 			public Graphics[,] tiles;
 			public bool[,] passable;
-			public List<Script> onStep = new List<Script>();
-			public List<Script> onAction = new List<Script>();
+			public List<Script>[,] onStep;
 			public Layer(int width, int height, string path, Game game) {
 				string[] tileLines = game.loader.LoadText(string.Format(path, "tiles")).Split('\n');
 				string[] passLines = game.loader.LoadText(string.Format(path, "passability")).Split('\n');
-				//TODO: Sprites
 				objects = new List<Sprite>[width, height];
 				tiles = new Graphics[width, height];
 				passable = new bool[width, height];
+				onStep = new List<Script>[width, height];
 
 				for (int j = 0; j < height; ++j) {
 					string[] tileLine = tileLines[j].Split(' ');
 					string[] passLine = passLines[j].Split(' ');
 					for (int i = 0; i < width; ++i) {
 						objects[i, j] = new List<Sprite>();
+						onStep[i, j] = new List<Script>();
 						int tileID = int.Parse(tileLine[i]);
 						if (tileID == 0) {
 							tiles[i, j] = new NoGraphics();
@@ -60,7 +60,7 @@ namespace KFIRPG.corelib {
 			layers = new Layer[numLayers];
 			for (int i = 0; i < numLayers; ++i) {
 				layers[i] = new Layer(cols, rows, "maps/" + mapName + "/layers/{0}." + i.ToString(), game);
-				string[] objectLines = game.loader.LoadText("maps/" + mapName + "/layers/objects." + i.ToString()).Split('\n');
+				/*string[] objectLines = game.loader.LoadText("maps/" + mapName + "/layers/objects." + i.ToString()).Split('\n');
 				if (!(objectLines.Length == 1 && string.IsNullOrEmpty(objectLines[0].Trim()))) {
 					foreach (string line in objectLines) {
 						string[] sline = line.Split(' ');
@@ -69,7 +69,34 @@ namespace KFIRPG.corelib {
 						int y = int.Parse(sline[2]);
 						this.Place(sp, x, y, i);
 					}
+				}*/
+			}
+			XmlDocument objects = new XmlDocument();
+			objects.LoadXml(game.loader.LoadText("maps/" + mapName + "/objects.xml"));
+			foreach (XmlNode node in objects.SelectNodes("/objects/object")) {
+				string name = node.SelectSingleNode("sprite").InnerText.Trim();
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
+				string action = node.SelectSingleNode("action").InnerText.Trim();
+				Sprite sp = new Sprite(name, game);
+				this.Place(sp, x, y, l);
+				if (action != "") {
+					Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + action));
+					script.Owner = sp;
+					sp.Action = script;
 				}
+			}
+
+			XmlDocument onstep = new XmlDocument();
+			onstep.LoadXml(game.loader.LoadText("maps/" + mapName + "/onstep.xml"));
+			foreach (XmlNode node in onstep.SelectNodes("/events/event")) {
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
+				string name = node.SelectSingleNode("script").InnerText.Trim();
+				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + name));
+				layers[l].onStep[x, y].Add(script);
 			}
 		}
 
@@ -86,6 +113,15 @@ namespace KFIRPG.corelib {
 			layers[fromLayer].objects[fromX, fromY].Remove(sprite);
 			layers[toLayer].objects[toX, toY].Add(sprite);
 			sprite.UpdateCoords(toX, toY, toLayer);
+		}
+		internal bool OnStep(int x, int y, int layer) {
+			if (layers[layer].onStep[x, y].Count == 0) return false;
+			layers[layer].onStep[x, y].ForEach(script => script.Run());
+			return true;
+		}
+		internal void OnAction(int x, int y, int layer) {
+			if (x < 0 || x >= cols || y < 0 || y > rows || layer < 0 || layer >= layers.Length) return;
+			layers[layer].objects[x, y].ForEach(sprite => sprite.DoAction());
 		}
 
 		private bool ObjectPassable(Sprite obj) {

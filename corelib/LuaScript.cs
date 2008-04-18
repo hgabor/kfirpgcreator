@@ -40,9 +40,8 @@ namespace KFIRPG.corelib {
 				return vm.DoString(scriptStr);
 			}
 			else {
-				vm["this"] = owner;
+				vm["self"] = owner;
 				object[] ret = vm.DoString(scriptStr);
-				vm["this"] = null;
 				return ret;
 			}
 		}

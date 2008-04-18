@@ -21,6 +21,9 @@ namespace KFIRPG.corelib {
 			else if (game.Input.IsPressed(UserInput.Buttons.Right)) {
 				me.PlanMove(Sprite.Dir.Right, map);
 			}
+			if (game.Input.IsPressed(UserInput.Buttons.Action)) {
+				me.PlanAction(map);
+			}
 		}
 	}
 }

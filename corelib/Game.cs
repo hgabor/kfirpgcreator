@@ -29,9 +29,9 @@ namespace KFIRPG.corelib {
 			int startY = int.Parse(globalSettings.SelectSingleNode("/settings/starty").InnerText);
 			int startL = int.Parse(globalSettings.SelectSingleNode("/settings/startl").InnerText);
 
-			party = new Party();
+			party = new Party(this);
 			foreach (XmlNode node in globalSettings.SelectNodes("/settings/party")) {
-				party.Add(new Sprite(node.InnerText, this));
+				party.Add(new PlayerSprite(node.InnerText, this));
 			}
 			party.Leader.MovementAI = new PlayerMovementController(this);
 

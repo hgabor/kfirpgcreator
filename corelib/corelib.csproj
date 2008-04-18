@@ -84,6 +84,7 @@
     <Compile Include="NotMovingAI.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="PlayerMovementController.cs" />
+    <Compile Include="PlayerSprite.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptLib.cs" />

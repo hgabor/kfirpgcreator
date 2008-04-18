@@ -48,10 +48,18 @@ namespace KFIRPG.corelib {
 		bool noclip;
 		public bool Noclip { get { return noclip; } }
 
+		Script action = null;
+		public Script Action { set { action = value; } }
+		public void DoAction() {
+			if (action != null) action.Run();
+		}
+
 		MovementAI movementAI = new NotMovingAI();
 		public MovementAI MovementAI {
 			set { movementAI = value; }
 		}
+
+		protected virtual bool OnStep(Map map) { return false; }
 
 
 		int corrX = 0;
@@ -70,6 +78,16 @@ namespace KFIRPG.corelib {
 		Dir moving = Dir.None;
 		Dir nextMove = Dir.None;
 		Dir facing = Dir.Up;
+		public void Turn(Dir direction) {
+			facing = direction;
+			switch (moving) {
+				case Dir.Up: graphic.SetState("moveup", 0); break;
+				case Dir.Down: graphic.SetState("movedown", 0); break;
+				case Dir.Left: graphic.SetState("moveleft", 0); break;
+				case Dir.Right: graphic.SetState("moveright", 0); break;
+				case Dir.None: graphic.SetState("still", (int)facing); break;
+			}
+		}
 
 		public void PlanMove(Dir direction, Map map) {
 			nextMove = Dir.None;
@@ -101,6 +119,17 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		public void PlanAction(Map map) {
+			if (moving != Dir.None) return;
+			switch (facing) {
+				case Dir.Up: map.OnAction(x, y - 1, layer); break;
+				case Dir.Down: map.OnAction(x, y + 1, layer); break;
+				case Dir.Left: map.OnAction(x - 1, y, layer); break;
+				case Dir.Right: map.OnAction(x + 1, y, layer); break;
+			}
+			map.OnAction(x, y, layer);
+		}
+
 		public void Think(Map map) {
 			movementAI.TryDoingSomething(this, map);
 			Dir oldMoving = moving;
@@ -116,13 +145,20 @@ namespace KFIRPG.corelib {
 						corrX -= speed;
 					}
 					else if (corrX <= 0) {
-						if (nextMove != Dir.Left) {
+						if (oldMoving == moving && OnStep(map)) {
 							corrX = 0;
 							moving = Dir.None;
+							graphic.SetState("still", (int)facing);
 						}
 						else {
-							corrX += size;
-							map.Move(this, x, y, layer, x - 1, y, layer);
+							if (nextMove != Dir.Left) {
+								corrX = 0;
+								moving = Dir.None;
+							}
+							else {
+								corrX += size;
+								map.Move(this, x, y, layer, x - 1, y, layer);
+							}
 						}
 					}
 					break;
@@ -131,13 +167,20 @@ namespace KFIRPG.corelib {
 						corrX += speed;
 					}
 					else if (corrX >= 0) {
-						if (nextMove != Dir.Right) {
+						if (oldMoving == moving && OnStep(map)) {
 							corrX = 0;
 							moving = Dir.None;
+							graphic.SetState("still", (int)facing);
 						}
 						else {
-							corrX -= size;
-							map.Move(this, x, y, layer, x + 1, y, layer);
+							if (nextMove != Dir.Right) {
+								corrX = 0;
+								moving = Dir.None;
+							}
+							else {
+								corrX -= size;
+								map.Move(this, x, y, layer, x + 1, y, layer);
+							}
 						}
 					}
 					break;
@@ -146,13 +189,20 @@ namespace KFIRPG.corelib {
 						corrY -= speed;
 					}
 					else if (corrY <= 0) {
-						if (nextMove != Dir.Up) {
-							corrX = 0;
+						if (oldMoving == moving && OnStep(map)) {
+							corrY = 0;
 							moving = Dir.None;
+							graphic.SetState("still", (int)facing);
 						}
 						else {
-							corrY += size;
-							map.Move(this, x, y, layer, x, y - 1, layer);
+							if (nextMove != Dir.Up) {
+								corrX = 0;
+								moving = Dir.None;
+							}
+							else {
+								corrY += size;
+								map.Move(this, x, y, layer, x, y - 1, layer);
+							}
 						}
 					}
 					break;
@@ -161,13 +211,20 @@ namespace KFIRPG.corelib {
 						corrY += speed;
 					}
 					else if (corrY >= 0) {
-						if (nextMove != Dir.Down) {
-							corrX = 0;
+						if (oldMoving == moving && OnStep(map)) {
+							corrY = 0;
 							moving = Dir.None;
+							graphic.SetState("still", (int)facing);
 						}
 						else {
-							corrY -= size;
-							map.Move(this, x, y, layer, x, y + 1, layer);
+							if (nextMove != Dir.Down) {
+								corrX = 0;
+								moving = Dir.None;
+							}
+							else {
+								corrY -= size;
+								map.Move(this, x, y, layer, x, y + 1, layer);
+							}
 						}
 					}
 					break;

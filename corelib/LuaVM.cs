@@ -63,6 +63,15 @@ namespace KFIRPG.corelib {
 			vm.DoString(resume);
 		}
 
+		public object this[string var] {
+			get {
+				return vm[var];
+			}
+			set {
+				vm[var] = value;
+			}
+		}
+
 		#endregion
 	}
 }

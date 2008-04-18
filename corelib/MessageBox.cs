@@ -42,7 +42,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public MessageBox(string text, Dialogs dialogs, Game game) {
-			wasPressed = game.Input.IsPressed(UserInput.Buttons.Action);
+			game.Input.WaitForKeyUp();
 			this.game = game;
 			this.dialogs = dialogs;
 			SdlDotNet.Graphics.Font font = dialogs.Font;
@@ -86,13 +86,9 @@ namespace KFIRPG.corelib {
 
 		public override void Think() {
 			if (game.Input.IsPressed(UserInput.Buttons.Action)) {
-				if (!wasPressed) {
-					game.PopScreen();
-					game.vm.ContinueWithValue(null);
-				}
-			}
-			else {
-				wasPressed = false;
+				game.PopScreen();
+				game.vm.ContinueWithValue(null);
+				game.Input.WaitForKeyUp();
 			}
 		}
 	}
