@@ -5,6 +5,6 @@ using System.Text;
 namespace KFIRPG.corelib {
 	interface Script {
 		Entity Owner { get; set; }
-		object[] Run();
+		object Run();
 	}
 }

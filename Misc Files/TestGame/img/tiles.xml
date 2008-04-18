@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <spritesheet>
+  <cols>8</cols>
   <image type="still">
     <start>0</start>
     <count>1</count>

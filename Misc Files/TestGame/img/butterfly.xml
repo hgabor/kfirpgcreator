@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <spritesheet>
+  <cols>2</cols>
   <image type="still">
     <start>0</start>
     <count>2</count>
@@ -7,25 +8,25 @@
     <timeout>15</timeout>
   </image>
   <image type="movedown">
-    <start>2</start>
+    <start>0</start>
     <count>2</count>
     <interval>2</interval>
     <timeout>15</timeout>
   </image>
   <image type="moveup">
-    <start>4</start>
+    <start>2</start>
     <count>2</count>
     <interval>2</interval>
     <timeout>15</timeout>
   </image>
   <image type="moveleft">
-    <start>6</start>
+    <start>4</start>
     <count>2</count>
     <interval>2</interval>
     <timeout>15</timeout>
   </image>
   <image type="moveright">
-    <start>8</start>
+    <start>6</start>
     <count>2</count>
     <interval>2</interval>
     <timeout>15</timeout>

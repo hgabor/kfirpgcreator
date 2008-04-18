@@ -40,16 +40,12 @@ namespace KFIRPG.corelib {
 		}
 
 		List<Sprite> objects = new List<Sprite>();
-		Script onEnter;
-		Script onLeave;
 		Layer[] layers;
 		int rows;
 		int cols;
 		int tileSize;
 
 		public Map(string mapName, Game game) {
-			onEnter = game.vm.LoadScript(game.loader.LoadText(string.Concat("maps/", mapName, "/onenter")));
-			onLeave = game.vm.LoadScript(game.loader.LoadText(string.Concat("maps/", mapName, "/onleave")));
 			XmlDocument info = new XmlDocument();
 			info.LoadXml(game.loader.LoadText(string.Concat("maps/", mapName, "/info.xml")));
 			cols = int.Parse(info.SelectSingleNode("/map/width").InnerText);
@@ -79,12 +75,17 @@ namespace KFIRPG.corelib {
 				int y = int.Parse(node.SelectSingleNode("y").InnerText);
 				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
 				string action = node.SelectSingleNode("action").InnerText.Trim();
+				string movement = node.SelectSingleNode("movement").InnerText.Trim();
 				Sprite sp = new Sprite(name, game);
 				this.Place(sp, x, y, l);
 				if (action != "") {
-					Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + action));
+					Script script = game.vm.LoadScript(game.loader.LoadText("scripts/map/" + action));
 					script.Owner = sp;
 					sp.Action = script;
+				}
+				if (movement != "") {
+					MovementAI ai = new ScriptedMovementAI(movement, game);
+					sp.MovementAI = ai;
 				}
 			}
 
@@ -95,7 +96,7 @@ namespace KFIRPG.corelib {
 				int y = int.Parse(node.SelectSingleNode("y").InnerText);
 				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
 				string name = node.SelectSingleNode("script").InnerText.Trim();
-				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + name));
+				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/map/" + name));
 				layers[l].onStep[x, y].Add(script);
 			}
 		}

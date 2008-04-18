@@ -19,13 +19,14 @@ namespace KFIRPG.corelib {
 		int subState;
 		int frame;
 		int size;
-		const int columnsInRow = 8;
+		int columnsInRow;
 
 		public Animation(string sheetName, int size, Game game) {
 			this.size = size;
 			sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
+			columnsInRow = int.Parse(doc.SelectSingleNode("spritesheet/cols").InnerText);
 			foreach (XmlNode node in doc.SelectNodes("spritesheet/image")) {
 				State current = new State();
 				string name = node.Attributes["type"].InnerText;

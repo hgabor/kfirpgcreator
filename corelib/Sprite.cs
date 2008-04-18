@@ -76,6 +76,7 @@ namespace KFIRPG.corelib {
 		}
 
 		Dir moving = Dir.None;
+		public bool IsMoving { get { return moving != Dir.None; } }
 		Dir nextMove = Dir.None;
 		Dir facing = Dir.Up;
 		public void Turn(Dir direction) {

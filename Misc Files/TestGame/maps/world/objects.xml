@@ -6,6 +6,7 @@
     <y>4</y>
     <layer>1</layer>
     <action>blahblah</action>
+    <movement>random</movement>
   </object>
   <object>
     <sprite>butterfly</sprite>
@@ -13,5 +14,6 @@
     <y>5</y>
     <layer>2</layer>
     <action></action>
+    <movement>random_nostop</movement>
   </object>
 </objects>

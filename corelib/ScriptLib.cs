@@ -37,6 +37,11 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		[Script]
+		public void WriteLine(object text) {
+			Console.WriteLine(text.ToString());
+		}
+
 		public ScriptLib(Game game) {
 			this.game = game;
 			dialogs = new Dialogs(game);

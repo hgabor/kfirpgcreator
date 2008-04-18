@@ -87,6 +87,7 @@
     <Compile Include="PlayerSprite.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Script.cs" />
+    <Compile Include="ScriptedMovementAI.cs" />
     <Compile Include="ScriptLib.cs" />
     <Compile Include="ScriptVM.cs" />
     <Compile Include="Sprite.cs" />
