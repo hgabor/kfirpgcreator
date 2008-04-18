@@ -41,23 +41,22 @@ namespace KFIRPG.corelib {
 			return retLines;
 		}
 
-		//TODO: Loader should load the Fonts
 		public MessageBox(string text, Dialogs dialogs, Game game) {
 			wasPressed = game.Input.IsPressed(UserInput.Buttons.Action);
 			this.game = game;
 			this.dialogs = dialogs;
-			SdlDotNet.Graphics.Font font = new SdlDotNet.Graphics.Font("TestGame\\dialog\\DejaVuSans.ttf", 12);
+			SdlDotNet.Graphics.Font font = dialogs.Font;
 
-			//HACK: Font.Render only returns a Surface with transparent background, when called
-			//      with textWidth=0 and maxLines=0, and when the text contains no newline characters,
-			//      black background otherwise.
+			//HACK: Font.Render only returns a Surface with transparent background when called
+			//      with textWidth=0 and maxLines=0, and when the text contains no newline characters.
+			//      Otherwise it renders on a black background.
 			List<string> lines = SplitAndRejoin(text, font);
 			textSurfaces = lines.ConvertAll<Surface>(s => font.Render(s, Color.White, true, 0, 0));
 
 			if (textSurfaces.Count == 0) {
 				textX = 0;
 				textY = 0;
-				height = 19;
+				height = dialogs.Border * 2 - 1;
 			}
 			else {
 				int sumHeight = 0;
@@ -68,17 +67,16 @@ namespace KFIRPG.corelib {
 					textX = (game.Width - (textSurfaces[0].Width)) / 2;
 				}
 				else {
-					textX = (game.Width - (width - 100)) / 2;
+					textX = (game.Width - (width - dialogs.Margin * 2)) / 2;
 				}
-				height = sumHeight + 100;
-				while (height % 10 != 0) ++height;
+				height = sumHeight + dialogs.Margin * 2;
+				while (height % dialogs.Border != 0) ++height;
 				textY = (game.Height - sumHeight) / 2;
 			}
 		}
 
 		public override void Draw(SdlDotNet.Graphics.Surface surface) {
 			dialogs.DrawWindow(width - 1, height - 1, surface);
-			//surface.Blit(sprite);
 			int y = textY;
 			foreach (Surface surf in textSurfaces) {
 				surface.Blit(surf, new Point(textX, y));

@@ -10,7 +10,9 @@ namespace KFIRPG.corelib {
 		Surface surface;
 		Color bgColor;
 		public readonly int Border;
+		public readonly int Margin = 50;
 		Game game;
+		public readonly SdlDotNet.Graphics.Font Font;
 
 		public Dialogs(Game game) {
 			this.game = game;
@@ -21,6 +23,9 @@ namespace KFIRPG.corelib {
 			int green = int.Parse(doc.SelectSingleNode("/dialog/background/green").InnerText);
 			int blue = int.Parse(doc.SelectSingleNode("/dialog/background/blue").InnerText);
 			int alpha = int.Parse(doc.SelectSingleNode("/dialog/background/alpha").InnerText);
+			string fontName = doc.SelectSingleNode("/dialog/font").InnerText.Trim();
+			int fontSize = int.Parse(doc.SelectSingleNode("/dialog/fontsize").InnerText);
+			Font = new SdlDotNet.Graphics.Font(game.loader.LoadRaw("dialog/" + fontName), fontSize);
 			bgColor = Color.FromArgb(alpha, red, green, blue);
 
 			surface = new Surface(game.loader.LoadBitmap("dialog/windowborder.png"));

@@ -7,4 +7,6 @@
     <blue>0</blue>
     <alpha>192</alpha>
   </background>
+  <font>DejaVuSans.ttf</font>
+  <fontsize>12</fontsize>
 </dialog>
