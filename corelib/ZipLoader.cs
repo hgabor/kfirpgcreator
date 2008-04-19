@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
-	class ZipLoader: Loader {
+	public class ZipLoader: Loader {
 		public ZipLoader(string fileName) { }
 
 		#region Loader Members

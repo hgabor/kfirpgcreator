@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
-	interface Loader {
+	public interface Loader {
 		System.Drawing.Bitmap LoadBitmap(string path);
 		string LoadText(string path);
 		byte[] LoadRaw(string path);

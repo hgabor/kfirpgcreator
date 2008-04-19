@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 
 namespace KFIRPG.corelib {
-	class FileLoader: Loader {
+	public class FileLoader: Loader {
 		string basePath;
 		public FileLoader(string path) {
 			basePath = path;
