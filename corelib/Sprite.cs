@@ -5,13 +5,13 @@ using System.Xml;
 
 namespace KFIRPG.corelib {
 	class Sprite: Entity {
-		Animation baseGraphic;
-		Animation graphic;
+		AnimatedGraphics baseGraphic;
+		AnimatedGraphics graphic;
 
 		public Sprite(string spriteId, Game game) {
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = baseGraphic = new Animation(doc.SelectSingleNode("sprite/img").InnerText, game.TileSize, game);
+			graphic = baseGraphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/img").InnerText, game.TileSize, game);
 			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
 			noclip = int.Parse(doc.SelectSingleNode("sprite/noclip").InnerText) == 1;
 

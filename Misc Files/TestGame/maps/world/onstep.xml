@@ -6,4 +6,10 @@
     <layer>1</layer>
     <script>bridgecreaks</script>
   </event>
+  <event>
+    <x>5</x>
+    <y>0</y>
+    <layer>1</layer>
+    <script>teleport</script>
+  </event>
 </events>

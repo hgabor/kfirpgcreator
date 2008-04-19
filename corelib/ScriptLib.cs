@@ -42,6 +42,16 @@ namespace KFIRPG.corelib {
 			Console.WriteLine(text.ToString());
 		}
 
+		[Script]
+		public void MoveTo(int x, int y, int layer) {
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = game.TakeScreenshot();
+			Sprite leader = game.Party.Leader;
+			game.currentMap.Move(leader, leader.X, leader.Y, leader.Layer, x, y, layer);
+			game.currentMap.OnStep(x, y, layer);
+			game.PushScreen(anim);
+		}
+
 		public ScriptLib(Game game) {
 			this.game = game;
 			dialogs = new Dialogs(game);

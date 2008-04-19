@@ -50,8 +50,11 @@ namespace KFIRPG.corelib {
 		}
 
 		public void Message(string text) {
+			FadeAnimation animation = new FadeAnimation(game);
+			animation.FromImage = game.TakeScreenshot();
 			MessageBox mb = new MessageBox(text, this, game);
 			game.PushScreen(mb);
+			game.PushScreen(animation);
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace KFIRPG.corelib {
 							tiles[i, j] = new NoGraphics();
 						}
 						else {
-							Animation anim = new Animation("tiles", game.TileSize, game);
+							AnimatedGraphics anim = new AnimatedGraphics("tiles", game.TileSize, game);
 							anim.SetState("still", tileID - 1);
 							tiles[i, j] = anim;
 						}

@@ -66,15 +66,16 @@
     <Content Include="Plan.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimatedGraphics.cs" />
     <Compile Include="Audio.cs" />
     <Compile Include="Dialogs.cs" />
+    <Compile Include="FadeAnimation.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="MessageBox.cs" />
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Animation.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="LuaScript.cs" />
     <Compile Include="LuaVM.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="PlayerMovementController.cs" />
     <Compile Include="PlayerSprite.cs" />
     <Compile Include="Screen.cs" />
+    <Compile Include="ScreenAnimation.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptedMovementAI.cs" />
     <Compile Include="ScriptLib.cs" />

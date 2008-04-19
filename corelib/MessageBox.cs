@@ -86,9 +86,12 @@ namespace KFIRPG.corelib {
 
 		public override void Think() {
 			if (game.Input.IsPressed(UserInput.Buttons.Action)) {
+				FadeAnimation anim = new FadeAnimation(game);
+				anim.FromImage = game.TakeScreenshot();
 				game.PopScreen();
 				game.vm.ContinueWithValue(null);
 				game.Input.WaitForKeyUp();
+				game.PushScreen(anim);
 			}
 		}
 	}

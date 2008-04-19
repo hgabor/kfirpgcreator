@@ -28,6 +28,7 @@ namespace KFIRPG.corelib {
 			int startX = int.Parse(globalSettings.SelectSingleNode("/settings/startx").InnerText);
 			int startY = int.Parse(globalSettings.SelectSingleNode("/settings/starty").InnerText);
 			int startL = int.Parse(globalSettings.SelectSingleNode("/settings/startl").InnerText);
+			currentMap = defaultMap;
 
 			party = new Party(this);
 			foreach (XmlNode node in globalSettings.SelectNodes("/settings/party")) {
@@ -57,6 +58,7 @@ namespace KFIRPG.corelib {
 		internal void PopScreen() {
 			screens.RemoveAt(screens.Count - 1);
 		}
+		internal Map currentMap;
 
 		Party party;
 		internal Party Party { get { return party; } }
@@ -100,6 +102,12 @@ namespace KFIRPG.corelib {
 			foreach (Screen screen in screens) {
 				screen.Draw(surface);
 			}
+		}
+
+		public SdlDotNet.Graphics.Surface TakeScreenshot() {
+			SdlDotNet.Graphics.Surface surface = new SdlDotNet.Graphics.Surface(width, height);
+			Render(surface);
+			return surface;
 		}
 
 		public readonly UserInput Input = new UserInput();

@@ -6,7 +6,7 @@ using System.Xml;
 using SdlDotNet.Graphics;
 
 namespace KFIRPG.corelib {
-	class Animation: Graphics {
+	class AnimatedGraphics: Graphics {
 		Surface sheet;
 		class State {
 			public int start;
@@ -21,7 +21,7 @@ namespace KFIRPG.corelib {
 		int size;
 		int columnsInRow;
 
-		public Animation(string sheetName, int size, Game game) {
+		public AnimatedGraphics(string sheetName, int size, Game game) {
 			this.size = size;
 			sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
 			XmlDocument doc = new XmlDocument();
