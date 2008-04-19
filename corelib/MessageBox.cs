@@ -42,7 +42,6 @@ namespace KFIRPG.corelib {
 		}
 
 		public MessageBox(string text, Dialogs dialogs, Game game) {
-			game.Input.WaitForKeyUp();
 			this.game = game;
 			this.dialogs = dialogs;
 			SdlDotNet.Graphics.Font font = dialogs.Font;
@@ -90,7 +89,6 @@ namespace KFIRPG.corelib {
 				anim.FromImage = game.TakeScreenshot();
 				game.PopScreen();
 				game.vm.ContinueWithValue(null);
-				game.Input.WaitForKeyUp();
 				game.PushScreen(anim);
 			}
 		}

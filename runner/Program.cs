@@ -11,8 +11,19 @@ namespace KFIRPG.runner {
 			//try {
 			Game game = Game.LoadFromFile("game.xml");
 			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height);
+
+			SdlDotNet.Input.Joystick joy = null;
+			if (SdlDotNet.Input.Joysticks.NumberOfJoysticks > 0) {
+				joy = SdlDotNet.Input.Joysticks.OpenJoystick(0);
+				if (joy.NumberOfAxes < 2 || joy.NumberOfButtons < 2) {
+					joy.Close();
+					joy = null;
+				}
+			}
+
 			bool quit = false;
 			Events.Quit += (sender, args) => { quit = true; };
+
 			int counter = 0;
 			DateTime lastMeasure = DateTime.Now;
 			int lastMovement = SdlDotNet.Core.Timer.TicksElapsed;
@@ -29,6 +40,15 @@ namespace KFIRPG.runner {
 				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.RightArrow)) buttons |= UserInput.Buttons.Right;
 				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Space)) buttons |= UserInput.Buttons.Action;
 				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Escape)) buttons |= UserInput.Buttons.Back;
+				if (joy != null) {
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) == 0) buttons |= UserInput.Buttons.Up;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) == 1) buttons |= UserInput.Buttons.Down;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) == 0) buttons |= UserInput.Buttons.Left;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) == 1) buttons |= UserInput.Buttons.Right;
+					if (joy.GetButtonState(0) == SdlDotNet.Input.ButtonKeyState.Pressed) buttons |= UserInput.Buttons.Action;
+					if (joy.GetButtonState(1) == SdlDotNet.Input.ButtonKeyState.Pressed) buttons |= UserInput.Buttons.Back;
+				}
+
 				game.Input.Set(buttons);
 				ticks = SdlDotNet.Core.Timer.TicksElapsed;
 				if ((ticks - lastMovement) > targetMSpM) {
