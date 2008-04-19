@@ -4,7 +4,7 @@
   <tilesize>32</tilesize>
   <screenwidth>640</screenwidth>
   <screenheight>480</screenheight>
-  <defaultmap>world</defaultmap>
+  <defaultmap>lake</defaultmap>
   <startx>1</startx>
   <starty>0</starty>
   <startl>1</startl>
