@@ -26,6 +26,7 @@ namespace KFIRPG.editor {
 					gfx = sprite.sheet.GetGfxById(1);
 				}
 			}
+
 			SpriteSheet.Gfx gfx;
 			public SpriteSheet.Gfx Gfx {
 				get { return gfx; }
@@ -80,14 +81,21 @@ namespace KFIRPG.editor {
 				string move = node.SelectSingleNode("movement").InnerText.Trim();
 				string action = node.SelectSingleNode("action").InnerText.Trim();
 				Obj o = new Obj();
-				o.Sprite = new Sprite(spriteName, project);
+				o.Sprite = project.sprites[spriteName];
 				o.movementAIScript = move;
 				o.actionScript = action;
 				layers[layer].objects[x, y] = o;
 			}
-			
-			//TODO: Objects
-			//TODO: Events
+
+			XmlDocument events = new XmlDocument();
+			events.LoadXml(loader.LoadText("maps/" + name + "/onstep.xml"));
+			foreach (XmlNode node in events.SelectNodes("/events/event")) {
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int layer = int.Parse(node.SelectSingleNode("layer").InnerText);
+				string script = node.SelectSingleNode("script").InnerText.Trim();
+				layers[layer].tiles[x, y].onStep = script;
+			}
 		}
 	}
 }

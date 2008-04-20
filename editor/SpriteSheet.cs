@@ -25,10 +25,10 @@ namespace KFIRPG.editor {
 
 		public class Gfx {
 			SpriteSheet sheet;
-			int x, y, width, height;
-			public Gfx(int x, int y, int width, int height, SpriteSheet sheet) {
-				this.x = x;
-				this.y = y;
+			int id, cols, width, height;
+			public Gfx(int id, int cols, int width, int height, SpriteSheet sheet) {
+				this.id = id;
+				this.cols = cols;
 				this.width = width;
 				this.height = height;
 				this.sheet = sheet;
@@ -37,13 +37,15 @@ namespace KFIRPG.editor {
 			private Gfx() { }
 
 			public virtual void Draw(int x, int y, Graphics g) {
-				g.DrawImage(sheet.sheet, new Rectangle(x, y, width, height), new Rectangle(this.x * sheet.size, this.y * sheet.size, width, height), GraphicsUnit.Pixel);
+				g.DrawImage(sheet.sheet, new Rectangle(x, y, width, height), new Rectangle(id % cols * sheet.size, id / cols * sheet.size, width, height), GraphicsUnit.Pixel);
 			}
+			public virtual int Id { get { return id + 1; } }
 
 			internal static readonly Gfx Empty = new NullGfx();
 
 			private class NullGfx: Gfx {
 				public override void Draw(int x, int y, Graphics g) { }
+				public override int Id { get { return 0; } }
 			}
 		}
 
@@ -51,7 +53,9 @@ namespace KFIRPG.editor {
 
 		public SpriteSheet(string name, Project project) {
 			Loader loader = project.loader;
-			sheet = loader.LoadBitmap("img/" + name + ".png");
+			using (Bitmap bm = loader.LoadBitmap("img/" + name + ".png")) {
+				sheet = new Bitmap(bm);
+			}
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(loader.LoadText("img/" + name + ".xml"));
 			cols = int.Parse(doc.SelectSingleNode("/spritesheet/cols").InnerText);
@@ -68,7 +72,7 @@ namespace KFIRPG.editor {
 
 		public Gfx GetGfxById(int id) {
 			if (id == 0) return Gfx.Empty;
-			else return new Gfx((id - 1) % cols, (id - 1) / cols, size, size, this);
+			else return new Gfx(id - 1, cols, size, size, this);
 		}
 	}
 }

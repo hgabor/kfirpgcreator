@@ -35,7 +35,6 @@
 			this.checkedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.checkedListBox.CheckOnClick = true;
 			this.checkedListBox.FormattingEnabled = true;
 			this.checkedListBox.IntegralHeight = false;
 			this.checkedListBox.Location = new System.Drawing.Point(12, 12);
@@ -93,8 +92,9 @@
 			this.Controls.Add(this.downbutton);
 			this.Controls.Add(this.upbutton);
 			this.Controls.Add(this.checkedListBox);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.Name = "LayersToolbar";
+			this.ShowInTaskbar = false;
 			this.Text = "Layers";
 			this.ResumeLayout(false);
 

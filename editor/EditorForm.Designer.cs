@@ -25,12 +25,20 @@
 		private void InitializeComponent() {
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.loadProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.layersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.audioLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.imageLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
+			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.menuStrip.SuspendLayout();
 			this.SuspendLayout();
@@ -48,14 +56,60 @@
 			// 
 			// fileToolStripMenuItem
 			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newProjectToolStripMenuItem,
+            this.loadProjectToolStripMenuItem,
+            this.saveProjectToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
+			// newProjectToolStripMenuItem
+			// 
+			this.newProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white;
+			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newProjectToolStripMenuItem.Text = "New project...";
+			// 
+			// loadProjectToolStripMenuItem
+			// 
+			this.loadProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.folder;
+			this.loadProjectToolStripMenuItem.Name = "loadProjectToolStripMenuItem";
+			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.loadProjectToolStripMenuItem.Text = "Load project...";
+			this.loadProjectToolStripMenuItem.Click += new System.EventHandler(this.loadProjectToolStripMenuItem_Click);
+			// 
+			// saveProjectToolStripMenuItem
+			// 
+			this.saveProjectToolStripMenuItem.Enabled = false;
+			this.saveProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.disk;
+			this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
+			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveProjectToolStripMenuItem.Text = "Save project";
+			this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.door;
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.exitToolStripMenuItem.Text = "Exit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
 			// viewToolStripMenuItem
 			// 
 			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.layersToolStripMenuItem});
+            this.layersToolStripMenuItem,
+            this.audioLibraryToolStripMenuItem,
+            this.imageLibraryToolStripMenuItem});
+			this.viewToolStripMenuItem.Enabled = false;
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
 			this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
 			this.viewToolStripMenuItem.Text = "View";
@@ -65,8 +119,24 @@
 			this.layersToolStripMenuItem.Checked = true;
 			this.layersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.layersToolStripMenuItem.Name = "layersToolStripMenuItem";
-			this.layersToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+			this.layersToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.layersToolStripMenuItem.Text = "Layers";
+			// 
+			// audioLibraryToolStripMenuItem
+			// 
+			this.audioLibraryToolStripMenuItem.Checked = true;
+			this.audioLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.audioLibraryToolStripMenuItem.Name = "audioLibraryToolStripMenuItem";
+			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.audioLibraryToolStripMenuItem.Text = "Audio Library";
+			// 
+			// imageLibraryToolStripMenuItem
+			// 
+			this.imageLibraryToolStripMenuItem.Checked = true;
+			this.imageLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.imageLibraryToolStripMenuItem.Name = "imageLibraryToolStripMenuItem";
+			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.imageLibraryToolStripMenuItem.Text = "Image Library";
 			// 
 			// toolStrip
 			// 
@@ -128,6 +198,7 @@
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "EditorForm";
 			this.Text = "KFI RPG Creator";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
 			this.ResumeLayout(false);
@@ -146,5 +217,13 @@
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem layersToolStripMenuItem;
 		private DoubleBufferedPanel mainPanel;
+		private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem loadProjectToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem saveProjectToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.FolderBrowserDialog folderDialog;
+		private System.Windows.Forms.ToolStripMenuItem audioLibraryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem imageLibraryToolStripMenuItem;
 	}
 }

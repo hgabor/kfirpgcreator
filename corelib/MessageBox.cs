@@ -13,7 +13,6 @@ namespace KFIRPG.corelib {
 		int textX;
 		int textY;
 		List<Surface> textSurfaces;
-		bool wasPressed;
 
 		List<string> SplitAndRejoin(string text, SdlDotNet.Graphics.Font font) {
 			List<string> retLines = new List<string>();
