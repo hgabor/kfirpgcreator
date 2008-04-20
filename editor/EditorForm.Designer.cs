@@ -70,14 +70,14 @@
 			// 
 			this.newProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white;
 			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
-			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.newProjectToolStripMenuItem.Text = "New project...";
 			// 
 			// loadProjectToolStripMenuItem
 			// 
 			this.loadProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.folder;
 			this.loadProjectToolStripMenuItem.Name = "loadProjectToolStripMenuItem";
-			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.loadProjectToolStripMenuItem.Text = "Load project...";
 			this.loadProjectToolStripMenuItem.Click += new System.EventHandler(this.loadProjectToolStripMenuItem_Click);
 			// 
@@ -86,20 +86,20 @@
 			this.saveProjectToolStripMenuItem.Enabled = false;
 			this.saveProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.disk;
 			this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.saveProjectToolStripMenuItem.Text = "Save project";
 			this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(139, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.door;
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -183,6 +183,8 @@
 			this.mainPanel.Size = new System.Drawing.Size(483, 333);
 			this.mainPanel.TabIndex = 4;
 			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
+			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
+			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
 			// 
 			// EditorForm
 			// 

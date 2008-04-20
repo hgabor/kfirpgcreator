@@ -19,6 +19,8 @@ namespace KFIRPG.editor {
 		AudioLibrary audio;
 		ImageLibrary images;
 
+		Cursor cursor;
+
 		public void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
 			form.FormClosing += (sender, args) => {
 				args.Cancel = true;
@@ -46,6 +48,7 @@ namespace KFIRPG.editor {
 			layers = new LayersToolbar();
 			BindFormWithMenuItem(layers, layersToolStripMenuItem);
 			layers.checkedListBox.ItemCheck += UpdateEventHandler;
+			layers.checkedListBox.SelectedIndexChanged += UpdateEventHandler;
 
 			/*
 			layers.addbutton.Click += (sender, args) => {
@@ -69,6 +72,8 @@ namespace KFIRPG.editor {
 			CalculateScrollbars();
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
+
+			cursor = new TileCursor(currentProject.tileSize);
 		}
 
 		public void CalculateScrollbars() {
@@ -242,6 +247,8 @@ namespace KFIRPG.editor {
 		readonly Pen stepEventPen = Pens.Orange;
 		readonly Brush actionBrush = new SolidBrush(Color.FromArgb(128, Color.Yellow));
 		readonly Pen actionPen = Pens.Yellow;
+		readonly Color inactiveLayerColor = Color.FromArgb(128, Color.Gray);
+		readonly Brush inactiveLayerBrush = new SolidBrush(Color.FromArgb(128, Color.Gray));
 
 		private void DrawBox(int x, int y, int width, int height, Brush bg, Pen frame, Graphics g) {
 			g.FillRectangle(bg, x, y, width, height);
@@ -253,8 +260,9 @@ namespace KFIRPG.editor {
 			int x = -hScrollBar.Value * currentProject.tileSize;
 			int y = -vScrollBar.Value * currentProject.tileSize;
 			int size = currentProject.tileSize;
-			for (int l = 0; l < currentMap.layers.Count;++l) {
+			for (int l = 0; l < currentMap.layers.Count; ++l) {
 				if (!layers.checkedListBox.CheckedIndices.Contains(currentMap.layers.Count - l - 1)) continue;
+				bool selectedLayer = layers.checkedListBox.SelectedIndex == currentMap.layers.Count - l - 1;
 				Map.Layer layer = currentMap.layers[l];
 				for (int i = 0; i < currentMap.width; ++i) {
 					for (int j = 0; j < currentMap.height; ++j) {
@@ -272,6 +280,7 @@ namespace KFIRPG.editor {
 					}
 				}
 			}
+			cursor.Draw(e.Graphics);
 		}
 
 		private void UpdateEventHandler(object sender, EventArgs args) {
@@ -308,6 +317,19 @@ namespace KFIRPG.editor {
 			if (SetSaveLocation()) {
 				Load();
 			}
+		}
+
+		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Left) {
+				cursor.Click();
+			}
+			else {
+			}
+		}
+
+		private void mainPanel_MouseMove(object sender, MouseEventArgs e) {
+			cursor.UpdateCoords(e.X, e.Y);
+			mainPanel.Invalidate();
 		}
 	}
 }
