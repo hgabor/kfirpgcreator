@@ -40,6 +40,7 @@
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
+			this.paletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -108,7 +109,8 @@
 			this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.layersToolStripMenuItem,
             this.audioLibraryToolStripMenuItem,
-            this.imageLibraryToolStripMenuItem});
+            this.imageLibraryToolStripMenuItem,
+            this.paletteToolStripMenuItem});
 			this.viewToolStripMenuItem.Enabled = false;
 			this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
 			this.viewToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
@@ -119,7 +121,7 @@
 			this.layersToolStripMenuItem.Checked = true;
 			this.layersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.layersToolStripMenuItem.Name = "layersToolStripMenuItem";
-			this.layersToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.layersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.layersToolStripMenuItem.Text = "Layers";
 			// 
 			// audioLibraryToolStripMenuItem
@@ -127,7 +129,7 @@
 			this.audioLibraryToolStripMenuItem.Checked = true;
 			this.audioLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.audioLibraryToolStripMenuItem.Name = "audioLibraryToolStripMenuItem";
-			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.audioLibraryToolStripMenuItem.Text = "Audio Library";
 			// 
 			// imageLibraryToolStripMenuItem
@@ -135,7 +137,7 @@
 			this.imageLibraryToolStripMenuItem.Checked = true;
 			this.imageLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.imageLibraryToolStripMenuItem.Name = "imageLibraryToolStripMenuItem";
-			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.imageLibraryToolStripMenuItem.Text = "Image Library";
 			// 
 			// toolStrip
@@ -186,6 +188,14 @@
 			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
 			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
 			// 
+			// paletteToolStripMenuItem
+			// 
+			this.paletteToolStripMenuItem.Checked = true;
+			this.paletteToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.paletteToolStripMenuItem.Name = "paletteToolStripMenuItem";
+			this.paletteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.paletteToolStripMenuItem.Text = "Palette";
+			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,5 +237,6 @@
 		private System.Windows.Forms.FolderBrowserDialog folderDialog;
 		private System.Windows.Forms.ToolStripMenuItem audioLibraryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem imageLibraryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem paletteToolStripMenuItem;
 	}
 }

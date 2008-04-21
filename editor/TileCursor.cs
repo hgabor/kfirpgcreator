@@ -6,14 +6,32 @@ using System.Drawing;
 namespace KFIRPG.editor {
 	class TileCursor: Cursor {
 		int size;
+		int id;
+		SpriteSheet tileSheet;
 		readonly Pen pen = new Pen(Color.Red);
 
-		public TileCursor(int tileSize) {
-			size = tileSize;
+		public TileCursor() {
+			id = 0;
+			tileSheet = null;
+			size = 32;
 		}
 
-		public override void Click() {
-			throw new NotImplementedException();
+		public TileCursor(int tileId, Project project) {
+			id = tileId;
+			size = project.tileSize;
+			tileSheet = project.sheets["tiles"];
+		}
+
+		public override void Click(Map.Layer currentLayer) {
+			if (tileSheet != null) {
+				if (id == 0) {
+					currentLayer.tiles[tileX, tileY].gfx = SpriteSheet.Gfx.Empty;
+				}
+				else {
+					currentLayer.tiles[tileX, tileY].gfx = new SpriteSheet.Gfx(id - 1, tileSheet.cols, size, size, tileSheet);
+				}
+				
+			}
 		}
 
 		public override void Draw(Graphics g) {

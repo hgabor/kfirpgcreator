@@ -70,6 +70,12 @@
       <DependentUpon>LayersToolbar.cs</DependentUpon>
     </Compile>
     <Compile Include="Map.cs" />
+    <Compile Include="Palette.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Palette.Designer.cs">
+      <DependentUpon>Palette.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -104,6 +110,9 @@
     <EmbeddedResource Include="LayersToolbar.resx">
       <DependentUpon>LayersToolbar.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Palette.resx">
+      <DependentUpon>Palette.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

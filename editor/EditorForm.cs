@@ -18,6 +18,7 @@ namespace KFIRPG.editor {
 		LayersToolbar layers;
 		AudioLibrary audio;
 		ImageLibrary images;
+		Palette palette;
 
 		Cursor cursor;
 
@@ -68,12 +69,18 @@ namespace KFIRPG.editor {
 			images = new ImageLibrary();
 			BindFormWithMenuItem(images, imageLibraryToolStripMenuItem);
 
+			palette = new Palette();
+			BindFormWithMenuItem(palette, paletteToolStripMenuItem);
+			palette.PaletteSelectionChanged += (sender, args) => {
+				this.cursor = args.Cursor;
+			};
+
 			this.Resize += (sender, args) => CalculateScrollbars();
 			CalculateScrollbars();
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
 
-			cursor = new TileCursor(currentProject.tileSize);
+			cursor = new TileCursor();
 		}
 
 		public void CalculateScrollbars() {
@@ -97,8 +104,9 @@ namespace KFIRPG.editor {
 				item.Enabled = true;
 			}
 			layers.Show();
-			audio.Show();
-			images.Show();
+			//audio.Show();
+			//images.Show();
+			palette.Show();
 		}
 
 		private new void Load() {
@@ -107,6 +115,7 @@ namespace KFIRPG.editor {
 
 			audio.Load(currentProject);
 			images.Load(currentProject);
+			palette.Load(currentProject);
 			for (int l = currentMap.layers.Count - 1; l >= 0; --l) {
 				layers.checkedListBox.Items.Add("layer " + l.ToString(), true);
 			}
@@ -321,14 +330,17 @@ namespace KFIRPG.editor {
 
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
-				cursor.Click();
+				cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
 			}
 			else {
 			}
 		}
 
 		private void mainPanel_MouseMove(object sender, MouseEventArgs e) {
-			cursor.UpdateCoords(e.X, e.Y);
+			int x = -hScrollBar.Value * currentProject.tileSize;
+			int y = -vScrollBar.Value * currentProject.tileSize;
+
+			cursor.UpdateCoords(e.X, e.Y, e.X / currentProject.tileSize + x, e.Y / currentProject.tileSize + y);
 			mainPanel.Invalidate();
 		}
 	}
