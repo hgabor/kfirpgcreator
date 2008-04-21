@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <events>
   <event>
-    <x>1</x>
-    <y>3</y>
-    <layer>1</layer>
-    <script>bridgecreaks</script>
-  </event>
-  <event>
     <x>5</x>
     <y>0</y>
     <layer>1</layer>
     <script>teleport</script>
+  </event>
+  <event>
+    <x>1</x>
+    <y>3</y>
+    <layer>1</layer>
+    <script>bridgecreaks</script>
   </event>
 </events>
