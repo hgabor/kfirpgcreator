@@ -7,9 +7,17 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace KFIRPG.editor {
-	public partial class LayersToolbar: Form {
+	internal partial class LayersToolbar: Form {
 		public LayersToolbar() {
 			InitializeComponent();
+		}
+
+		public new void Load(Map currentMap) {
+			checkedListBox.Items.Clear();
+			for (int l = currentMap.layers.Count - 1; l >= 0; --l) {
+				checkedListBox.Items.Add("layer " + l.ToString(), true);
+			}
+			checkedListBox.SelectedIndex = 0;
 		}
 	}
 }

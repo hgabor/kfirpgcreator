@@ -121,7 +121,7 @@ namespace KFIRPG.corelib {
 			return true;
 		}
 		internal void OnAction(int x, int y, int layer) {
-			if (x < 0 || x >= cols || y < 0 || y > rows || layer < 0 || layer >= layers.Length) return;
+			if (x < 0 || x >= cols || y < 0 || y >= rows || layer < 0 || layer >= layers.Length) return;
 			layers[layer].objects[x, y].ForEach(sprite => sprite.DoAction());
 		}
 

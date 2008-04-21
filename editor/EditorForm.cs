@@ -116,10 +116,7 @@ namespace KFIRPG.editor {
 			audio.Load(currentProject);
 			images.Load(currentProject);
 			palette.Load(currentProject);
-			for (int l = currentMap.layers.Count - 1; l >= 0; --l) {
-				layers.checkedListBox.Items.Add("layer " + l.ToString(), true);
-			}
-			layers.checkedListBox.SelectedIndex = 0;
+			layers.Load(currentMap);
 
 			EnableControls();
 			mainPanel.Invalidate();
