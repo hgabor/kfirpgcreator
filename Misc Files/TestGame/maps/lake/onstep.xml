@@ -3,13 +3,13 @@
   <event>
     <x>5</x>
     <y>0</y>
-    <layer>1</layer>
+    <layer>2</layer>
     <script>teleport</script>
   </event>
   <event>
     <x>1</x>
     <y>3</y>
-    <layer>1</layer>
+    <layer>2</layer>
     <script>bridgecreaks</script>
   </event>
 </events>
