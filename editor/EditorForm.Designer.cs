@@ -34,21 +34,26 @@
 			this.layersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.audioLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.imageLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.paletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.passabilityButton = new System.Windows.Forms.ToolStripButton();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
-			this.paletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
+			this.toolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
 			// 
 			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.mapToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
 			this.menuStrip.Size = new System.Drawing.Size(499, 24);
@@ -121,7 +126,7 @@
 			this.layersToolStripMenuItem.Checked = true;
 			this.layersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.layersToolStripMenuItem.Name = "layersToolStripMenuItem";
-			this.layersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.layersToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.layersToolStripMenuItem.Text = "Layers";
 			// 
 			// audioLibraryToolStripMenuItem
@@ -129,7 +134,7 @@
 			this.audioLibraryToolStripMenuItem.Checked = true;
 			this.audioLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.audioLibraryToolStripMenuItem.Name = "audioLibraryToolStripMenuItem";
-			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.audioLibraryToolStripMenuItem.Text = "Audio Library";
 			// 
 			// imageLibraryToolStripMenuItem
@@ -137,11 +142,37 @@
 			this.imageLibraryToolStripMenuItem.Checked = true;
 			this.imageLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.imageLibraryToolStripMenuItem.Name = "imageLibraryToolStripMenuItem";
-			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.imageLibraryToolStripMenuItem.Text = "Image Library";
+			// 
+			// paletteToolStripMenuItem
+			// 
+			this.paletteToolStripMenuItem.Checked = true;
+			this.paletteToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.paletteToolStripMenuItem.Name = "paletteToolStripMenuItem";
+			this.paletteToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.paletteToolStripMenuItem.Text = "Palette";
+			// 
+			// mapToolStripMenuItem
+			// 
+			this.mapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resizeToolStripMenuItem});
+			this.mapToolStripMenuItem.Enabled = false;
+			this.mapToolStripMenuItem.Name = "mapToolStripMenuItem";
+			this.mapToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+			this.mapToolStripMenuItem.Text = "Map";
+			// 
+			// resizeToolStripMenuItem
+			// 
+			this.resizeToolStripMenuItem.Name = "resizeToolStripMenuItem";
+			this.resizeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+			this.resizeToolStripMenuItem.Text = "Resize...";
+			this.resizeToolStripMenuItem.Click += new System.EventHandler(this.resizeToolStripMenuItem_Click);
 			// 
 			// toolStrip
 			// 
+			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.passabilityButton});
 			this.toolStrip.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(499, 25);
@@ -174,6 +205,17 @@
 			this.statusStrip.TabIndex = 3;
 			this.statusStrip.Text = "statusStrip1";
 			// 
+			// passabilityButton
+			// 
+			this.passabilityButton.CheckOnClick = true;
+			this.passabilityButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.passabilityButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.passabilityButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.passabilityButton.Name = "passabilityButton";
+			this.passabilityButton.Size = new System.Drawing.Size(23, 22);
+			this.passabilityButton.Text = "toolStripButton1";
+			this.passabilityButton.Click += new System.EventHandler(this.UpdateEventHandler);
+			// 
 			// mainPanel
 			// 
 			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -187,14 +229,6 @@
 			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
 			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
 			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
-			// 
-			// paletteToolStripMenuItem
-			// 
-			this.paletteToolStripMenuItem.Checked = true;
-			this.paletteToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.paletteToolStripMenuItem.Name = "paletteToolStripMenuItem";
-			this.paletteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.paletteToolStripMenuItem.Text = "Palette";
 			// 
 			// EditorForm
 			// 
@@ -213,6 +247,8 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
+			this.toolStrip.ResumeLayout(false);
+			this.toolStrip.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -238,5 +274,8 @@
 		private System.Windows.Forms.ToolStripMenuItem audioLibraryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem imageLibraryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem paletteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mapToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem resizeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripButton passabilityButton;
 	}
 }

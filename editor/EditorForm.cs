@@ -256,8 +256,8 @@ namespace KFIRPG.editor {
 		readonly Pen stepEventPen = Pens.Orange;
 		readonly Brush actionBrush = new SolidBrush(Color.FromArgb(128, Color.Yellow));
 		readonly Pen actionPen = Pens.Yellow;
-		readonly Color inactiveLayerColor = Color.FromArgb(128, Color.Gray);
-		readonly Brush inactiveLayerBrush = new SolidBrush(Color.FromArgb(128, Color.Gray));
+		readonly Brush passBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
+		readonly Pen passPen = Pens.Red;
 
 		private void DrawBox(int x, int y, int width, int height, Brush bg, Pen frame, Graphics g) {
 			g.FillRectangle(bg, x, y, width, height);
@@ -278,6 +278,10 @@ namespace KFIRPG.editor {
 						layer.tiles[i, j].gfx.Draw(x + i * size, y + j * size, e.Graphics);
 						if (layer.objects[i, j] != null) {
 							layer.objects[i, j].Gfx.Draw(x + i * size, y + j * size, e.Graphics);
+						}
+
+						if (!layer.tiles[i, j].passable && passabilityButton.Checked) {
+							DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
 						}
 
 						if (layer.tiles[i, j].onStep != "") {
@@ -330,7 +334,9 @@ namespace KFIRPG.editor {
 
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
-				cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
+					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+				}
 			}
 			else {
 			}
@@ -341,6 +347,15 @@ namespace KFIRPG.editor {
 			int y = -vScrollBar.Value * currentProject.tileSize;
 
 			cursor.UpdateCoords(e.X, e.Y, e.X / currentProject.tileSize + x, e.Y / currentProject.tileSize + y);
+			mainPanel.Invalidate();
+		}
+
+		private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
+			Size thisSize = new Size(currentMap.width, currentMap.height);
+			Size newSize = WidthHeightSelector.Select(thisSize, this);
+			if (thisSize != newSize) {
+				currentMap.Resize(newSize.Width, newSize.Height);
+			}
 			mainPanel.Invalidate();
 		}
 	}

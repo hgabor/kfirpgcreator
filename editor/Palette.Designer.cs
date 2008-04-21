@@ -28,13 +28,18 @@
 			this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
 			this.tilesPanel = new System.Windows.Forms.Panel();
+			this.passabilityPage = new System.Windows.Forms.TabPage();
+			this.impassableButton = new System.Windows.Forms.Button();
+			this.passableButton = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tilePage.SuspendLayout();
+			this.passabilityPage.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tilePage);
+			this.tabControl1.Controls.Add(this.passabilityPage);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -57,6 +62,8 @@
 			// 
 			// hScrollBar1
 			// 
+			this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.hScrollBar1.Location = new System.Drawing.Point(0, 240);
 			this.hScrollBar1.Name = "hScrollBar1";
 			this.hScrollBar1.Size = new System.Drawing.Size(273, 16);
@@ -64,6 +71,8 @@
 			// 
 			// vScrollBar1
 			// 
+			this.vScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.vScrollBar1.Location = new System.Drawing.Point(273, 0);
 			this.vScrollBar1.Name = "vScrollBar1";
 			this.vScrollBar1.Size = new System.Drawing.Size(16, 240);
@@ -71,12 +80,47 @@
 			// 
 			// tilesPanel
 			// 
+			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
 			this.tilesPanel.Name = "tilesPanel";
 			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
 			this.tilesPanel.TabIndex = 0;
 			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
 			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
+			// 
+			// passabilityPage
+			// 
+			this.passabilityPage.Controls.Add(this.impassableButton);
+			this.passabilityPage.Controls.Add(this.passableButton);
+			this.passabilityPage.Location = new System.Drawing.Point(4, 22);
+			this.passabilityPage.Name = "passabilityPage";
+			this.passabilityPage.Padding = new System.Windows.Forms.Padding(3);
+			this.passabilityPage.Size = new System.Drawing.Size(289, 256);
+			this.passabilityPage.TabIndex = 1;
+			this.passabilityPage.Text = "Passability";
+			this.passabilityPage.UseVisualStyleBackColor = true;
+			// 
+			// impassableButton
+			// 
+			this.impassableButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.impassableButton.Location = new System.Drawing.Point(46, 6);
+			this.impassableButton.Name = "impassableButton";
+			this.impassableButton.Size = new System.Drawing.Size(32, 32);
+			this.impassableButton.TabIndex = 1;
+			this.impassableButton.UseVisualStyleBackColor = true;
+			this.impassableButton.Click += new System.EventHandler(this.impassableButton_Click);
+			// 
+			// passableButton
+			// 
+			this.passableButton.Image = global::KFIRPG.editor.Properties.Resources.tick;
+			this.passableButton.Location = new System.Drawing.Point(8, 6);
+			this.passableButton.Name = "passableButton";
+			this.passableButton.Size = new System.Drawing.Size(32, 32);
+			this.passableButton.TabIndex = 0;
+			this.passableButton.UseVisualStyleBackColor = true;
+			this.passableButton.Click += new System.EventHandler(this.passableButton_Click);
 			// 
 			// Palette
 			// 
@@ -90,6 +134,7 @@
 			this.Text = "Palette";
 			this.tabControl1.ResumeLayout(false);
 			this.tilePage.ResumeLayout(false);
+			this.passabilityPage.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -101,5 +146,8 @@
 		private System.Windows.Forms.HScrollBar hScrollBar1;
 		private System.Windows.Forms.VScrollBar vScrollBar1;
 		private System.Windows.Forms.Panel tilesPanel;
+		private System.Windows.Forms.TabPage passabilityPage;
+		private System.Windows.Forms.Button passableButton;
+		private System.Windows.Forms.Button impassableButton;
 	}
 }

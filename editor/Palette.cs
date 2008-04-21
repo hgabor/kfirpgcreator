@@ -50,5 +50,17 @@ namespace KFIRPG.editor {
 				PaletteSelectionChanged(this, new CursorEventArgs(new TileCursor(tileId, currentProject)));
 			}
 		}
+
+		private void passableButton_Click(object sender, EventArgs e) {
+			if (PaletteSelectionChanged != null) {
+				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(true, currentProject)));
+			}
+		}
+
+		private void impassableButton_Click(object sender, EventArgs e) {
+			if (PaletteSelectionChanged != null) {
+				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(false, currentProject)));
+			}
+		}
 	}
 }

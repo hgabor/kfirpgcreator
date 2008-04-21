@@ -53,11 +53,37 @@ namespace KFIRPG.editor {
 					}
 				}
 			}
+
+			public void Resize(int newX, int newY) {
+				int oldX = tiles.GetUpperBound(0) + 1;
+				int oldY = tiles.GetUpperBound(1) + 1;
+				Tile[,] newTiles = new Tile[newX, newY];
+				Obj[,] newObjs = new Obj[newX, newY];
+				for (int i = 0; i < newX; ++i) {
+					for (int j = 0; j < newY; ++j) {
+						if (i < oldX && j < oldY) {
+							newTiles[i, j] = tiles[i, j];
+							newObjs[i, j] = objects[i, j];
+						}
+						else {
+							newTiles[i, j] = new Tile(SpriteSheet.Gfx.Empty, false);
+						}
+					}
+				}
+				tiles = newTiles;
+				objects = newObjs;
+			}
 		}
 
 		public List<Layer> layers = new List<Layer>();
 		public int width;
 		public int height;
+
+		public void Resize(int newX, int newY) {
+			width = newX;
+			height = newY;
+			layers.ForEach((Layer l) => l.Resize(newX, newY));
+		}
 
 		public Map(string name, Project project) {
 			Loader loader = project.loader;

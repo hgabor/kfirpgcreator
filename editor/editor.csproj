@@ -76,6 +76,7 @@
     <Compile Include="Palette.Designer.cs">
       <DependentUpon>Palette.cs</DependentUpon>
     </Compile>
+    <Compile Include="PassabilityCursor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -86,6 +87,12 @@
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="TileCursor.cs" />
+    <Compile Include="WidthHeightSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WidthHeightSelector.Designer.cs">
+      <DependentUpon>WidthHeightSelector.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -119,6 +126,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="WidthHeightSelector.resx">
+      <DependentUpon>WidthHeightSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\corelib\corelib.csproj">
@@ -149,5 +160,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tick.png" />
   </ItemGroup>
 </Project>
