@@ -15,7 +15,7 @@ namespace KFIRPG.editor {
 		public new void Load(Map currentMap) {
 			checkedListBox.Items.Clear();
 			for (int l = currentMap.layers.Count - 1; l >= 0; --l) {
-				checkedListBox.Items.Add("layer " + l.ToString(), true);
+				checkedListBox.Items.Add(currentMap.layers[l].name, true);
 			}
 			checkedListBox.SelectedIndex = 0;
 		}

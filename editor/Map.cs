@@ -38,6 +38,7 @@ namespace KFIRPG.editor {
 		public class Layer {
 			public Tile[,] tiles;
 			public Obj[,] objects;
+			public string name;
 			public Layer(int width, int height, string pathBase, Project project) {
 				Loader loader = project.loader;
 				SpriteSheet sheet = project.sheets["tiles"];
@@ -50,6 +51,17 @@ namespace KFIRPG.editor {
 					string[] gfxLine = gfxLines[j].Split(' ');
 					for (int i = 0; i < width; ++i) {
 						tiles[i, j] = new Tile(sheet.GetGfxById(int.Parse(gfxLine[i])), int.Parse(passLine[i]) == 1);
+					}
+				}
+				name = loader.LoadText(string.Format(pathBase, "name")).Trim();
+			}
+			public Layer(int width, int height, string name) {
+				this.name = name;
+				tiles = new Tile[width, height];
+				objects = new Obj[width, height];
+				for (int i = 0; i < width; ++i) {
+					for (int j = 0; j < height; ++j) {
+						tiles[i, j] = new Tile(SpriteSheet.Gfx.Empty, true);
 					}
 				}
 			}
@@ -78,6 +90,7 @@ namespace KFIRPG.editor {
 		public List<Layer> layers = new List<Layer>();
 		public int width;
 		public int height;
+		public string name;
 
 		public void Resize(int newX, int newY) {
 			width = newX;
@@ -86,6 +99,7 @@ namespace KFIRPG.editor {
 		}
 
 		public Map(string name, Project project) {
+			this.name = name;
 			Loader loader = project.loader;
 			XmlDocument info = new XmlDocument();
 			info.LoadXml(loader.LoadText("maps/" + name + "/info.xml"));
@@ -122,6 +136,13 @@ namespace KFIRPG.editor {
 				string script = node.SelectSingleNode("script").InnerText.Trim();
 				layers[layer].tiles[x, y].onStep = script;
 			}
+		}
+
+		internal Layer CreateNewLayer(string name) {
+			int layerId = layers.Count;
+			Layer newLayer = new Layer(width, height, name);
+			layers.Add(newLayer);
+			return newLayer;
 		}
 	}
 }

@@ -42,8 +42,8 @@ namespace KFIRPG.editor {
 
 		public EditorForm() {
 			InitializeComponent();
-			currentProject = Project.FromFiles("TestGame");
-			currentMap = currentProject.maps[currentProject.startupMapName];
+			//currentProject = Project.FromFiles("TestGame");
+			//currentMap = currentProject.maps[currentProject.startupMapName];
 
 			//Layers toolbar
 			layers = new LayersToolbar();
@@ -55,6 +55,7 @@ namespace KFIRPG.editor {
 			layers.addbutton.Click += (sender, args) => {
 			};
 			layers.deletebutton.Click += (sender, args) => {
+
 			};
 			layers.upbutton.Click += (sender, args) => {
 			};
@@ -75,6 +76,8 @@ namespace KFIRPG.editor {
 				this.cursor = args.Cursor;
 			};
 
+			specialViewComboBox.SelectedIndex = 0;
+
 			this.Resize += (sender, args) => CalculateScrollbars();
 			CalculateScrollbars();
 			vScrollBar.ValueChanged += UpdateEventHandler;
@@ -84,12 +87,19 @@ namespace KFIRPG.editor {
 		}
 
 		public void CalculateScrollbars() {
+			if (currentMap == null) {
+				vScrollBar.Enabled = false;
+				hScrollBar.Enabled = false;
+				return;
+			}
+			vScrollBar.Enabled = true;
 			vScrollBar.Minimum = 0;
 			vScrollBar.Maximum = currentMap.height;
 			vScrollBar.LargeChange = mainPanel.Height / currentProject.tileSize;
 			if (vScrollBar.Maximum >= vScrollBar.LargeChange && vScrollBar.Value >= vScrollBar.Maximum - vScrollBar.LargeChange) {
 				vScrollBar.Value = vScrollBar.Maximum - vScrollBar.LargeChange;
 			}
+			hScrollBar.Enabled = true;
 			hScrollBar.Minimum = 0;
 			hScrollBar.Maximum = currentMap.width;
 			hScrollBar.LargeChange = mainPanel.Width / currentProject.tileSize;
@@ -117,6 +127,47 @@ namespace KFIRPG.editor {
 			images.Load(currentProject);
 			palette.Load(currentProject);
 			layers.Load(currentMap);
+
+			layers.addbutton.Click += (sender, args) => {
+				using (ComposedForm form = new ComposedForm("New layer", ComposedForm.Parts.Name)) {
+					if (form.ShowDialog() == DialogResult.OK) {
+						currentMap.CreateNewLayer(form.GetName());
+						layers.Load(currentMap);
+						mainPanel.Invalidate();
+					}
+				}
+			};
+			layers.deletebutton.Click += (sender, args) => {
+				if (MessageBox.Show(layers,
+					string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem),
+					"Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+					currentMap.layers.RemoveAt(currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1);
+					layers.Load(currentMap);
+					mainPanel.Invalidate();
+				}
+			};
+			layers.upbutton.Click += (sender, args) => {
+				int index = layers.checkedListBox.SelectedIndex;
+				if (index == 0) return;
+				int lindex = currentMap.layers.Count - index - 1;
+				Map.Layer layer = currentMap.layers[lindex];
+				currentMap.layers.RemoveAt(lindex);
+				currentMap.layers.Insert(lindex + 1, layer);
+				layers.Load(currentMap);
+				layers.checkedListBox.SelectedIndex = index - 1;
+				mainPanel.Invalidate();
+			};
+			layers.downbutton.Click += (sender, args) => {
+				int index = layers.checkedListBox.SelectedIndex;
+				if (index == currentMap.layers.Count - 1) return;
+				int lindex = currentMap.layers.Count - index - 1;
+				Map.Layer layer = currentMap.layers[lindex];
+				currentMap.layers.RemoveAt(lindex);
+				currentMap.layers.Insert(lindex - 1, layer);
+				layers.Load(currentMap);
+				layers.checkedListBox.SelectedIndex = index + 1;
+				mainPanel.Invalidate();
+			};
 
 			EnableControls();
 			mainPanel.Invalidate();
@@ -234,6 +285,7 @@ namespace KFIRPG.editor {
 								passSw.WriteLine(string.Join(" ", passLine));
 							}
 						}
+						File.WriteAllText(string.Format("maps/{0}/layers/name.{1}", map.Key, l), layer.name);
 					}
 					objects.Save("maps/" + map.Key + "/objects.xml");
 					onstep.Save("maps/" + map.Key + "/onstep.xml");
@@ -277,15 +329,18 @@ namespace KFIRPG.editor {
 							layer.objects[i, j].Gfx.Draw(x + i * size, y + j * size, e.Graphics);
 						}
 
-						if (!layer.tiles[i, j].passable && passabilityButton.Checked) {
-							DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
-						}
+						if (specialViewComboBox.SelectedIndex == 1 || selectedLayer) {
 
-						if (layer.tiles[i, j].onStep != "") {
-							DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
-						}
-						if (layer.objects[i, j] != null && layer.objects[i, j].actionScript != "") {
-							DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
+							if (!layer.tiles[i, j].passable && passabilityButton.Checked) {
+								DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
+							}
+
+							if (layer.tiles[i, j].onStep != "") {
+								DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
+							}
+							if (layer.objects[i, j] != null && layer.objects[i, j].actionScript != "") {
+								DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
+							}
 						}
 					}
 				}
@@ -340,6 +395,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void mainPanel_MouseMove(object sender, MouseEventArgs e) {
+			if (currentProject == null) return;
 			int x = -hScrollBar.Value * currentProject.tileSize;
 			int y = -vScrollBar.Value * currentProject.tileSize;
 
@@ -349,11 +405,16 @@ namespace KFIRPG.editor {
 
 		private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
 			Size thisSize = new Size(currentMap.width, currentMap.height);
-			Size newSize = WidthHeightSelector.Select(thisSize, this);
-			if (thisSize != newSize) {
-				currentMap.Resize(newSize.Width, newSize.Height);
+			using (ComposedForm form = new ComposedForm("Resize map", ComposedForm.Parts.Size)) {
+				form.SetSize(thisSize);
+				if (form.ShowDialog() == DialogResult.OK) {
+					Size newSize = form.GetSize();
+					if (thisSize != newSize) {
+						currentMap.Resize(newSize.Width, newSize.Height);
+					}
+					mainPanel.Invalidate();
+				}
 			}
-			mainPanel.Invalidate();
 		}
 	}
 }

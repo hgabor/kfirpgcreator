@@ -47,6 +47,12 @@
     <Compile Include="AudioLibrary.Designer.cs">
       <DependentUpon>AudioLibrary.cs</DependentUpon>
     </Compile>
+    <Compile Include="ComposedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ComposedForm.Designer.cs">
+      <DependentUpon>ComposedForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Cursor.cs" />
     <Compile Include="DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
@@ -87,12 +93,6 @@
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="TileCursor.cs" />
-    <Compile Include="WidthHeightSelector.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WidthHeightSelector.Designer.cs">
-      <DependentUpon>WidthHeightSelector.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -104,6 +104,10 @@
   <ItemGroup>
     <EmbeddedResource Include="AudioLibrary.resx">
       <DependentUpon>AudioLibrary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComposedForm.resx">
+      <DependentUpon>ComposedForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EditorForm.resx">
@@ -124,10 +128,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WidthHeightSelector.resx">
-      <DependentUpon>WidthHeightSelector.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
