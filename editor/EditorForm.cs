@@ -138,7 +138,10 @@ namespace KFIRPG.editor {
 				}
 			};
 			layers.deletebutton.Click += (sender, args) => {
-				if (MessageBox.Show(layers,
+				if (currentMap.layers.Count == 1) {
+					MessageBox.Show("Cannot remove last layer!", "Last layer");
+				}
+				else if (MessageBox.Show(layers,
 					string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem),
 					"Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
 					currentMap.layers.RemoveAt(currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1);
@@ -167,6 +170,14 @@ namespace KFIRPG.editor {
 				layers.Load(currentMap);
 				layers.checkedListBox.SelectedIndex = index + 1;
 				mainPanel.Invalidate();
+			};
+
+			foreach(string mapName in currentProject.maps.Keys) {
+				mapComboBox.Items.Add(mapName);
+			}
+			mapComboBox.SelectedIndex = mapComboBox.Items.IndexOf(currentMap.name);
+			mapComboBox.SelectedIndexChanged += (sender, args) => {
+				ChangeCurrentMap((string)mapComboBox.SelectedItem);
 			};
 
 			EnableControls();
@@ -301,6 +312,12 @@ namespace KFIRPG.editor {
 			else return false;
 		}
 
+		private void ChangeCurrentMap(string mapName) {
+			currentMap = currentProject.maps[mapName];
+			mapComboBox.SelectedIndex = mapComboBox.Items.IndexOf(mapName);
+			layers.Load(currentMap);
+		}
+
 		readonly Brush stepEventBrush = new SolidBrush(Color.FromArgb(128, Color.Orange));
 		readonly Pen stepEventPen = Pens.Orange;
 		readonly Brush actionBrush = new SolidBrush(Color.FromArgb(128, Color.Yellow));
@@ -384,6 +401,35 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
+			Size thisSize = new Size(currentMap.width, currentMap.height);
+			using (ComposedForm form = new ComposedForm("Resize map", ComposedForm.Parts.Size)) {
+				form.SetSize(thisSize);
+				if (form.ShowDialog() == DialogResult.OK) {
+					Size newSize = form.GetSize();
+					if (thisSize != newSize) {
+						currentMap.Resize(newSize.Width, newSize.Height);
+					}
+					mainPanel.Invalidate();
+				}
+			}
+		}
+
+		private void newMapToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ComposedForm form = new ComposedForm("New map", ComposedForm.Parts.Name | ComposedForm.Parts.Size)) {
+				if (form.ShowDialog() == DialogResult.OK) {
+					string name = form.GetName();
+					Size size = form.GetSize();
+					Map map = new Map(name, size);
+					currentProject.maps.Add(name, map);
+					mapComboBox.Items.Add(name);
+					ChangeCurrentMap(name);
+				}
+			}
+		}
+
+		bool dragging = false;
+
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
@@ -400,21 +446,29 @@ namespace KFIRPG.editor {
 			int y = -vScrollBar.Value * currentProject.tileSize;
 
 			cursor.UpdateCoords(e.X, e.Y, e.X / currentProject.tileSize + x, e.Y / currentProject.tileSize + y);
+
+			if (dragging && e.Button == MouseButtons.Left) {
+				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
+					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+				}
+			}
+
 			mainPanel.Invalidate();
 		}
 
-		private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
-			Size thisSize = new Size(currentMap.width, currentMap.height);
-			using (ComposedForm form = new ComposedForm("Resize map", ComposedForm.Parts.Size)) {
-				form.SetSize(thisSize);
-				if (form.ShowDialog() == DialogResult.OK) {
-					Size newSize = form.GetSize();
-					if (thisSize != newSize) {
-						currentMap.Resize(newSize.Width, newSize.Height);
-					}
-					mainPanel.Invalidate();
-				}
+		private void EditorForm_Deactivate(object sender, EventArgs e) {
+			dragging = false;
+		}
+
+		private void mainPanel_MouseDown(object sender, MouseEventArgs e) {
+			dragging = true;
+			if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
+				cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
 			}
+		}
+
+		private void mainPanel_MouseUp(object sender, MouseEventArgs e) {
+			dragging = false;
 		}
 	}
 }

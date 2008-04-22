@@ -164,4 +164,10 @@
   <ItemGroup>
     <None Include="Resources\tick.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\map_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.png" />
+  </ItemGroup>
 </Project>

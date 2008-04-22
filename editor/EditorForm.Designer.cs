@@ -38,13 +38,15 @@
 			this.mapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.passabilityButton = new System.Windows.Forms.ToolStripButton();
+			this.specialViewComboBox = new System.Windows.Forms.ToolStripComboBox();
+			this.mapComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-			this.specialViewComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
@@ -174,16 +176,27 @@
 			// 
 			// gameToolStripMenuItem
 			// 
+			this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newMapToolStripMenuItem});
 			this.gameToolStripMenuItem.Enabled = false;
 			this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
 			this.gameToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
 			this.gameToolStripMenuItem.Text = "Game";
 			// 
+			// newMapToolStripMenuItem
+			// 
+			this.newMapToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.map_add;
+			this.newMapToolStripMenuItem.Name = "newMapToolStripMenuItem";
+			this.newMapToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+			this.newMapToolStripMenuItem.Text = "New map...";
+			this.newMapToolStripMenuItem.Click += new System.EventHandler(this.newMapToolStripMenuItem_Click);
+			// 
 			// toolStrip
 			// 
 			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.passabilityButton,
-            this.specialViewComboBox});
+            this.specialViewComboBox,
+            this.mapComboBox});
 			this.toolStrip.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(499, 25);
@@ -194,13 +207,34 @@
 			// 
 			this.passabilityButton.CheckOnClick = true;
 			this.passabilityButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.passabilityButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.passabilityButton.Image = global::KFIRPG.editor.Properties.Resources.stop;
 			this.passabilityButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.passabilityButton.Name = "passabilityButton";
 			this.passabilityButton.Size = new System.Drawing.Size(23, 22);
 			this.passabilityButton.Text = "Passability";
 			this.passabilityButton.ToolTipText = "Toggle passability view";
 			this.passabilityButton.Click += new System.EventHandler(this.UpdateEventHandler);
+			// 
+			// specialViewComboBox
+			// 
+			this.specialViewComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.specialViewComboBox.Items.AddRange(new object[] {
+            "Current layer",
+            "All layers"});
+			this.specialViewComboBox.MaxDropDownItems = 2;
+			this.specialViewComboBox.Name = "specialViewComboBox";
+			this.specialViewComboBox.Size = new System.Drawing.Size(121, 25);
+			this.specialViewComboBox.ToolTipText = "Set visibility for special tiles";
+			this.specialViewComboBox.SelectedIndexChanged += new System.EventHandler(this.UpdateEventHandler);
+			// 
+			// mapComboBox
+			// 
+			this.mapComboBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.mapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.mapComboBox.Name = "mapComboBox";
+			this.mapComboBox.Size = new System.Drawing.Size(121, 25);
+			this.mapComboBox.Sorted = true;
+			this.mapComboBox.ToolTipText = "Selects the map to work with";
 			// 
 			// hScrollBar
 			// 
@@ -228,18 +262,6 @@
 			this.statusStrip.TabIndex = 3;
 			this.statusStrip.Text = "statusStrip1";
 			// 
-			// specialViewComboBox
-			// 
-			this.specialViewComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.specialViewComboBox.Items.AddRange(new object[] {
-            "Current layer",
-            "All layers"});
-			this.specialViewComboBox.MaxDropDownItems = 2;
-			this.specialViewComboBox.Name = "specialViewComboBox";
-			this.specialViewComboBox.Size = new System.Drawing.Size(121, 25);
-			this.specialViewComboBox.ToolTipText = "Set visibility for special tiles";
-			this.specialViewComboBox.SelectedIndexChanged += new System.EventHandler(this.UpdateEventHandler);
-			// 
 			// mainPanel
 			// 
 			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -252,7 +274,8 @@
 			this.mainPanel.TabIndex = 4;
 			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
 			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
-			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
+			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
+			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
 			// 
 			// EditorForm
 			// 
@@ -268,6 +291,7 @@
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "EditorForm";
 			this.Text = "KFI RPG Creator";
+			this.Deactivate += new System.EventHandler(this.EditorForm_Deactivate);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
@@ -303,5 +327,7 @@
 		private System.Windows.Forms.ToolStripButton passabilityButton;
 		private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox specialViewComboBox;
+		private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
+		private System.Windows.Forms.ToolStripComboBox mapComboBox;
 	}
 }

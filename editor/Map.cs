@@ -138,6 +138,14 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		public Map(string name, Size size) {
+			this.name = name;
+			width = size.Width;
+			height = size.Height;
+			Layer layer = new Layer(size.Width, size.Height, "layer1");
+			layers.Add(layer);
+		}
+
 		internal Layer CreateNewLayer(string name) {
 			int layerId = layers.Count;
 			Layer newLayer = new Layer(width, height, name);

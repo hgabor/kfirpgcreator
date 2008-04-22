@@ -25,12 +25,12 @@
 		private void InitializeComponent() {
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tilePage = new System.Windows.Forms.TabPage();
-			this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
-			this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
-			this.tilesPanel = new System.Windows.Forms.Panel();
+			this.hScrollBar = new System.Windows.Forms.HScrollBar();
+			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.passabilityPage = new System.Windows.Forms.TabPage();
 			this.impassableButton = new System.Windows.Forms.Button();
 			this.passableButton = new System.Windows.Forms.Button();
+			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.tabControl1.SuspendLayout();
 			this.tilePage.SuspendLayout();
 			this.passabilityPage.SuspendLayout();
@@ -49,9 +49,9 @@
 			// 
 			// tilePage
 			// 
-			this.tilePage.Controls.Add(this.hScrollBar1);
-			this.tilePage.Controls.Add(this.vScrollBar1);
 			this.tilePage.Controls.Add(this.tilesPanel);
+			this.tilePage.Controls.Add(this.hScrollBar);
+			this.tilePage.Controls.Add(this.vScrollBar);
 			this.tilePage.Location = new System.Drawing.Point(4, 22);
 			this.tilePage.Name = "tilePage";
 			this.tilePage.Padding = new System.Windows.Forms.Padding(3);
@@ -60,35 +60,25 @@
 			this.tilePage.Text = "Tiles";
 			this.tilePage.UseVisualStyleBackColor = true;
 			// 
-			// hScrollBar1
+			// hScrollBar
 			// 
-			this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			this.hScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.hScrollBar1.Location = new System.Drawing.Point(0, 240);
-			this.hScrollBar1.Name = "hScrollBar1";
-			this.hScrollBar1.Size = new System.Drawing.Size(273, 16);
-			this.hScrollBar1.TabIndex = 2;
+			this.hScrollBar.Enabled = false;
+			this.hScrollBar.Location = new System.Drawing.Point(0, 240);
+			this.hScrollBar.Name = "hScrollBar";
+			this.hScrollBar.Size = new System.Drawing.Size(273, 16);
+			this.hScrollBar.TabIndex = 2;
 			// 
-			// vScrollBar1
+			// vScrollBar
 			// 
-			this.vScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			this.vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.vScrollBar1.Location = new System.Drawing.Point(273, 0);
-			this.vScrollBar1.Name = "vScrollBar1";
-			this.vScrollBar1.Size = new System.Drawing.Size(16, 240);
-			this.vScrollBar1.TabIndex = 1;
-			// 
-			// tilesPanel
-			// 
-			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
-			this.tilesPanel.Name = "tilesPanel";
-			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
-			this.tilesPanel.TabIndex = 0;
-			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
-			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
+			this.vScrollBar.Enabled = false;
+			this.vScrollBar.Location = new System.Drawing.Point(273, 0);
+			this.vScrollBar.Name = "vScrollBar";
+			this.vScrollBar.Size = new System.Drawing.Size(16, 240);
+			this.vScrollBar.TabIndex = 1;
 			// 
 			// passabilityPage
 			// 
@@ -122,6 +112,18 @@
 			this.passableButton.UseVisualStyleBackColor = true;
 			this.passableButton.Click += new System.EventHandler(this.passableButton_Click);
 			// 
+			// tilesPanel
+			// 
+			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
+			this.tilesPanel.Name = "tilesPanel";
+			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
+			this.tilesPanel.TabIndex = 3;
+			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
+			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
+			// 
 			// Palette
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -143,11 +145,11 @@
 
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tilePage;
-		private System.Windows.Forms.HScrollBar hScrollBar1;
-		private System.Windows.Forms.VScrollBar vScrollBar1;
-		private System.Windows.Forms.Panel tilesPanel;
+		private System.Windows.Forms.HScrollBar hScrollBar;
+		private System.Windows.Forms.VScrollBar vScrollBar;
 		private System.Windows.Forms.TabPage passabilityPage;
 		private System.Windows.Forms.Button passableButton;
 		private System.Windows.Forms.Button impassableButton;
+		private DoubleBufferedPanel tilesPanel;
 	}
 }
