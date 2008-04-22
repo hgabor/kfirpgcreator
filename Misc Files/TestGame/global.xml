@@ -12,4 +12,18 @@
   <party>
     <character>sticky</character>
   </party>
+  <locations>
+    <location name="TeleportDest">
+      <x>0</x>
+      <y>6</y>
+      <layer>2</layer>
+      <map>lake</map>
+    </location>
+    <location name="HouseInside">
+      <x>1</x>
+      <y>1</y>
+      <layer>0</layer>
+      <map>map2</map>
+    </location>
+  </locations>
 </settings>
