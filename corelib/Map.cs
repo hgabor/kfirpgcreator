@@ -40,12 +40,18 @@ namespace KFIRPG.corelib {
 		}
 
 		List<Sprite> objects = new List<Sprite>();
+		List<Sprite> addList = new List<Sprite>();
+		List<Sprite> removeList = new List<Sprite>();
 		Layer[] layers;
 		int rows;
 		int cols;
 		int tileSize;
 
+		string mapName;
+		public string Name { get { return mapName; } }
+
 		public Map(string mapName, Game game) {
+			this.mapName = mapName;
 			XmlDocument info = new XmlDocument();
 			info.LoadXml(game.loader.LoadText(string.Concat("maps/", mapName, "/info.xml")));
 			cols = int.Parse(info.SelectSingleNode("/map/width").InnerText);
@@ -79,7 +85,7 @@ namespace KFIRPG.corelib {
 				Sprite sp = new Sprite(name, game);
 				this.Place(sp, x, y, l);
 				if (action != "") {
-					Script script = game.vm.LoadScript(game.loader.LoadText("scripts/map/" + action));
+					Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + action));
 					script.Owner = sp;
 					sp.Action = script;
 				}
@@ -96,19 +102,21 @@ namespace KFIRPG.corelib {
 				int y = int.Parse(node.SelectSingleNode("y").InnerText);
 				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
 				string name = node.SelectSingleNode("script").InnerText.Trim();
-				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/map/" + name));
+				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + name));
 				layers[l].onStep[x, y].Add(script);
 			}
 		}
 
 		internal void Place(Sprite sprite, int x, int y, int layer) {
 			layers[layer].objects[x, y].Add(sprite);
-			objects.Add(sprite);
+			//objects.Add(sprite);
+			addList.Add(sprite);
 			sprite.UpdateCoords(x, y, layer);
 		}
 		internal void Remove(Sprite sprite, int x, int y, int layer) {
 			layers[layer].objects[x, y].Remove(sprite);
-			objects.Remove(sprite);
+			//objects.Remove(sprite);
+			removeList.Add(sprite);
 		}
 		internal void Move(Sprite sprite, int fromX, int fromY, int fromLayer, int toX, int toY, int toLayer) {
 			layers[fromLayer].objects[fromX, fromY].Remove(sprite);
@@ -152,6 +160,14 @@ namespace KFIRPG.corelib {
 		internal void ThinkAll() {
 			foreach (Sprite sp in objects) {
 				sp.Think(this);
+			}
+			if (removeList.Count != 0) {
+				foreach (Sprite sp in removeList) objects.Remove(sp);
+				removeList.Clear();
+			}
+			if (addList.Count != 0) {
+				objects.AddRange(addList);
+				addList.Clear();
 			}
 		}
 	}

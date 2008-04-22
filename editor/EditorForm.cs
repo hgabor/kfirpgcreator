@@ -13,6 +13,16 @@ namespace KFIRPG.editor {
 	public partial class EditorForm: Form {
 		Project currentProject;
 		Map currentMap;
+		int CurrentLayerIndex {
+			get {
+				return currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1;
+			}
+		}
+		Map.Layer CurrentLayer {
+			get {
+				return currentMap.layers[CurrentLayerIndex];
+			}
+		}
 		string savePath = null;
 
 		LayersToolbar layers;
@@ -51,19 +61,6 @@ namespace KFIRPG.editor {
 			layers.checkedListBox.ItemCheck += UpdateEventHandler;
 			layers.checkedListBox.SelectedIndexChanged += UpdateEventHandler;
 
-			/*
-			layers.addbutton.Click += (sender, args) => {
-			};
-			layers.deletebutton.Click += (sender, args) => {
-
-			};
-			layers.upbutton.Click += (sender, args) => {
-			};
-			layers.downbutton.Click += (sender, args) => {
-			};
-			layers.checkedListBox.ItemCheck += UpdateEventHandler;*/
-
-			//Audio library
 			audio = new AudioLibrary();
 			BindFormWithMenuItem(audio, audioLibraryToolStripMenuItem);
 
@@ -207,8 +204,10 @@ namespace KFIRPG.editor {
 			foreach (Sprite sp in currentProject.party) {
 				party.AppendChild(global.CreateElement("character")).InnerText = sp.name;
 			}
-			global.Save("global.xml");
 
+			//Locations.xml
+			XmlElement locations = global.CreateElement("locations");
+			globalRoot.AppendChild(locations);
 
 			//Images
 			Directory.CreateDirectory("img");
@@ -280,6 +279,16 @@ namespace KFIRPG.editor {
 										ev.AppendChild(onstep.CreateElement("layer")).InnerText = l.ToString();
 										ev.AppendChild(onstep.CreateElement("script")).InnerText = layer.tiles[i, j].onStep;
 									}
+									if (!string.IsNullOrEmpty(layer.tiles[i, j].locationName)) {
+										string locName = layer.tiles[i, j].locationName;
+										XmlElement location = global.CreateElement("location");
+										locations.AppendChild(location);
+										location.SetAttribute("name", locName);
+										location.AppendChild(global.CreateElement("x")).InnerText = i.ToString();
+										location.AppendChild(global.CreateElement("y")).InnerText = j.ToString();
+										location.AppendChild(global.CreateElement("layer")).InnerText = l.ToString();
+										location.AppendChild(global.CreateElement("map")).InnerText = map.Key;
+									}
 									if (layer.objects[i, j] != null) {
 										Map.Obj obj = layer.objects[i, j];
 										XmlElement o = objects.CreateElement("object");
@@ -302,6 +311,18 @@ namespace KFIRPG.editor {
 					onstep.Save("maps/" + map.Key + "/onstep.xml");
 				}
 			}
+
+			//Scripts
+			Directory.CreateDirectory("scripts/map");
+			Directory.CreateDirectory("scripts/movement");
+			using (StreamWriter sw = new StreamWriter(File.Create("scripts.list"))) {
+				foreach (Script script in currentProject.scripts) {
+					sw.WriteLine(script.name);
+					File.WriteAllText("scripts/" + script.name, script.text);
+				}
+			}
+
+			global.Save("global.xml");
 		}
 
 		private bool SetSaveLocation() {
@@ -324,6 +345,9 @@ namespace KFIRPG.editor {
 		readonly Pen actionPen = Pens.Yellow;
 		readonly Brush passBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
 		readonly Pen passPen = Pens.Red;
+		readonly Pen mapFramePen = Pens.White;
+		readonly Brush locationBrush = new SolidBrush(Color.FromArgb(128, Color.Blue));
+		readonly Pen locationPen = Pens.Blue;
 
 		private void DrawBox(int x, int y, int width, int height, Brush bg, Pen frame, Graphics g) {
 			g.FillRectangle(bg, x, y, width, height);
@@ -355,6 +379,9 @@ namespace KFIRPG.editor {
 							if (layer.tiles[i, j].onStep != "") {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
 							}
+							if (layer.tiles[i, j].locationName != "") {
+								DrawBox(x + i * size, y + j * size, size - 1, size - 1, locationBrush, locationPen, e.Graphics);
+							}
 							if (layer.objects[i, j] != null && layer.objects[i, j].actionScript != "") {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
 							}
@@ -362,6 +389,7 @@ namespace KFIRPG.editor {
 					}
 				}
 			}
+			e.Graphics.DrawRectangle(mapFramePen, new Rectangle(x, y, currentMap.width * size - 1, currentMap.height * size - 1));
 			cursor.Draw(e.Graphics);
 		}
 
@@ -430,13 +458,12 @@ namespace KFIRPG.editor {
 
 		bool dragging = false;
 
+		Point? tileLocation = null;
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Left) {
-				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
-				}
-			}
-			else {
+			if (e.Button == MouseButtons.Right && currentProject != null && !IsOutOfBounds(e.Location)) {
+				tileLocation = new Point(-hScrollBar.Value * currentProject.tileSize + e.X / currentProject.tileSize,
+					-vScrollBar.Value * currentProject.tileSize + e.Y / currentProject.tileSize);
+				contextMenu.Show(mainPanel, e.Location);
 			}
 		}
 
@@ -469,6 +496,36 @@ namespace KFIRPG.editor {
 
 		private void mainPanel_MouseUp(object sender, MouseEventArgs e) {
 			dragging = false;
+		}
+
+		private bool IsOutOfBounds(Point point) {
+			int x = -hScrollBar.Value * currentProject.tileSize;
+			int y = -vScrollBar.Value * currentProject.tileSize;
+			return (point.X + x >= currentMap.width * currentProject.tileSize) || (point.Y + y >= currentMap.height * currentProject.tileSize);
+		}
+
+		private void locationMenuItem_Click(object sender, EventArgs e) {
+			using (ComposedForm form = new ComposedForm("Location name", ComposedForm.Parts.Name, ComposedForm.Parts.None)) {
+				form.SetName(CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName);
+				if (form.ShowDialog(this) == DialogResult.OK) {
+					CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
+				}
+			}
+		}
+
+		private void scriptsToolStripMenuItem_Click(object sender, EventArgs e) {
+			using (ScriptEditor form = new ScriptEditor(currentProject)) {
+				form.ShowDialog(this);
+			}
+		}
+
+		private void onstepMenuItem_Click(object sender, EventArgs e) {
+			string currentScript = CurrentLayer.tiles[tileLocation.Value.X,tileLocation.Value.Y].onStep;
+			using (ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
+				if (selector.ShowDialog(this) == DialogResult.OK) {
+					CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
+				}
+			}
 		}
 	}
 }

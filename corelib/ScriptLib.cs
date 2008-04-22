@@ -6,14 +6,14 @@ namespace KFIRPG.corelib {
 	[AttributeUsage(AttributeTargets.Method)]
 	class ScriptAttribute: Attribute { }
 	[AttributeUsage(AttributeTargets.Method)]
-	class AsyncScriptAttribute: Attribute { }
+	class BlockingScriptAttribute: Attribute { }
 
 	class ScriptLib {
 		Dialogs dialogs;
 		Game game;
 		Random random = new Random();
 
-		[AsyncScript]
+		[BlockingScript]
 		public void Message(string message) {
 			dialogs.Message(message);
 		}
@@ -42,14 +42,34 @@ namespace KFIRPG.corelib {
 			Console.WriteLine(text.ToString());
 		}
 
-		[Script]
-		public void MoveTo(int x, int y, int layer) {
+		public void ShortJump(int x, int y, int layer) {
 			FadeAnimation anim = new FadeAnimation(game);
 			anim.FromImage = game.TakeScreenshot();
 			Sprite leader = game.Party.Leader;
 			game.currentMap.Move(leader, leader.X, leader.Y, leader.Layer, x, y, layer);
 			game.currentMap.OnStep(x, y, layer);
 			game.PushScreen(anim);
+		}
+
+		public void LongJump(Location loc) {
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = game.TakeScreenshot();
+			Sprite leader = game.Party.Leader;
+			game.currentMap.Remove(leader, leader.X, leader.Y, leader.Layer);
+			game.currentMap = new Map(loc.MapName, game);
+			game.currentMap.Place(leader, loc.X, loc.Y, loc.Layer);
+			game.PushScreen(anim);
+		}
+
+		[Script]
+		public void MoveTo(string locationStr) {
+			Location location = game.GetLocation(locationStr);
+			if (location.MapName == game.currentMap.Name) {
+				ShortJump(location.X, location.Y, location.Layer);
+			}
+			else {
+				LongJump(location);
+			}
 		}
 
 		public ScriptLib(Game game) {

@@ -71,6 +71,7 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="Graphics.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="MessageBox.cs" />
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />

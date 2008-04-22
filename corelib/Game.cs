@@ -36,7 +36,17 @@ namespace KFIRPG.corelib {
 			}
 			party.Leader.MovementAI = new PlayerMovementController(this);
 
-			PushScreen(new MapScreen(defaultMap, startX, startY, startL, this));
+			foreach(XmlNode loc in globalSettings.SelectNodes("/settings/locations/location")) {
+				locations.Add(loc.Attributes["name"].InnerText.Trim(),
+					new Location(int.Parse(loc.SelectSingleNode("x").InnerText),
+						int.Parse(loc.SelectSingleNode("y").InnerText),
+						int.Parse(loc.SelectSingleNode("layer").InnerText),
+						loc.SelectSingleNode("map").InnerText.Trim()));
+			}
+
+			currentMap.Place(party.Leader, startX, startY, startL);
+
+			PushScreen(new MapScreen(this));
 
 			startupScript = vm.LoadScript(loader.LoadText("scripts/" + globalSettings.SelectSingleNode("/settings/startscript").InnerText));
 			startupScript.Run();
@@ -59,6 +69,11 @@ namespace KFIRPG.corelib {
 			screens.RemoveAt(screens.Count - 1);
 		}
 		internal Map currentMap;
+
+		Dictionary<string, Location> locations = new Dictionary<string, Location>();
+		internal Location GetLocation(string name) {
+			return locations[name];
+		}
 
 		Party party;
 		internal Party Party { get { return party; } }

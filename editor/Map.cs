@@ -11,6 +11,7 @@ namespace KFIRPG.editor {
 			public SpriteSheet.Gfx gfx;
 			public bool passable;
 			public string onStep = "";
+			public string locationName = "";
 			public Tile(SpriteSheet.Gfx gfx, bool passable) {
 				this.gfx = gfx;
 				this.passable = passable;

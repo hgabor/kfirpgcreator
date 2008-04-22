@@ -23,6 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			this.components = new System.ComponentModel.Container();
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,9 +37,10 @@
 			this.imageLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.paletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.newMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.passabilityButton = new System.Windows.Forms.ToolStripButton();
 			this.specialViewComboBox = new System.Windows.Forms.ToolStripComboBox();
@@ -47,9 +49,13 @@
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.locationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.onstepMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
+			this.contextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -130,22 +136,21 @@
 			// 
 			this.layersToolStripMenuItem.Checked = true;
 			this.layersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.layersToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white_stack;
 			this.layersToolStripMenuItem.Name = "layersToolStripMenuItem";
 			this.layersToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.layersToolStripMenuItem.Text = "Layers";
 			// 
 			// audioLibraryToolStripMenuItem
 			// 
-			this.audioLibraryToolStripMenuItem.Checked = true;
-			this.audioLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.audioLibraryToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.music;
 			this.audioLibraryToolStripMenuItem.Name = "audioLibraryToolStripMenuItem";
 			this.audioLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.audioLibraryToolStripMenuItem.Text = "Audio Library";
 			// 
 			// imageLibraryToolStripMenuItem
 			// 
-			this.imageLibraryToolStripMenuItem.Checked = true;
-			this.imageLibraryToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.imageLibraryToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.picture;
 			this.imageLibraryToolStripMenuItem.Name = "imageLibraryToolStripMenuItem";
 			this.imageLibraryToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.imageLibraryToolStripMenuItem.Text = "Image Library";
@@ -154,6 +159,7 @@
 			// 
 			this.paletteToolStripMenuItem.Checked = true;
 			this.paletteToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.paletteToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.palette;
 			this.paletteToolStripMenuItem.Name = "paletteToolStripMenuItem";
 			this.paletteToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
 			this.paletteToolStripMenuItem.Text = "Palette";
@@ -161,14 +167,23 @@
 			// mapToolStripMenuItem
 			// 
 			this.mapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newMapToolStripMenuItem,
             this.resizeToolStripMenuItem});
 			this.mapToolStripMenuItem.Enabled = false;
 			this.mapToolStripMenuItem.Name = "mapToolStripMenuItem";
 			this.mapToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.mapToolStripMenuItem.Text = "Map";
 			// 
+			// newMapToolStripMenuItem
+			// 
+			this.newMapToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.map_add;
+			this.newMapToolStripMenuItem.Name = "newMapToolStripMenuItem";
+			this.newMapToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+			this.newMapToolStripMenuItem.Text = "New...";
+			// 
 			// resizeToolStripMenuItem
 			// 
+			this.resizeToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.arrow_out;
 			this.resizeToolStripMenuItem.Name = "resizeToolStripMenuItem";
 			this.resizeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
 			this.resizeToolStripMenuItem.Text = "Resize...";
@@ -177,19 +192,19 @@
 			// gameToolStripMenuItem
 			// 
 			this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newMapToolStripMenuItem});
+            this.scriptsToolStripMenuItem});
 			this.gameToolStripMenuItem.Enabled = false;
 			this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
 			this.gameToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
 			this.gameToolStripMenuItem.Text = "Game";
 			// 
-			// newMapToolStripMenuItem
+			// scriptsToolStripMenuItem
 			// 
-			this.newMapToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.map_add;
-			this.newMapToolStripMenuItem.Name = "newMapToolStripMenuItem";
-			this.newMapToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-			this.newMapToolStripMenuItem.Text = "New map...";
-			this.newMapToolStripMenuItem.Click += new System.EventHandler(this.newMapToolStripMenuItem_Click);
+			this.scriptsToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.pencil;
+			this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
+			this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+			this.scriptsToolStripMenuItem.Text = "Scripts...";
+			this.scriptsToolStripMenuItem.Click += new System.EventHandler(this.scriptsToolStripMenuItem_Click);
 			// 
 			// toolStrip
 			// 
@@ -262,6 +277,29 @@
 			this.statusStrip.TabIndex = 3;
 			this.statusStrip.Text = "statusStrip1";
 			// 
+			// contextMenu
+			// 
+			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.locationMenuItem,
+            this.onstepMenuItem});
+			this.contextMenu.Name = "contextMenu";
+			this.contextMenu.Size = new System.Drawing.Size(153, 70);
+			// 
+			// locationMenuItem
+			// 
+			this.locationMenuItem.Name = "locationMenuItem";
+			this.locationMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.locationMenuItem.Text = "Location...";
+			this.locationMenuItem.Click += new System.EventHandler(this.locationMenuItem_Click);
+			// 
+			// onstepMenuItem
+			// 
+			this.onstepMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
+			this.onstepMenuItem.Name = "onstepMenuItem";
+			this.onstepMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.onstepMenuItem.Text = "OnStep...";
+			this.onstepMenuItem.Click += new System.EventHandler(this.onstepMenuItem_Click);
+			// 
 			// mainPanel
 			// 
 			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -274,6 +312,7 @@
 			this.mainPanel.TabIndex = 4;
 			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
 			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
+			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
 			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
 			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
 			// 
@@ -297,6 +336,7 @@
 			this.menuStrip.PerformLayout();
 			this.toolStrip.ResumeLayout(false);
 			this.toolStrip.PerformLayout();
+			this.contextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -327,7 +367,11 @@
 		private System.Windows.Forms.ToolStripButton passabilityButton;
 		private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox specialViewComboBox;
-		private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
 		private System.Windows.Forms.ToolStripComboBox mapComboBox;
+		private System.Windows.Forms.ContextMenuStrip contextMenu;
+		private System.Windows.Forms.ToolStripMenuItem locationMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem onstepMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
 	}
 }

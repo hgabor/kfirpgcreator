@@ -40,8 +40,11 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		public ComposedForm(string caption, Parts parts)
+			: this(caption, parts, parts) { }
+
 		const int spacing = 10;
-		public ComposedForm(string caption, Parts parts) {
+		public ComposedForm(string caption, Parts parts, Parts required) {
 			InitializeComponent();
 			this.Text = caption;
 			int startHere = 0;
@@ -60,11 +63,13 @@ namespace KFIRPG.editor {
 				nameTextBox = new TextBox();
 				nameTextBox.Top = startHere + spacing;
 				nameTextBox.Left = label.Right + spacing;
-				nameTextBox.Text = "unnamed";
-				nameTextBox.TextChanged += (sender, args) => {
-					if (string.IsNullOrEmpty(nameTextBox.Text)) okButton.Enabled = false;
-					else okButton.Enabled = true;
-				};
+				if ((required & Parts.Name) == Parts.Name) {
+					nameTextBox.Text = "unnamed";
+					nameTextBox.TextChanged += (sender, args) => {
+						if (string.IsNullOrEmpty(nameTextBox.Text)) okButton.Enabled = false;
+						else okButton.Enabled = true;
+					};
+				}
 				Controls.Add(nameTextBox);
 				if ((nameTextBox.Right + spacing) > maxWidth) maxWidth = nameTextBox.Right + spacing;
 				startHere = nameTextBox.Bottom + spacing;

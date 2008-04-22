@@ -90,6 +90,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScriptSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptSelector.Designer.cs">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Script.cs" />
+    <Compile Include="ScriptEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptEditor.Designer.cs">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="TileCursor.cs" />
@@ -128,6 +141,14 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptSelector.resx">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptEditor.resx">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -169,5 +190,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lightning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\palette.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white_stack.png" />
   </ItemGroup>
 </Project>

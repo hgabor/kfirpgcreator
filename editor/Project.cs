@@ -8,6 +8,7 @@ namespace KFIRPG.editor {
 		public Dictionary<string, SpriteSheet> sheets = new Dictionary<string, SpriteSheet>();
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;
 		public string startupMapName;
@@ -53,11 +54,25 @@ namespace KFIRPG.editor {
 				maps.Add(map, new Map(map, this));
 			}
 
+			foreach (string strScript in loader.LoadText("scripts.list").Split('\n')) {
+				string script = strScript.Trim();
+				if (script == "") continue;
+				scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
+			}
+
 			startX = int.Parse(global.SelectSingleNode("/settings/startx").InnerText);
 			startY = int.Parse(global.SelectSingleNode("/settings/starty").InnerText);
 			startLayer = int.Parse(global.SelectSingleNode("/settings/startl").InnerText);
 			foreach (XmlNode node in global.SelectNodes("/settings/party/character")) {
 				party.Add(sprites[node.InnerText.Trim()]);
+			}
+			foreach (XmlNode node in global.SelectNodes("/settings/locations/location")) {
+				string locName = node.Attributes["name"].InnerText.Trim();
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
+				string mapName = node.SelectSingleNode("map").InnerText.Trim();
+				maps[mapName].layers[l].tiles[x, y].locationName = locName;
 			}
 		}
 

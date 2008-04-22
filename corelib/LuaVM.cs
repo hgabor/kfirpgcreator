@@ -24,7 +24,7 @@ namespace KFIRPG.corelib {
 		public LuaVM(Game game) {
 			scriptLib = new ScriptLib(game);
 			foreach (MethodInfo method in scriptLib.GetType().GetMethods()) {
-				if (method.GetCustomAttributes(typeof(AsyncScriptAttribute), true).Length != 0) {
+				if (method.GetCustomAttributes(typeof(BlockingScriptAttribute), true).Length != 0) {
 					vm.RegisterFunction("internal_" + method.Name, scriptLib, method);
 					vm.DoString(string.Format(coroutineStr, method.Name, paramList(method)));
 				}

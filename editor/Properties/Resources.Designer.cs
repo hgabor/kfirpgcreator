@@ -74,6 +74,13 @@ namespace KFIRPG.editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_out {
+            get {
+                object obj = ResourceManager.GetObject("arrow_out", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap arrow_up {
             get {
                 object obj = ResourceManager.GetObject("arrow_up", resourceCulture);
@@ -109,6 +116,13 @@ namespace KFIRPG.editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap lightning {
+            get {
+                object obj = ResourceManager.GetObject("lightning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap map_add {
             get {
                 object obj = ResourceManager.GetObject("map_add", resourceCulture);
@@ -116,9 +130,44 @@ namespace KFIRPG.editor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap music {
+            get {
+                object obj = ResourceManager.GetObject("music", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap page_white {
             get {
                 object obj = ResourceManager.GetObject("page_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap page_white_stack {
+            get {
+                object obj = ResourceManager.GetObject("page_white_stack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap palette {
+            get {
+                object obj = ResourceManager.GetObject("palette", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap pencil {
+            get {
+                object obj = ResourceManager.GetObject("pencil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap picture {
+            get {
+                object obj = ResourceManager.GetObject("picture", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
