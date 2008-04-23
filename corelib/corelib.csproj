@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AnimatedGraphics.cs" />
     <Compile Include="Audio.cs" />
+    <Compile Include="CachedLoader.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="Graphics.cs" />

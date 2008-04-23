@@ -5,6 +5,7 @@ using System.Text;
 namespace KFIRPG.corelib {
 	public interface Loader {
 		System.Drawing.Bitmap LoadBitmap(string path);
+		SdlDotNet.Graphics.Surface LoadSurface(string path);
 		string LoadText(string path);
 		byte[] LoadRaw(string path);
 	}

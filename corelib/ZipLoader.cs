@@ -12,6 +12,10 @@ namespace KFIRPG.corelib {
 			throw new NotImplementedException();
 		}
 
+		public SdlDotNet.Graphics.Surface LoadSurface(string path) {
+			throw new NotImplementedException();
+		}
+
 		public string LoadText(string path) {
 			throw new NotImplementedException();
 		}

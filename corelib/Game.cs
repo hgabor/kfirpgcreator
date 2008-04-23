@@ -6,7 +6,7 @@ using System.Xml;
 namespace KFIRPG.corelib {
 	public class Game {
 		private Game(Loader loader) {
-			this.loader = loader;
+			this.loader = new CachedLoader(loader);
 			XmlDocument globalSettings = new XmlDocument();
 			globalSettings.LoadXml(loader.LoadText("global.xml"));
 

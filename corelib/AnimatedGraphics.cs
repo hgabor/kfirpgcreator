@@ -23,7 +23,8 @@ namespace KFIRPG.corelib {
 
 		public AnimatedGraphics(string sheetName, int size, Game game) {
 			this.size = size;
-			sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
+			//sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
+			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
 			columnsInRow = int.Parse(doc.SelectSingleNode("spritesheet/cols").InnerText);

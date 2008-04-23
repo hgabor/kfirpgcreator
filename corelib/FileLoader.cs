@@ -16,6 +16,10 @@ namespace KFIRPG.corelib {
 			return new System.Drawing.Bitmap(Path.Combine(basePath, path));
 		}
 
+		public SdlDotNet.Graphics.Surface LoadSurface(string path) {
+			return new SdlDotNet.Graphics.Surface(LoadBitmap(path));
+		}
+
 		public string LoadText(string path) {
 			return File.ReadAllText(Path.Combine(basePath, path));
 		}
