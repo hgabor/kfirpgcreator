@@ -13,6 +13,12 @@
     <character>sticky</character>
   </party>
   <locations>
+    <location name="HouseOutside">
+      <x>7</x>
+      <y>5</y>
+      <layer>2</layer>
+      <map>lake</map>
+    </location>
     <location name="TeleportDest">
       <x>0</x>
       <y>6</y>
@@ -20,8 +26,8 @@
       <map>lake</map>
     </location>
     <location name="HouseInside">
-      <x>1</x>
-      <y>1</y>
+      <x>2</x>
+      <y>4</y>
       <layer>0</layer>
       <map>map2</map>
     </location>

@@ -1,6 +1,7 @@
-map/door
+map/houseexit
 map/blahblah
 map/bridgecreaks
 map/teleport
 movement/random
 movement/random_nostop
+map/door

@@ -14,7 +14,7 @@
   </event>
   <event>
     <x>7</x>
-    <y>5</y>
+    <y>4</y>
     <layer>2</layer>
     <script>map/door</script>
   </event>
