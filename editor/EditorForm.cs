@@ -376,13 +376,13 @@ namespace KFIRPG.editor {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
 							}
 
-							if (layer.tiles[i, j].onStep != "") {
+							if (!string.IsNullOrEmpty(layer.tiles[i, j].onStep)) {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
 							}
-							if (layer.tiles[i, j].locationName != "") {
+							if (!string.IsNullOrEmpty(layer.tiles[i, j].locationName)) {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, locationBrush, locationPen, e.Graphics);
 							}
-							if (layer.objects[i, j] != null && layer.objects[i, j].actionScript != "") {
+							if (layer.objects[i, j] != null && !string.IsNullOrEmpty(layer.objects[i, j].actionScript)) {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
 							}
 						}
@@ -488,9 +488,11 @@ namespace KFIRPG.editor {
 		}
 
 		private void mainPanel_MouseDown(object sender, MouseEventArgs e) {
-			dragging = true;
-			if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-				cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+			if (e.Button == MouseButtons.Left) {
+				dragging = true;
+				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
+					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+				}
 			}
 		}
 
@@ -526,6 +528,32 @@ namespace KFIRPG.editor {
 					CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
 				}
 			}
+		}
+
+		private void onActionToolStripMenuItem_Click(object sender, EventArgs e) {
+			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			string currentScript = obj.actionScript;
+			using (ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
+				if (selector.ShowDialog(this) == DialogResult.OK) {
+					obj.actionScript = selector.Script;
+				}
+			}
+		}
+
+		private void movementScriptToolStripMenuItem_Click(object sender, EventArgs e) {
+			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			string currentScript = obj.movementAIScript;
+			using (ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
+				if (selector.ShowDialog(this) == DialogResult.OK) {
+					obj.movementAIScript = selector.Script;
+				}
+			}
+		}
+
+		private void contextMenu_Opened(object sender, EventArgs e) {
+			bool isObject = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y] != null;
+			onActionToolStripMenuItem.Enabled = isObject;
+			movementScriptToolStripMenuItem.Enabled = isObject;
 		}
 	}
 }

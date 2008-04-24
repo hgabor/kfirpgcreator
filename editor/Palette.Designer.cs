@@ -25,21 +25,26 @@
 		private void InitializeComponent() {
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tilePage = new System.Windows.Forms.TabPage();
+			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.passabilityPage = new System.Windows.Forms.TabPage();
 			this.impassableButton = new System.Windows.Forms.Button();
 			this.passableButton = new System.Windows.Forms.Button();
-			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
+			this.objectPage = new System.Windows.Forms.TabPage();
+			this.clearScriptCheckBox = new System.Windows.Forms.CheckBox();
+			this.objectsListBox = new System.Windows.Forms.ListBox();
 			this.tabControl1.SuspendLayout();
 			this.tilePage.SuspendLayout();
 			this.passabilityPage.SuspendLayout();
+			this.objectPage.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tilePage);
 			this.tabControl1.Controls.Add(this.passabilityPage);
+			this.tabControl1.Controls.Add(this.objectPage);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -59,6 +64,18 @@
 			this.tilePage.TabIndex = 0;
 			this.tilePage.Text = "Tiles";
 			this.tilePage.UseVisualStyleBackColor = true;
+			// 
+			// tilesPanel
+			// 
+			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
+			this.tilesPanel.Name = "tilesPanel";
+			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
+			this.tilesPanel.TabIndex = 3;
+			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
+			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
 			// 
 			// hScrollBar
 			// 
@@ -112,17 +129,38 @@
 			this.passableButton.UseVisualStyleBackColor = true;
 			this.passableButton.Click += new System.EventHandler(this.passableButton_Click);
 			// 
-			// tilesPanel
+			// objectPage
 			// 
-			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
-			this.tilesPanel.Name = "tilesPanel";
-			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
-			this.tilesPanel.TabIndex = 3;
-			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
-			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
+			this.objectPage.Controls.Add(this.clearScriptCheckBox);
+			this.objectPage.Controls.Add(this.objectsListBox);
+			this.objectPage.Location = new System.Drawing.Point(4, 22);
+			this.objectPage.Name = "objectPage";
+			this.objectPage.Padding = new System.Windows.Forms.Padding(3);
+			this.objectPage.Size = new System.Drawing.Size(289, 256);
+			this.objectPage.TabIndex = 2;
+			this.objectPage.Text = "Objects";
+			this.objectPage.UseVisualStyleBackColor = true;
+			// 
+			// clearScriptCheckBox
+			// 
+			this.clearScriptCheckBox.AutoSize = true;
+			this.clearScriptCheckBox.Location = new System.Drawing.Point(8, 6);
+			this.clearScriptCheckBox.Name = "clearScriptCheckBox";
+			this.clearScriptCheckBox.Size = new System.Drawing.Size(191, 17);
+			this.clearScriptCheckBox.TabIndex = 1;
+			this.clearScriptCheckBox.Text = "Erase action and movement scripts";
+			this.clearScriptCheckBox.UseVisualStyleBackColor = true;
+			this.clearScriptCheckBox.CheckedChanged += new System.EventHandler(this.SelectObjectCursor_Handler);
+			// 
+			// objectsListBox
+			// 
+			this.objectsListBox.FormattingEnabled = true;
+			this.objectsListBox.IntegralHeight = false;
+			this.objectsListBox.Location = new System.Drawing.Point(0, 29);
+			this.objectsListBox.Name = "objectsListBox";
+			this.objectsListBox.Size = new System.Drawing.Size(289, 227);
+			this.objectsListBox.TabIndex = 0;
+			this.objectsListBox.SelectedIndexChanged += new System.EventHandler(this.SelectObjectCursor_Handler);
 			// 
 			// Palette
 			// 
@@ -137,6 +175,8 @@
 			this.tabControl1.ResumeLayout(false);
 			this.tilePage.ResumeLayout(false);
 			this.passabilityPage.ResumeLayout(false);
+			this.objectPage.ResumeLayout(false);
+			this.objectPage.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -151,5 +191,8 @@
 		private System.Windows.Forms.Button passableButton;
 		private System.Windows.Forms.Button impassableButton;
 		private DoubleBufferedPanel tilesPanel;
+		private System.Windows.Forms.TabPage objectPage;
+		private System.Windows.Forms.ListBox objectsListBox;
+		private System.Windows.Forms.CheckBox clearScriptCheckBox;
 	}
 }

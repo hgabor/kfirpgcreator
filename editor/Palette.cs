@@ -54,6 +54,13 @@ namespace KFIRPG.editor {
 				vScrollBar.LargeChange = tilesPanel.Height;
 			};
 
+			objectsListBox.Items.Clear();
+			objectsListBox.Items.Add("DELETE OBJECT");
+			foreach (string spriteName in project.sprites.Keys) {
+				objectsListBox.Items.Add(spriteName);
+			}
+			objectsListBox.SelectedIndex = -1;
+
 			tilePage.Invalidate();
 		}
 
@@ -61,16 +68,19 @@ namespace KFIRPG.editor {
 		int selectedcol = 0;
 		int offsetX = 0;
 		int offsetY = 0;
+		bool tileSelected = false;
 
 		private void tilesPanel_Paint(object sender, PaintEventArgs e) {
 			if (sheet != null) {
 				e.Graphics.DrawImage(sheet.sheet, new Point(-offsetX, sheet.size - offsetY));
 			}
-			if (selectedrow != 0) {
-				e.Graphics.DrawRectangle(Pens.Red, selectedcol * sheet.size - offsetX, selectedrow * sheet.size - offsetY, sheet.size - 1, sheet.size - 1);
-			}
-			else {
-				e.Graphics.DrawRectangle(Pens.Red, -offsetX, -offsetY, sheet.size - 1, sheet.size - 1);
+			if (tileSelected) {
+				if (selectedrow != 0) {
+					e.Graphics.DrawRectangle(Pens.Red, selectedcol * sheet.size - offsetX, selectedrow * sheet.size - offsetY, sheet.size - 1, sheet.size - 1);
+				}
+				else {
+					e.Graphics.DrawRectangle(Pens.Red, -offsetX, -offsetY, sheet.size - 1, sheet.size - 1);
+				}
 			}
 		}
 
@@ -81,6 +91,9 @@ namespace KFIRPG.editor {
 			if (PaletteSelectionChanged != null) {
 				PaletteSelectionChanged(this, new CursorEventArgs(new TileCursor(tileId, currentProject)));
 			}
+
+			objectsListBox.SelectedIndex = -1;
+			tileSelected = true;
 			tilesPanel.Invalidate();
 		}
 
@@ -88,11 +101,38 @@ namespace KFIRPG.editor {
 			if (PaletteSelectionChanged != null) {
 				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(true, currentProject)));
 			}
+
+			objectsListBox.SelectedIndex = -1;
+			tileSelected = false;
 		}
 
 		private void impassableButton_Click(object sender, EventArgs e) {
 			if (PaletteSelectionChanged != null) {
 				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(false, currentProject)));
+			}
+
+			objectsListBox.SelectedIndex = -1;
+			tileSelected = false;
+		}
+
+		private void SelectObjectCursor_Handler(object sender, EventArgs e) {
+			if (objectsListBox.SelectedIndex == 0) {
+				Cursor cursor = new DeleteSpriteCursor();
+				if (PaletteSelectionChanged != null) {
+					PaletteSelectionChanged(this, new CursorEventArgs(cursor));
+				}
+
+				tileSelected = false;
+			}
+			else if (objectsListBox.SelectedIndex != -1) {
+				string name = (string)objectsListBox.SelectedItem;
+				Sprite sprite = currentProject.sprites[name];
+				Cursor cursor = new SpriteCursor(sprite, clearScriptCheckBox.Checked, currentProject);
+				if (PaletteSelectionChanged != null) {
+					PaletteSelectionChanged(this, new CursorEventArgs(cursor));
+				}
+
+				tileSelected = false;
 			}
 		}
 	}

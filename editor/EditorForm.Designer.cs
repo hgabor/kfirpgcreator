@@ -53,6 +53,8 @@
 			this.locationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.onstepMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
+			this.onActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -281,14 +283,17 @@
 			// 
 			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.locationMenuItem,
-            this.onstepMenuItem});
+            this.onstepMenuItem,
+            this.onActionToolStripMenuItem,
+            this.movementScriptToolStripMenuItem});
 			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(153, 70);
+			this.contextMenu.Size = new System.Drawing.Size(162, 114);
+			this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
 			// 
 			// locationMenuItem
 			// 
 			this.locationMenuItem.Name = "locationMenuItem";
-			this.locationMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.locationMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.locationMenuItem.Text = "Location...";
 			this.locationMenuItem.Click += new System.EventHandler(this.locationMenuItem_Click);
 			// 
@@ -296,7 +301,7 @@
 			// 
 			this.onstepMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
 			this.onstepMenuItem.Name = "onstepMenuItem";
-			this.onstepMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.onstepMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.onstepMenuItem.Text = "OnStep...";
 			this.onstepMenuItem.Click += new System.EventHandler(this.onstepMenuItem_Click);
 			// 
@@ -315,6 +320,22 @@
 			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
 			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
 			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
+			// 
+			// onActionToolStripMenuItem
+			// 
+			this.onActionToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
+			this.onActionToolStripMenuItem.Name = "onActionToolStripMenuItem";
+			this.onActionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.onActionToolStripMenuItem.Text = "OnAction...";
+			this.onActionToolStripMenuItem.Click += new System.EventHandler(this.onActionToolStripMenuItem_Click);
+			// 
+			// movementScriptToolStripMenuItem
+			// 
+			this.movementScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
+			this.movementScriptToolStripMenuItem.Name = "movementScriptToolStripMenuItem";
+			this.movementScriptToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.movementScriptToolStripMenuItem.Text = "Movement script...";
+			this.movementScriptToolStripMenuItem.Click += new System.EventHandler(this.movementScriptToolStripMenuItem_Click);
 			// 
 			// EditorForm
 			// 
@@ -373,5 +394,7 @@
 		private System.Windows.Forms.ToolStripMenuItem onstepMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem onActionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem movementScriptToolStripMenuItem;
 	}
 }

@@ -54,6 +54,7 @@
       <DependentUpon>ComposedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Cursor.cs" />
+    <Compile Include="DeleteSpriteCursor.cs" />
     <Compile Include="DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -104,6 +105,7 @@
       <DependentUpon>ScriptEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Sprite.cs" />
+    <Compile Include="SpriteCursor.cs" />
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="TileCursor.cs" />
   </ItemGroup>

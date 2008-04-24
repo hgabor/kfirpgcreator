@@ -16,20 +16,22 @@ namespace KFIRPG.editor {
 			scripts = project.scripts;
 			if (scripts.Count != 0) {
 				currentScript = scripts[0];
+				nameTextBox.Text = currentScript.name;
+				scriptTextBox.Text = currentScript.text;
 			}
 			else {
 				currentScript = new Script("unnamed", "");
+				nameTextBox.Text = "unnamed";
 			}
-			nameTextBox.Text = "unnamed";
 			PopulateList();
 		}
 
 		public ScriptEditor(Script currentScript, Project project) {
 			InitializeComponent();
 			scripts = project.scripts;
-			this.currentScript = currentScript;
-			nameTextBox.Text = currentScript.name;
-			scriptTextBox.Text = currentScript.text;
+			this.currentScript = currentScript != null ? currentScript : new Script("unnamed", "");
+			nameTextBox.Text = this.currentScript.name;
+			scriptTextBox.Text = this.currentScript.text;
 			PopulateList();
 		}
 
