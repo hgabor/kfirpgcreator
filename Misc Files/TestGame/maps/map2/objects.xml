@@ -1,2 +1,11 @@
 <?xml version="1.0"?>
-<objects />
+<objects>
+  <object>
+    <x>2</x>
+    <y>3</y>
+    <layer>0</layer>
+    <sprite>sticky</sprite>
+    <action>map/innkeepernorooms</action>
+    <movement>movement/random</movement>
+  </object>
+</objects>
