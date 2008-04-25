@@ -28,7 +28,7 @@ namespace KFIRPG.editor {
 					currentLayer.tiles[tileX, tileY].gfx = SpriteSheet.Gfx.Empty;
 				}
 				else if (tileX <= currentLayer.tiles.GetUpperBound(0) && tileY <= currentLayer.tiles.GetUpperBound(1)) {
-					currentLayer.tiles[tileX, tileY].gfx = new SpriteSheet.Gfx(id - 1, tileSheet.cols, size, size, tileSheet);
+					currentLayer.tiles[tileX, tileY].gfx = new SpriteSheet.Gfx(id - 1, tileSheet);
 				}
 				
 			}

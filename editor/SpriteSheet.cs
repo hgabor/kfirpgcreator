@@ -9,7 +9,8 @@ namespace KFIRPG.editor {
 	class SpriteSheet {
 		public int cols;
 		public Bitmap sheet;
-		public int size;
+		public int spriteWidth, spriteHeight;
+		public int x, y;
 		public class Animation {
 			public int startFrame;
 			public int frameCount;
@@ -25,19 +26,16 @@ namespace KFIRPG.editor {
 
 		public class Gfx {
 			SpriteSheet sheet;
-			int id, cols, width, height;
-			public Gfx(int id, int cols, int width, int height, SpriteSheet sheet) {
+			int id;
+			public Gfx(int id, SpriteSheet sheet) {
 				this.id = id;
-				this.cols = cols;
-				this.width = width;
-				this.height = height;
 				this.sheet = sheet;
 			}
 
 			private Gfx() { }
 
 			public virtual void Draw(int x, int y, Graphics g) {
-				g.DrawImage(sheet.sheet, new Rectangle(x, y, width, height), new Rectangle(id % cols * sheet.size, id / cols * sheet.size, width, height), GraphicsUnit.Pixel);
+				g.DrawImage(sheet.sheet, new Rectangle(x - sheet.x, y - sheet.y, sheet.spriteWidth, sheet.spriteHeight), new Rectangle(id % sheet.cols * sheet.spriteWidth, id / sheet.cols * sheet.spriteHeight, sheet.spriteWidth, sheet.spriteHeight), GraphicsUnit.Pixel);
 			}
 			public virtual int Id { get { return id + 1; } }
 
@@ -58,7 +56,12 @@ namespace KFIRPG.editor {
 			}
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(loader.LoadText("img/" + name + ".xml"));
-			cols = int.Parse(doc.SelectSingleNode("/spritesheet/cols").InnerText);
+			spriteWidth = int.Parse(doc.SelectSingleNode("/spritesheet/width").InnerText);
+			spriteHeight = int.Parse(doc.SelectSingleNode("/spritesheet/height").InnerText);
+			x = int.Parse(doc.SelectSingleNode("/spritesheet/x").InnerText);
+			y = int.Parse(doc.SelectSingleNode("/spritesheet/y").InnerText);
+			cols = sheet.Width / spriteWidth;
+			//cols = int.Parse(doc.SelectSingleNode("/spritesheet/cols").InnerText);
 			foreach (XmlNode node in doc.SelectNodes("/spritesheet/image")) {
 				string type = node.Attributes["type"].InnerText;
 				int start = int.Parse(node.SelectSingleNode("start").InnerText);
@@ -67,12 +70,12 @@ namespace KFIRPG.editor {
 				int timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
 				states.Add(type, new Animation(start, count, interval, timeout));
 			}
-			this.size = project.tileSize;
+			this.spriteWidth = project.tileSize;
 		}
 
 		public Gfx GetGfxById(int id) {
 			if (id == 0) return Gfx.Empty;
-			else return new Gfx(id - 1, cols, size, size, this);
+			else return new Gfx(id - 1, this);
 		}
 	}
 }

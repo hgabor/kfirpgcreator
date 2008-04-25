@@ -18,16 +18,22 @@ namespace KFIRPG.corelib {
 		State currentState;
 		int subState;
 		int frame;
-		int size;
+		int width;
+		int height;
+		int x;
+		int y;
 		int columnsInRow;
 
-		public AnimatedGraphics(string sheetName, int size, Game game) {
-			this.size = size;
+		public AnimatedGraphics(string sheetName, Game game) {
 			//sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
 			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
-			columnsInRow = int.Parse(doc.SelectSingleNode("spritesheet/cols").InnerText);
+			width = int.Parse(doc.SelectSingleNode("spritesheet/width").InnerText);
+			height = int.Parse(doc.SelectSingleNode("spritesheet/height").InnerText);
+			x = int.Parse(doc.SelectSingleNode("spritesheet/x").InnerText);
+			y = int.Parse(doc.SelectSingleNode("spritesheet/y").InnerText);
+			columnsInRow = sheet.Width / width;
 			foreach (XmlNode node in doc.SelectNodes("spritesheet/image")) {
 				State current = new State();
 				string name = node.Attributes["type"].InnerText;
@@ -74,7 +80,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public override void Blit(int x, int y, Surface dest) {
-			dest.Blit(sheet, new Point(x, y), new Rectangle(col * size, row * size, size, size));
+			dest.Blit(sheet, new Point(x - this.x, y - this.y), new Rectangle(col * width, row * height, width, height));
 		}
 	}
 }

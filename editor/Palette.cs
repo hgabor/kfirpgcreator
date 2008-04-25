@@ -33,18 +33,18 @@ namespace KFIRPG.editor {
 
 			hScrollBar.Enabled = true;
 			hScrollBar.Minimum = 0;
-			hScrollBar.Maximum = sheet.cols * sheet.size;
+			hScrollBar.Maximum = sheet.cols * sheet.spriteWidth;
 			hScrollBar.LargeChange = tilesPanel.Width;
-			hScrollBar.SmallChange = sheet.size;
+			hScrollBar.SmallChange = sheet.spriteWidth;
 			hScrollBar.ValueChanged += (sender, args) => {
 				this.offsetX = hScrollBar.Value;
 				tilesPanel.Invalidate();
 			};
 			vScrollBar.Enabled = true;
 			vScrollBar.Minimum = 0;
-			vScrollBar.Maximum = sheet.sheet.Height + sheet.size;
+			vScrollBar.Maximum = sheet.sheet.Height + sheet.spriteHeight;
 			vScrollBar.LargeChange = tilesPanel.Height;
-			vScrollBar.SmallChange = sheet.size;
+			vScrollBar.SmallChange = sheet.spriteHeight;
 			vScrollBar.ValueChanged += (sender, args) => {
 				this.offsetY = vScrollBar.Value;
 				tilesPanel.Invalidate();
@@ -72,21 +72,21 @@ namespace KFIRPG.editor {
 
 		private void tilesPanel_Paint(object sender, PaintEventArgs e) {
 			if (sheet != null) {
-				e.Graphics.DrawImage(sheet.sheet, new Point(-offsetX, sheet.size - offsetY));
+				e.Graphics.DrawImage(sheet.sheet, new Point(-offsetX, sheet.spriteHeight - offsetY));
 			}
 			if (tileSelected) {
 				if (selectedrow != 0) {
-					e.Graphics.DrawRectangle(Pens.Red, selectedcol * sheet.size - offsetX, selectedrow * sheet.size - offsetY, sheet.size - 1, sheet.size - 1);
+					e.Graphics.DrawRectangle(Pens.Red, selectedcol * sheet.spriteWidth - offsetX, selectedrow * sheet.spriteHeight - offsetY, sheet.spriteWidth - 1, sheet.spriteHeight - 1);
 				}
 				else {
-					e.Graphics.DrawRectangle(Pens.Red, -offsetX, -offsetY, sheet.size - 1, sheet.size - 1);
+					e.Graphics.DrawRectangle(Pens.Red, -offsetX, -offsetY, sheet.spriteWidth - 1, sheet.spriteHeight - 1);
 				}
 			}
 		}
 
 		private void tilesPanel_MouseClick(object sender, MouseEventArgs e) {
-			selectedrow = (e.Y + offsetY) / sheet.size;
-			selectedcol = (e.X + offsetX) / sheet.size;
+			selectedrow = (e.Y + offsetY) / sheet.spriteHeight;
+			selectedcol = (e.X + offsetX) / sheet.spriteWidth;
 			int tileId = selectedrow == 0 || selectedcol >= sheet.cols ? 0 : (selectedrow - 1) * sheet.cols + selectedcol + 1;
 			if (PaletteSelectionChanged != null) {
 				PaletteSelectionChanged(this, new CursorEventArgs(new TileCursor(tileId, currentProject)));
