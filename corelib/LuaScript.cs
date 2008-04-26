@@ -20,7 +20,7 @@ namespace KFIRPG.corelib {
 
 		public LuaScript(string script, Lua vm) {
 			this.vm = vm;
-			this.script = string.Format(scriptBase, crNameBase, script);
+			this.script = string.Format(scriptBase, crNameBase, script.Replace("{", "{{").Replace("}","}}"));
 		}
 
 		Entity owner = null;
@@ -36,7 +36,7 @@ namespace KFIRPG.corelib {
 		#region Script Members
 
 		public object Run() {
-			string scriptStr = string.Format(script, coroutineId++);
+			string scriptStr = string.Format(script, coroutineId++).Replace("{{", "{").Replace("}}","}");
 			if (owner != null) {
 				vm["self"] = owner;
 			}

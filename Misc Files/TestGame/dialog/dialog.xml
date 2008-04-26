@@ -7,6 +7,18 @@
     <blue>0</blue>
     <alpha>192</alpha>
   </background>
+  <selectedborder>
+    <red>0</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+  </selectedborder>
+  <selectedbackground>
+    <red>0</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>128</alpha>
+  </selectedbackground>
   <font>DejaVuSans.ttf</font>
-  <fontsize>12</fontsize>
+  <fontsize>14</fontsize>
 </dialog>

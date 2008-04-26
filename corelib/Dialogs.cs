@@ -8,7 +8,9 @@ using SdlDotNet.Graphics;
 namespace KFIRPG.corelib {
 	class Dialogs {
 		Surface surface;
-		Color bgColor;
+		public readonly Color bgColor;
+		public readonly Color selectedBorder;
+		public readonly Color selectedBg;
 		public readonly int Border;
 		public readonly int Margin = 50;
 		Game game;
@@ -27,6 +29,17 @@ namespace KFIRPG.corelib {
 			int fontSize = int.Parse(doc.SelectSingleNode("/dialog/fontsize").InnerText);
 			Font = new SdlDotNet.Graphics.Font(game.loader.LoadRaw("dialog/" + fontName), fontSize);
 			bgColor = Color.FromArgb(alpha, red, green, blue);
+
+			selectedBorder = Color.FromArgb(
+				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/alpha").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/red").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/green").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/blue").InnerText));
+			selectedBg = Color.FromArgb(
+				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/alpha").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/red").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/green").InnerText),
+				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/blue").InnerText));
 
 			surface = new Surface(game.loader.LoadBitmap("dialog/windowborder.png"));
 		}
@@ -47,14 +60,6 @@ namespace KFIRPG.corelib {
 			dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition1), new Rectangle(Border, 0, Border, Border));
 			dest.Blit(surface, new Point(box.XPosition1, box.YPosition2 - Border + 1), new Rectangle(0, Border, Border, Border));
 			dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition2 - Border + 1), new Rectangle(Border, Border, Border, Border));
-		}
-
-		public void Message(string text) {
-			FadeAnimation animation = new FadeAnimation(game);
-			animation.FromImage = game.TakeScreenshot();
-			MessageBox mb = new MessageBox(text, this, game);
-			game.PushScreen(mb);
-			game.PushScreen(animation);
 		}
 	}
 }

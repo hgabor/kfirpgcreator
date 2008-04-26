@@ -1,3 +1,11 @@
 StartMusic("Canon in D Major.ogg")
 Message("Welcome to the wonderful world of KFI!\nPress the action key to close this window. This is a really long string that should be broken into little pieces, one by one.")
 Message("You can start moving around using the arrow keys!")
+
+if Ask("Do you like tea?", "Yes", "No") == 1 then
+  Message("Me too!")
+else
+  Message("Neither do I!")
+end
+
+Message("So long, farewell!")

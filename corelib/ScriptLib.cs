@@ -15,7 +15,46 @@ namespace KFIRPG.corelib {
 
 		[BlockingScript]
 		public void Message(string message) {
-			dialogs.Message(message);
+			//dialogs.Message(message);
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = game.TakeScreenshot();
+			Form form = new Form(dialogs, game);
+			Form.Menu menu = new Form.Menu(10, 10, 500, 300, form);
+			TextGraphics text = new TextGraphics(message, 10, 10, TextGraphics.Align.Center, dialogs, game);
+			menu.Add(text);
+			form.AddPanel("message", menu);
+			game.PushScreen(form);
+			game.PushScreen(anim);
+		}
+
+		[BlockingScript]
+		public void Ask(string question, string param1, string param2) {
+			Ask(question, new string[] { param1, param2 });
+		}
+
+		public void Ask(string question, params string[] answers) {
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = game.TakeScreenshot();
+			Form form = new Form(dialogs, game);
+			Form.Menu qmenu = new Form.Menu(10, 10, 500, 300, form);
+			TextGraphics qtext = new TextGraphics(question, 10, 10, TextGraphics.Align.Center, dialogs, game);
+			qmenu.Add(qtext);
+			form.AddPanel("message", qmenu);
+
+			int i = 0;
+			foreach (string answer in answers) {
+				Form.Item aitem = new Form.Item(10, 220 + 20 * i, 500, 20, form);
+				TextGraphics stext = new TextGraphics(answer, 0, 0, TextGraphics.Align.Left, dialogs, game);
+				aitem.Add(stext);
+				++i;
+				int j = i;
+				aitem.Selected += (sender, args) => {
+					form.ReturnValue = j;
+				};
+				qmenu.AddMenuItem(aitem);
+			}
+			game.PushScreen(form);
+			game.PushScreen(anim);
 		}
 
 		[Script]
