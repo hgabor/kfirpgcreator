@@ -8,8 +8,8 @@
     <alpha>192</alpha>
   </background>
   <selectedborder>
-    <red>0</red>
-    <green>0</green>
+    <red>128</red>
+    <green>128</green>
     <blue>255</blue>
     <alpha>255</alpha>
   </selectedborder>

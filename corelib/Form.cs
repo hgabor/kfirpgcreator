@@ -18,20 +18,25 @@ namespace KFIRPG.corelib {
 				this.width = width;
 				this.height = height;
 				this.form = form;
-				box = new SdlDotNet.Graphics.Primitives.Box(new System.Drawing.Point(x, y), new System.Drawing.Size(width, height));
+				box = new SdlDotNet.Graphics.Primitives.Box(new System.Drawing.Point(x, y), new System.Drawing.Size(width - 1, height - 1));
 			}
 
 			internal abstract void Think();
 
 			protected abstract void DrawInternal(int x, int y, Surface surface);
+			protected virtual void DrawBackground(int x, int y, Surface surface) {
+				form.dialogs.DrawWindow(box, surface);
+			}
 
 			List<Graphics> contents = new List<Graphics>();
 			public void Add(Graphics graphics) {
 				contents.Add(graphics);
 			}
 
+			//TODO: Adjust panel accoring to the x/y params
 			public void Draw(int x, int y, Surface surface) {
-				surface.Draw(box, form.dialogs.bgColor, false, true);
+				//surface.Draw(box, form.dialogs.bgColor, false, true);
+				DrawBackground(x, y, surface);
 				foreach (Graphics gfx in contents) {
 					gfx.Blit(x + this.x, y + this.y, surface);
 				}
@@ -112,6 +117,8 @@ namespace KFIRPG.corelib {
 			internal override void Think() { }
 
 			protected override void DrawInternal(int x, int y, Surface surface) { }
+
+			protected override void DrawBackground(int x, int y, Surface surface) { }
 		}
 
 		Dialogs dialogs;

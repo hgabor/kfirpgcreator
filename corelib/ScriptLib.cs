@@ -42,9 +42,10 @@ namespace KFIRPG.corelib {
 			form.AddPanel("message", qmenu);
 
 			int i = 0;
+			int position = 220;
 			foreach (string answer in answers) {
-				Form.Item aitem = new Form.Item(10, 220 + 20 * i, 500, 20, form);
 				TextGraphics stext = new TextGraphics(answer, 0, 0, TextGraphics.Align.Left, dialogs, game);
+				Form.Item aitem = new Form.Item(10 + dialogs.Border, position, 500 - 2 * dialogs.Border, stext.Height + 2 * dialogs.Border, form);
 				aitem.Add(stext);
 				++i;
 				int j = i;
@@ -52,6 +53,7 @@ namespace KFIRPG.corelib {
 					form.ReturnValue = j;
 				};
 				qmenu.AddMenuItem(aitem);
+				position += stext.Height + 2 * dialogs.Border;
 			}
 			game.PushScreen(form);
 			game.PushScreen(anim);

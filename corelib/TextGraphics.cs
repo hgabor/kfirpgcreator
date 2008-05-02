@@ -11,6 +11,11 @@ namespace KFIRPG.corelib {
 		Dialogs dialogs;
 		const int width = 500;
 		List<Surface> textSurfaces;
+		public int Height {
+			get {
+				return textSurfaces.Count * dialogs.TextHeight;
+			}
+		}
 
 		public enum Align { Left, Right, Center }
 		Align align;

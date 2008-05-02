@@ -13,6 +13,7 @@ namespace KFIRPG.corelib {
 		public readonly Color selectedBg;
 		public readonly int Border;
 		public readonly int Margin = 50;
+		public readonly int TextHeight;
 		Game game;
 		public readonly SdlDotNet.Graphics.Font Font;
 
@@ -41,11 +42,13 @@ namespace KFIRPG.corelib {
 				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/green").InnerText),
 				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/blue").InnerText));
 
+			TextHeight = Font.SizeText(" ").Height;
+
 			surface = new Surface(game.loader.LoadBitmap("dialog/windowborder.png"));
 		}
 
 		//TODO: Check for border size and width/height
-		public void DrawWindow(int width, int height, Surface dest) {
+		public void DrawCenteredWindow(int width, int height, Surface dest) {
 			SdlDotNet.Graphics.Primitives.Box box = new SdlDotNet.Graphics.Primitives.Box(new Point((game.Width - width) / 2, (game.Height - height) / 2), new Size(width, height));
 			dest.Draw(box, bgColor, false, true);
 			for (int i = Border; i < width - Border; i += Border) {
@@ -53,6 +56,22 @@ namespace KFIRPG.corelib {
 				dest.Blit(surface, new Point(box.XPosition1 + i, box.YPosition2 - Border + 1), new Rectangle(2 * Border, Border, Border, Border));
 			}
 			for (int i = Border; i < height - Border; i += Border) {
+				dest.Blit(surface, new Point(box.XPosition1, box.YPosition1 + i), new Rectangle(3 * Border, 0, Border, Border));
+				dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition1 + i), new Rectangle(3 * Border, Border, Border, Border));
+			}
+			dest.Blit(surface, new Point(box.XPosition1, box.YPosition1), new Rectangle(0, 0, Border, Border));
+			dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition1), new Rectangle(Border, 0, Border, Border));
+			dest.Blit(surface, new Point(box.XPosition1, box.YPosition2 - Border + 1), new Rectangle(0, Border, Border, Border));
+			dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition2 - Border + 1), new Rectangle(Border, Border, Border, Border));
+		}
+
+		public void DrawWindow(SdlDotNet.Graphics.Primitives.Box box, Surface dest) {
+			dest.Draw(box, bgColor, false, true);
+			for (int i = Border; i < box.Width - Border; i += Border) {
+				dest.Blit(surface, new Point(box.XPosition1 + i, box.YPosition1), new Rectangle(2 * Border, 0, Border, Border));
+				dest.Blit(surface, new Point(box.XPosition1 + i, box.YPosition2 - Border + 1), new Rectangle(2 * Border, Border, Border, Border));
+			}
+			for (int i = Border; i < box.Height - Border; i += Border) {
 				dest.Blit(surface, new Point(box.XPosition1, box.YPosition1 + i), new Rectangle(3 * Border, 0, Border, Border));
 				dest.Blit(surface, new Point(box.XPosition2 - Border + 1, box.YPosition1 + i), new Rectangle(3 * Border, Border, Border, Border));
 			}
