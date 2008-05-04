@@ -81,20 +81,15 @@ namespace KFIRPG.corelib {
 		Dir facing = Dir.Up;
 		public void Turn(Dir direction) {
 			facing = direction;
-			switch (moving) {
-				case Dir.Up: graphic.SetState("moveup", 0); break;
-				case Dir.Down: graphic.SetState("movedown", 0); break;
-				case Dir.Left: graphic.SetState("moveleft", 0); break;
-				case Dir.Right: graphic.SetState("moveright", 0); break;
-				case Dir.None: graphic.SetState("still", (int)facing); break;
-			}
+			graphic.SetDirection(direction);
 		}
 
 		public void PlanMove(Dir direction, Map map) {
 			nextMove = Dir.None;
 			if (moving == Dir.None && direction != Dir.None) {
 				facing = direction;
-				graphic.SetState("still", (int)facing);
+				graphic.SetDirection(direction);
+				graphic.SetState("still");
 			}
 			switch (direction) {
 				case Dir.Up:
@@ -149,7 +144,7 @@ namespace KFIRPG.corelib {
 						if (oldMoving == moving && OnStep(map)) {
 							corrX = 0;
 							moving = Dir.None;
-							graphic.SetState("still", (int)facing);
+							graphic.SetState("still");
 						}
 						else {
 							if (nextMove != Dir.Left) {
@@ -171,7 +166,7 @@ namespace KFIRPG.corelib {
 						if (oldMoving == moving && OnStep(map)) {
 							corrX = 0;
 							moving = Dir.None;
-							graphic.SetState("still", (int)facing);
+							graphic.SetState("still");
 						}
 						else {
 							if (nextMove != Dir.Right) {
@@ -193,7 +188,7 @@ namespace KFIRPG.corelib {
 						if (oldMoving == moving && OnStep(map)) {
 							corrY = 0;
 							moving = Dir.None;
-							graphic.SetState("still", (int)facing);
+							graphic.SetState("still");
 						}
 						else {
 							if (nextMove != Dir.Up) {
@@ -215,7 +210,7 @@ namespace KFIRPG.corelib {
 						if (oldMoving == moving && OnStep(map)) {
 							corrY = 0;
 							moving = Dir.None;
-							graphic.SetState("still", (int)facing);
+							graphic.SetState("still");
 						}
 						else {
 							if (nextMove != Dir.Down) {
@@ -237,12 +232,12 @@ namespace KFIRPG.corelib {
 			}
 
 			if (moving != oldMoving) {
-				switch (moving) {
-					case Dir.Up: graphic.SetState("moveup", 0); break;
-					case Dir.Down: graphic.SetState("movedown", 0); break;
-					case Dir.Left: graphic.SetState("moveleft", 0); break;
-					case Dir.Right: graphic.SetState("moveright", 0); break;
-					case Dir.None: graphic.SetState("still", (int)facing); break;
+				if (moving == Dir.None) {
+					graphic.SetState("still");
+				}
+				else {
+					graphic.SetState("move");
+					graphic.SetDirection(moving);
 				}
 			}
 			nextMove = Dir.None;

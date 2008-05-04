@@ -29,6 +29,7 @@
 			this.newProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mruToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,9 +53,9 @@
 			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.locationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.onstepMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.onActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -79,6 +80,7 @@
             this.newProjectToolStripMenuItem,
             this.loadProjectToolStripMenuItem,
             this.saveProjectToolStripMenuItem,
+            this.mruToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -89,14 +91,14 @@
 			// 
 			this.newProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white;
 			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
-			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.newProjectToolStripMenuItem.Text = "New project...";
 			// 
 			// loadProjectToolStripMenuItem
 			// 
 			this.loadProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.folder;
 			this.loadProjectToolStripMenuItem.Name = "loadProjectToolStripMenuItem";
-			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.loadProjectToolStripMenuItem.Text = "Load project...";
 			this.loadProjectToolStripMenuItem.Click += new System.EventHandler(this.loadProjectToolStripMenuItem_Click);
 			// 
@@ -105,20 +107,26 @@
 			this.saveProjectToolStripMenuItem.Enabled = false;
 			this.saveProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.disk;
 			this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.saveProjectToolStripMenuItem.Text = "Save project";
 			this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
+			// 
+			// mruToolStripMenuItem
+			// 
+			this.mruToolStripMenuItem.Name = "mruToolStripMenuItem";
+			this.mruToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mruToolStripMenuItem.Text = "Recent projects";
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(139, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.door;
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -287,7 +295,7 @@
             this.onActionToolStripMenuItem,
             this.movementScriptToolStripMenuItem});
 			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(162, 114);
+			this.contextMenu.Size = new System.Drawing.Size(162, 92);
 			this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
 			// 
 			// locationMenuItem
@@ -305,22 +313,6 @@
 			this.onstepMenuItem.Text = "OnStep...";
 			this.onstepMenuItem.Click += new System.EventHandler(this.onstepMenuItem_Click);
 			// 
-			// mainPanel
-			// 
-			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.mainPanel.BackColor = System.Drawing.Color.Black;
-			this.mainPanel.Location = new System.Drawing.Point(0, 49);
-			this.mainPanel.Name = "mainPanel";
-			this.mainPanel.Size = new System.Drawing.Size(483, 333);
-			this.mainPanel.TabIndex = 4;
-			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
-			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
-			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
-			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
-			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
-			// 
 			// onActionToolStripMenuItem
 			// 
 			this.onActionToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
@@ -336,6 +328,22 @@
 			this.movementScriptToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.movementScriptToolStripMenuItem.Text = "Movement script...";
 			this.movementScriptToolStripMenuItem.Click += new System.EventHandler(this.movementScriptToolStripMenuItem_Click);
+			// 
+			// mainPanel
+			// 
+			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.mainPanel.BackColor = System.Drawing.Color.Black;
+			this.mainPanel.Location = new System.Drawing.Point(0, 49);
+			this.mainPanel.Name = "mainPanel";
+			this.mainPanel.Size = new System.Drawing.Size(483, 333);
+			this.mainPanel.TabIndex = 4;
+			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
+			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
+			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
+			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
+			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
 			// 
 			// EditorForm
 			// 
@@ -396,5 +404,6 @@
 		private System.Windows.Forms.ToolStripMenuItem newMapToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem onActionToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem movementScriptToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mruToolStripMenuItem;
 	}
 }

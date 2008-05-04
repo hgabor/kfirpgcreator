@@ -24,6 +24,7 @@ namespace KFIRPG.editor {
 			}
 		}
 		string savePath = null;
+		MRU mru = new MRU(6, "recent");
 
 		LayersToolbar layers;
 		AudioLibrary audio;
@@ -80,6 +81,8 @@ namespace KFIRPG.editor {
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
 
+			RecreateMRUList();
+
 			cursor = new TileCursor();
 		}
 
@@ -114,6 +117,32 @@ namespace KFIRPG.editor {
 			//audio.Show();
 			//images.Show();
 			palette.Show();
+		}
+
+		private void RecreateMRUList() {
+			mruToolStripMenuItem.DropDownItems.Clear();
+			foreach (string item in mru) {
+				ToolStripMenuItem menuItem = new ToolStripMenuItem();
+				menuItem.Text = item;
+				menuItem.Click += (sender, args) => {
+					switch (MessageBox.Show(this, "Your project might have unsaved changes. Click yes to save the changes, no to continue without saving, or cancel if you do not want to load the project.",
+	"Exit", MessageBoxButtons.YesNoCancel)) {
+						case DialogResult.Yes:
+							if (this.savePath == null) {
+								if (this.SetSaveLocation()) Save();
+							}
+							else {
+								Save();
+							}
+							goto case DialogResult.No;
+						case DialogResult.No:
+							this.savePath = menuItem.Text;
+							Load();
+							break;
+					}
+				};
+				mruToolStripMenuItem.DropDownItems.Add(menuItem);
+			}
 		}
 
 		private new void Load() {
@@ -177,6 +206,8 @@ namespace KFIRPG.editor {
 				ChangeCurrentMap((string)mapComboBox.SelectedItem);
 			};
 
+			mru.Add(savePath);
+			RecreateMRUList();
 			EnableControls();
 			mainPanel.Invalidate();
 		}
@@ -222,15 +253,20 @@ namespace KFIRPG.editor {
 					doc.AppendChild(doc.CreateXmlDeclaration("1.0", null, null));
 					XmlElement rootNode = doc.CreateElement("spritesheet");
 					doc.AppendChild(rootNode);
-					XmlElement cols = doc.CreateElement("cols");
-					rootNode.AppendChild(doc.CreateElement("cols")).InnerText = sheet.Value.cols.ToString();
-					foreach (KeyValuePair<string, SpriteSheet.Animation> anim in sheet.Value.states) {
-						XmlElement image = doc.CreateElement("image");
+					rootNode.AppendChild(doc.CreateElement("width")).InnerText = sheet.Value.spriteWidth.ToString();
+					rootNode.AppendChild(doc.CreateElement("height")).InnerText = sheet.Value.spriteHeight.ToString();
+					rootNode.AppendChild(doc.CreateElement("x")).InnerText = sheet.Value.x.ToString();
+					rootNode.AppendChild(doc.CreateElement("y")).InnerText = sheet.Value.y.ToString();
+					//XmlElement cols = doc.CreateElement("cols");
+					//rootNode.AppendChild(doc.CreateElement("cols")).InnerText = sheet.Value.cols.ToString();
+					foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> anim in sheet.Value.animations) {
+						XmlElement image = doc.CreateElement("animation");
 						rootNode.AppendChild(image);
-						image.SetAttribute("type", anim.Key);
+						image.SetAttribute("type", anim.Key.type);
+						image.SetAttribute("dir", anim.Key.dir);
 						image.AppendChild(doc.CreateElement("start")).InnerText = anim.Value.startFrame.ToString();
 						image.AppendChild(doc.CreateElement("count")).InnerText = anim.Value.frameCount.ToString();
-						image.AppendChild(doc.CreateElement("interval")).InnerText = anim.Value.interval.ToString();
+						//image.AppendChild(doc.CreateElement("interval")).InnerText = anim.Value.interval.ToString();
 						image.AppendChild(doc.CreateElement("timeout")).InnerText = anim.Value.timeOut.ToString();
 					}
 					doc.Save("img/" + sheet.Key + ".xml");
@@ -405,6 +441,7 @@ namespace KFIRPG.editor {
 			this.Close();
 		}
 
+		//TODO: Refactor duplicate MessageBox code
 		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e) {
 			switch (MessageBox.Show(this, "Your project might have unsaved changes. Click yes to save the changes, no to exit without saving, or cancel if you do not want to exit.",
 				"Exit", MessageBoxButtons.YesNoCancel)) {

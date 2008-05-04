@@ -8,15 +8,25 @@ using SdlDotNet.Graphics;
 namespace KFIRPG.corelib {
 	class AnimatedGraphics: Graphics {
 		Surface sheet;
-		class State {
+
+		class Animation {
 			public int start;
 			public int count;
-			public int interval;
 			public int timeout;
 		}
-		Dictionary<string, State> states = new Dictionary<string, State>();
-		State currentState;
-		int subState;
+
+		struct AnimationType {
+			public string type;
+			public Sprite.Dir dir;
+			public AnimationType(string type, Sprite.Dir dir) {
+				this.type = type;
+				this.dir = dir;
+			}
+		}
+
+		Dictionary<AnimationType, Animation> animations = new Dictionary<AnimationType, Animation>();
+		Animation currentAnimation;
+		AnimationType currentType;
 		int frame;
 		int width;
 		int height;
@@ -34,35 +44,59 @@ namespace KFIRPG.corelib {
 			x = int.Parse(doc.SelectSingleNode("spritesheet/x").InnerText);
 			y = int.Parse(doc.SelectSingleNode("spritesheet/y").InnerText);
 			columnsInRow = sheet.Width / width;
-			foreach (XmlNode node in doc.SelectNodes("spritesheet/image")) {
-				State current = new State();
-				string name = node.Attributes["type"].InnerText;
+			foreach (XmlNode node in doc.SelectNodes("spritesheet/animation")) {
+				Animation current = new Animation();
+				string type = node.Attributes["type"].InnerText;
+				Sprite.Dir dir = (Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), node.Attributes["dir"].InnerText, true);
 				current.start = int.Parse(node.SelectSingleNode("start").InnerText);
 				current.count = int.Parse(node.SelectSingleNode("count").InnerText);
-				current.interval = int.Parse(node.SelectSingleNode("interval").InnerText);
 				current.timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
-				states.Add(name, current);
+				AnimationType animType = new AnimationType(type, dir);
+				animations.Add(animType, current);
+				if (this.currentAnimation == null) {
+					this.currentAnimation = current;
+					this.currentType = animType;
+				}
 			}
-			currentState = states["still"];
-			subState = 0;
+			if (currentAnimation == null) {
+				currentAnimation = new Animation();
+				currentAnimation.start = 0;
+				currentAnimation.timeout = 1;
+				currentAnimation.count = 1;
+			}
 			frame = 0;
 			CalculateRows();
 		}
 
-		public void SetState(string stateName, int subState) {
-			currentState = states[stateName];
-			this.subState = subState;
+		public AnimatedGraphics(string sheetName, Game game, int imageId)
+			: this(sheetName, game) {
+			currentAnimation = new Animation();
+			currentAnimation.start = imageId;
+			currentAnimation.timeout = 1;
+			currentAnimation.count = 1;
+			CalculateRows();
+		}
+
+		public void SetState(string stateName) {
+			currentType.type = stateName;
+			currentAnimation = animations[currentType];
 			frame = 0;
 			time = 0;
+			CalculateRows();
+		}
+
+		public void SetDirection(Sprite.Dir dir) {
+			currentType.dir = dir;
+			currentAnimation = animations[currentType];
 			CalculateRows();
 		}
 
 		int time = 0;
 		public void Advance() {
 			++time;
-			if (time == currentState.timeout) {
+			if (time >= currentAnimation.timeout) {
 				time = 0;
-				if (frame == currentState.count - 1) {
+				if (frame >= currentAnimation.count - 1) {
 					frame = 0;
 				}
 				else {
@@ -74,7 +108,7 @@ namespace KFIRPG.corelib {
 
 		int row, col;
 		void CalculateRows() {
-			int id = currentState.start + subState * currentState.interval + frame;
+			int id = currentAnimation.start + frame;
 			row = id / columnsInRow;
 			col = id % columnsInRow;
 		}

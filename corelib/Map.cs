@@ -29,8 +29,7 @@ namespace KFIRPG.corelib {
 							tiles[i, j] = new NoGraphics();
 						}
 						else {
-							AnimatedGraphics anim = new AnimatedGraphics("tiles", game);
-							anim.SetState("still", tileID - 1);
+							AnimatedGraphics anim = new AnimatedGraphics("tiles", game, tileID - 1);
 							tiles[i, j] = anim;
 						}
 						passable[i, j] = int.Parse(passLine[i]) == 1;
@@ -62,16 +61,6 @@ namespace KFIRPG.corelib {
 			layers = new Layer[numLayers];
 			for (int i = 0; i < numLayers; ++i) {
 				layers[i] = new Layer(cols, rows, "maps/" + mapName + "/layers/{0}." + i.ToString(), game);
-				/*string[] objectLines = game.loader.LoadText("maps/" + mapName + "/layers/objects." + i.ToString()).Split('\n');
-				if (!(objectLines.Length == 1 && string.IsNullOrEmpty(objectLines[0].Trim()))) {
-					foreach (string line in objectLines) {
-						string[] sline = line.Split(' ');
-						Sprite sp = new Sprite(sline[0].Trim(), game);
-						int x = int.Parse(sline[1]);
-						int y = int.Parse(sline[2]);
-						this.Place(sp, x, y, i);
-					}
-				}*/
 			}
 			XmlDocument objects = new XmlDocument();
 			objects.LoadXml(game.loader.LoadText("maps/" + mapName + "/objects.xml"));
@@ -109,13 +98,11 @@ namespace KFIRPG.corelib {
 
 		internal void Place(Sprite sprite, int x, int y, int layer) {
 			layers[layer].objects[x, y].Add(sprite);
-			//objects.Add(sprite);
 			addList.Add(sprite);
 			sprite.UpdateCoords(x, y, layer);
 		}
 		internal void Remove(Sprite sprite, int x, int y, int layer) {
 			layers[layer].objects[x, y].Remove(sprite);
-			//objects.Remove(sprite);
 			removeList.Add(sprite);
 		}
 		internal void Move(Sprite sprite, int fromX, int fromY, int fromLayer, int toX, int toY, int toLayer) {

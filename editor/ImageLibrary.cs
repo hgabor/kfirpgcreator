@@ -23,6 +23,27 @@ namespace KFIRPG.editor {
 					pictureBox.Image = project.sheets[(string)listbox.SelectedItem].sheet;
 				}
 			};
+			listbox.DoubleClick += (sender, args) => {
+				SpriteSheet sheet = project.sheets[(string)listbox.SelectedItem];
+				using (SpriteSheetDialog dialog = new SpriteSheetDialog()) {
+					dialog.pictureBox.Image = sheet.sheet;
+					dialog.widthNumericUpDown.Value = sheet.spriteWidth;
+					dialog.HeightNumericUpDown.Value = sheet.spriteHeight;
+					dialog.xNumericUpDown.Value = sheet.x;
+					dialog.yNumericUpDown.Value = sheet.y;
+					dialog.listBox.DisplayMember = "Key";
+					foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> anim in sheet.animations) {
+						dialog.listBox.Items.Add(anim);
+					}
+					if (dialog.ShowDialog(this) == DialogResult.OK) {
+						sheet.sheet = (Bitmap)dialog.pictureBox.Image;
+						sheet.spriteWidth = (int)dialog.widthNumericUpDown.Value;
+						sheet.spriteHeight = (int)dialog.HeightNumericUpDown.Value;
+						sheet.x = (int)dialog.xNumericUpDown.Value;
+						sheet.y = (int)dialog.yNumericUpDown.Value;
+					}
+				}
+			};
 		}
 
 		private void colorbutton_Click(object sender, EventArgs e) {

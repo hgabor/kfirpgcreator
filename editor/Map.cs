@@ -24,13 +24,17 @@ namespace KFIRPG.editor {
 				get { return sprite; }
 				set {
 					sprite = value;
-					gfx = sprite.sheet.GetGfxById(1);
+			//		gfx = sprite.sheet.GetGfxById(1);
 				}
 			}
 
+			/*
 			SpriteSheet.Gfx gfx;
 			public SpriteSheet.Gfx Gfx {
 				get { return gfx; }
+			}*/
+			public SpriteSheet.Gfx Gfx {
+				get { return sprite.sheet.GetGfxById(1); }
 			}
 			public string movementAIScript;
 			public string actionScript;

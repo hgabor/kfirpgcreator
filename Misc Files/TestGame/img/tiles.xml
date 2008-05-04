@@ -4,10 +4,4 @@
   <height>32</height>
   <x>0</x>
   <y>0</y>
-  <image type="still">
-    <start>0</start>
-    <count>1</count>
-    <interval>1</interval>
-    <timeout>1</timeout>
-  </image>
 </spritesheet>

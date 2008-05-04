@@ -22,6 +22,11 @@ namespace KFIRPG.editor {
 				this.interval = interval;
 				this.timeOut = timeOut;
 			}
+			public Animation(int startFrame, int frameCount, int timeOut) {
+				this.startFrame = startFrame;
+				this.frameCount = frameCount;
+				this.timeOut = timeOut;
+			}
 		}
 
 		public class Gfx {
@@ -47,7 +52,56 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		public Dictionary<string, Animation> states = new Dictionary<string, Animation>();
+		#region Old Format
+
+		//public Dictionary<string, Animation> states = new Dictionary<string, Animation>();
+
+		public void LoadOldFormat(XmlDocument doc) {
+			//throw new InvalidOperationException("Support for old format is not enabled!");
+			foreach (XmlNode node in doc.SelectNodes("/spritesheet/image")) {
+				string type = node.Attributes["type"].InnerText;
+				int start = int.Parse(node.SelectSingleNode("start").InnerText);
+				int count = int.Parse(node.SelectSingleNode("count").InnerText);
+				int interval = int.Parse(node.SelectSingleNode("interval").InnerText);
+				int timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
+				//states.Add(type, new Animation(start, count, interval, timeout));
+				if (type == "still") {
+					animations.Add(new AnimationType("still", "down"), new Animation(start, count, timeout));
+					animations.Add(new AnimationType("still", "up"), new Animation(start + interval, count, timeout));
+					animations.Add(new AnimationType("still", "left"), new Animation(start + 2 * interval, count, timeout));
+					animations.Add(new AnimationType("still", "right"), new Animation(start + 3 * interval, count, timeout));
+				}
+				else if (type.Contains("down")) {
+					animations.Add(new AnimationType(type.Replace("down", ""), "down"), new Animation(start, count, timeout));
+				}
+				else if (type.Contains("up")) {
+					animations.Add(new AnimationType(type.Replace("up", ""), "up"), new Animation(start, count, timeout));
+				}
+				else if (type.Contains("left")) {
+					animations.Add(new AnimationType(type.Replace("left", ""), "left"), new Animation(start, count, timeout));
+				}
+				else if (type.Contains("right")) {
+					animations.Add(new AnimationType(type.Replace("right", ""), "right"), new Animation(start, count, timeout));
+				}
+			}
+		}
+
+		#endregion
+
+		public struct AnimationType {
+			public readonly string type;
+			public readonly string dir;
+			public AnimationType(string type, string dir) {
+				this.type = type;
+				this.dir = dir;
+			}
+
+			public override string ToString() {
+				return type + " " + dir;
+			}
+		}
+
+		public Dictionary<AnimationType, Animation> animations = new Dictionary<AnimationType, Animation>();
 
 		public SpriteSheet(string name, Project project) {
 			Loader loader = project.loader;
@@ -62,15 +116,17 @@ namespace KFIRPG.editor {
 			y = int.Parse(doc.SelectSingleNode("/spritesheet/y").InnerText);
 			cols = sheet.Width / spriteWidth;
 			//cols = int.Parse(doc.SelectSingleNode("/spritesheet/cols").InnerText);
-			foreach (XmlNode node in doc.SelectNodes("/spritesheet/image")) {
-				string type = node.Attributes["type"].InnerText;
-				int start = int.Parse(node.SelectSingleNode("start").InnerText);
-				int count = int.Parse(node.SelectSingleNode("count").InnerText);
-				int interval = int.Parse(node.SelectSingleNode("interval").InnerText);
-				int timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
-				states.Add(type, new Animation(start, count, interval, timeout));
+			XmlNodeList nodes = doc.SelectNodes("/spritesheet/animation");
+			if (nodes != null && nodes.Count > 0) {
+				foreach (XmlNode node in nodes) {
+					string type = node.Attributes["type"].InnerText;
+					string dir = node.Attributes["dir"].InnerText;
+					int start = int.Parse(node.SelectSingleNode("start").InnerText);
+					int count = int.Parse(node.SelectSingleNode("count").InnerText);
+					int timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
+					animations.Add(new AnimationType(type, dir), new Animation(start, count, timeout));
+				}
 			}
-			this.spriteWidth = project.tileSize;
 		}
 
 		public Gfx GetGfxById(int id) {
