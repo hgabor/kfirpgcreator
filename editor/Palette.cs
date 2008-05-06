@@ -20,6 +20,12 @@ namespace KFIRPG.editor {
 
 		public event EventHandler<CursorEventArgs> PaletteSelectionChanged;
 
+		private void OnPaletteSelectionChanged(CursorEventArgs args) {
+			if (PaletteSelectionChanged != null) {
+				PaletteSelectionChanged(this, args);
+			}
+		}
+
 		public Palette() {
 			InitializeComponent();
 		}
@@ -88,9 +94,7 @@ namespace KFIRPG.editor {
 			selectedrow = (e.Y + offsetY) / sheet.spriteHeight;
 			selectedcol = (e.X + offsetX) / sheet.spriteWidth;
 			int tileId = selectedrow == 0 || selectedcol >= sheet.cols ? 0 : (selectedrow - 1) * sheet.cols + selectedcol + 1;
-			if (PaletteSelectionChanged != null) {
-				PaletteSelectionChanged(this, new CursorEventArgs(new TileCursor(tileId, currentProject)));
-			}
+			OnPaletteSelectionChanged(new CursorEventArgs(new TileCursor(tileId, currentProject)));
 
 			objectsListBox.SelectedIndex = -1;
 			tileSelected = true;
@@ -98,18 +102,14 @@ namespace KFIRPG.editor {
 		}
 
 		private void passableButton_Click(object sender, EventArgs e) {
-			if (PaletteSelectionChanged != null) {
-				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(true, currentProject)));
-			}
+			OnPaletteSelectionChanged(new CursorEventArgs(new PassabilityCursor(true, currentProject)));
 
 			objectsListBox.SelectedIndex = -1;
 			tileSelected = false;
 		}
 
 		private void impassableButton_Click(object sender, EventArgs e) {
-			if (PaletteSelectionChanged != null) {
-				PaletteSelectionChanged(this, new CursorEventArgs(new PassabilityCursor(false, currentProject)));
-			}
+			OnPaletteSelectionChanged(new CursorEventArgs(new PassabilityCursor(false, currentProject)));
 
 			objectsListBox.SelectedIndex = -1;
 			tileSelected = false;
@@ -118,9 +118,7 @@ namespace KFIRPG.editor {
 		private void SelectObjectCursor_Handler(object sender, EventArgs e) {
 			if (objectsListBox.SelectedIndex == 0) {
 				Cursor cursor = new DeleteSpriteCursor();
-				if (PaletteSelectionChanged != null) {
-					PaletteSelectionChanged(this, new CursorEventArgs(cursor));
-				}
+				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
 				tileSelected = false;
 			}
@@ -128,12 +126,24 @@ namespace KFIRPG.editor {
 				string name = (string)objectsListBox.SelectedItem;
 				Sprite sprite = currentProject.sprites[name];
 				Cursor cursor = new SpriteCursor(sprite, clearScriptCheckBox.Checked, currentProject);
-				if (PaletteSelectionChanged != null) {
-					PaletteSelectionChanged(this, new CursorEventArgs(cursor));
-				}
+				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
 				tileSelected = false;
 			}
+		}
+
+		private void ladderButton_Click(object sender, EventArgs e) {
+			OnPaletteSelectionChanged(new CursorEventArgs(new PlaceLadderCursor(currentProject)));
+
+			objectsListBox.SelectedIndex = -1;
+			tileSelected = false;
+		}
+
+		private void removeLadderButton_Click(object sender, EventArgs e) {
+			OnPaletteSelectionChanged(new CursorEventArgs(new RemoveLadderCursor(currentProject)));
+
+			objectsListBox.SelectedIndex = -1;
+			tileSelected = false;
 		}
 	}
 }

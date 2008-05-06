@@ -70,6 +70,7 @@
     <Compile Include="ImageLibrary.Designer.cs">
       <DependentUpon>ImageLibrary.cs</DependentUpon>
     </Compile>
+    <Compile Include="LadderCursor.cs" />
     <Compile Include="LayersToolbar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +105,12 @@
     </Compile>
     <Compile Include="ScriptEditor.Designer.cs">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectTwoLayersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectTwoLayersDialog.Designer.cs">
+      <DependentUpon>SelectTwoLayersDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteCursor.cs" />
@@ -158,6 +165,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ScriptEditor.resx">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectTwoLayersDialog.resx">
+      <DependentUpon>SelectTwoLayersDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SpriteSheetDialog.resx">

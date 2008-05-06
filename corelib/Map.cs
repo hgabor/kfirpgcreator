@@ -10,6 +10,7 @@ namespace KFIRPG.corelib {
 			public Graphics[,] tiles;
 			public bool[,] passable;
 			public List<Script>[,] onStep;
+			public Layer[,] ladderMove;
 			public Layer(int width, int height, string path, Game game) {
 				string[] tileLines = game.loader.LoadText(string.Format(path, "tiles")).Split('\n');
 				string[] passLines = game.loader.LoadText(string.Format(path, "passability")).Split('\n');
@@ -17,6 +18,7 @@ namespace KFIRPG.corelib {
 				tiles = new Graphics[width, height];
 				passable = new bool[width, height];
 				onStep = new List<Script>[width, height];
+				ladderMove = new Layer[width, height];
 
 				for (int j = 0; j < height; ++j) {
 					string[] tileLine = tileLines[j].Split(' ');
@@ -94,6 +96,16 @@ namespace KFIRPG.corelib {
 				Script script = game.vm.LoadScript(game.loader.LoadText("scripts/" + name));
 				layers[l].onStep[x, y].Add(script);
 			}
+			XmlDocument ladders = new XmlDocument();
+			ladders.LoadXml(game.loader.LoadText("maps/" + mapName + "/ladders.xml"));
+			foreach (XmlNode node in ladders.SelectNodes("/ladders/ladder")) {
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int baseLayer = int.Parse(node.SelectSingleNode("base").InnerText);
+				int topLayer = int.Parse(node.SelectSingleNode("top").InnerText);
+				layers[baseLayer].ladderMove[x, y - 1] = layers[topLayer];
+				layers[topLayer].ladderMove[x, y] = layers[baseLayer];
+			}
 		}
 
 		internal void Place(Sprite sprite, int x, int y, int layer) {
@@ -107,8 +119,14 @@ namespace KFIRPG.corelib {
 		}
 		internal void Move(Sprite sprite, int fromX, int fromY, int fromLayer, int toX, int toY, int toLayer) {
 			layers[fromLayer].objects[fromX, fromY].Remove(sprite);
-			layers[toLayer].objects[toX, toY].Add(sprite);
-			sprite.UpdateCoords(toX, toY, toLayer);
+			if (layers[toLayer].ladderMove[toX, toY] != null) {
+				layers[toLayer].ladderMove[toX, toY].objects[toX, toY].Add(sprite);
+				sprite.UpdateCoords(toX, toY, Array.IndexOf(layers, layers[toLayer].ladderMove[toX, toY]));
+			}
+			else {
+				layers[toLayer].objects[toX, toY].Add(sprite);
+				sprite.UpdateCoords(toX, toY, toLayer);
+			}
 		}
 		internal bool OnStep(int x, int y, int layer) {
 			if (layers[layer].onStep[x, y].Count == 0) return false;

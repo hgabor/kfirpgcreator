@@ -167,12 +167,32 @@ namespace KFIRPG.editor {
 				if (currentMap.layers.Count == 1) {
 					MessageBox.Show("Cannot remove last layer!", "Last layer");
 				}
-				else if (MessageBox.Show(layers,
-					string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem),
-					"Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-					currentMap.layers.RemoveAt(currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1);
-					layers.Load(currentMap);
-					mainPanel.Invalidate();
+				else {
+					int count = 0;
+					for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
+						for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
+							Map.Ladder ladder = currentMap.ladders[i, j];
+							if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) ++count;
+						}
+					}
+					string message;
+					if (count == 0) {
+						message = string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem);
+					}
+					else {
+						message = string.Format("Do you want to remove layer \"{0}\"? The layer contains {1} ladder(s), they will be removed!", layers.checkedListBox.SelectedItem, count);
+					}
+					if (MessageBox.Show(layers, message, "Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+						for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
+							for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
+								Map.Ladder ladder = currentMap.ladders[i, j];
+								if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) currentMap.ladders[i, j] = null;
+							}
+						}
+						currentMap.layers.Remove(CurrentLayer);
+						layers.Load(currentMap);
+						mainPanel.Invalidate();
+					}
 				}
 			};
 			layers.upbutton.Click += (sender, args) => {
@@ -345,6 +365,25 @@ namespace KFIRPG.editor {
 					}
 					objects.Save("maps/" + map.Key + "/objects.xml");
 					onstep.Save("maps/" + map.Key + "/onstep.xml");
+
+					XmlDocument ladders = new XmlDocument();
+					ladders.AppendChild(ladders.CreateXmlDeclaration("1.0", null, null));
+					XmlElement lRoot = ladders.CreateElement("ladders");
+					ladders.AppendChild(lRoot);
+					for (int i = 0; i < map.Value.width; ++i) {
+						for (int j = 0; j < map.Value.height; ++j) {
+							Map.Ladder ladder = map.Value.ladders[i, j];
+							if (ladder != null) {
+								XmlElement l = ladders.CreateElement("ladder");
+								lRoot.AppendChild(l);
+								l.AppendChild(ladders.CreateElement("x")).InnerText = i.ToString();
+								l.AppendChild(ladders.CreateElement("y")).InnerText = j.ToString();
+								l.AppendChild(ladders.CreateElement("base")).InnerText = map.Value.layers.IndexOf(ladder.baseLayer).ToString();
+								l.AppendChild(ladders.CreateElement("top")).InnerText = map.Value.layers.IndexOf(ladder.topLayer).ToString();
+							}
+						}
+					}
+					ladders.Save("maps/" + map.Key + "/ladders.xml");
 				}
 			}
 
@@ -384,6 +423,8 @@ namespace KFIRPG.editor {
 		readonly Pen mapFramePen = Pens.White;
 		readonly Brush locationBrush = new SolidBrush(Color.FromArgb(128, Color.Blue));
 		readonly Pen locationPen = Pens.Blue;
+		readonly Brush LadderBrush = new System.Drawing.Drawing2D.HatchBrush(System.Drawing.Drawing2D.HatchStyle.Horizontal, Color.Purple, Color.FromArgb(128, Color.Purple));
+		readonly Pen ladderPen = Pens.Purple;
 
 		private void DrawBox(int x, int y, int width, int height, Brush bg, Pen frame, Graphics g) {
 			g.FillRectangle(bg, x, y, width, height);
@@ -422,6 +463,13 @@ namespace KFIRPG.editor {
 								DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
 							}
 						}
+					}
+				}
+			}
+			for (int i = 0; i < currentMap.width; ++i) {
+				for (int j = 0; j < currentMap.height; ++j) {
+					if (currentMap.ladders[i, j] != null) {
+						DrawBox(x + i * size, y + (j - 1) * size, size - 1, 2 * size - 1, LadderBrush, ladderPen, e.Graphics);
 					}
 				}
 			}

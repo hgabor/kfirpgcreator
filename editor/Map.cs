@@ -41,10 +41,12 @@ namespace KFIRPG.editor {
 		}
 
 		public class Layer {
+			public readonly Map Map;
 			public Tile[,] tiles;
 			public Obj[,] objects;
 			public string name;
-			public Layer(int width, int height, string pathBase, Project project) {
+			public Layer(int width, int height, string pathBase, Map map, Project project) {
+				this.Map = map;
 				Loader loader = project.loader;
 				SpriteSheet sheet = project.sheets["tiles"];
 				tiles = new Tile[width, height];
@@ -60,7 +62,8 @@ namespace KFIRPG.editor {
 				}
 				name = loader.LoadText(string.Format(pathBase, "name")).Trim();
 			}
-			public Layer(int width, int height, string name) {
+			public Layer(int width, int height, string name, Map map) {
+				this.Map = map;
 				this.name = name;
 				tiles = new Tile[width, height];
 				objects = new Obj[width, height];
@@ -90,9 +93,23 @@ namespace KFIRPG.editor {
 				tiles = newTiles;
 				objects = newObjs;
 			}
+
+			public override string ToString() {
+				return name;
+			}
+		}
+
+		public class Ladder {
+			public Layer baseLayer;
+			public Layer topLayer;
+			public Ladder(Layer baseLayer, Layer topLayer) {
+				this.baseLayer = baseLayer;
+				this.topLayer = topLayer;
+			}
 		}
 
 		public List<Layer> layers = new List<Layer>();
+		public Ladder[,] ladders;
 		public int width;
 		public int height;
 		public string name;
@@ -112,9 +129,10 @@ namespace KFIRPG.editor {
 			width = int.Parse(info.SelectSingleNode("/map/width").InnerText);
 			height = int.Parse(info.SelectSingleNode("/map/height").InnerText);
 			for (int i = 0; i < numLayers; ++i) {
-				Layer layer = new Layer(width, height, "maps/" + name + "/layers/{0}." + i.ToString(), project);
+				Layer layer = new Layer(width, height, "maps/" + name + "/layers/{0}." + i.ToString(), this, project);
 				layers.Add(layer);
 			}
+			this.ladders = new Ladder[width, height];
 
 			XmlDocument objects = new XmlDocument();
 			objects.LoadXml(loader.LoadText("maps/" + name + "/objects.xml"));
@@ -141,19 +159,29 @@ namespace KFIRPG.editor {
 				string script = node.SelectSingleNode("script").InnerText.Trim();
 				layers[layer].tiles[x, y].onStep = script;
 			}
+
+			XmlDocument ladders = new XmlDocument();
+			ladders.LoadXml(loader.LoadText("maps/" + name + "/ladders.xml"));
+			foreach (XmlNode node in ladders.SelectNodes("/ladders/ladder")) {
+				int x = int.Parse(node.SelectSingleNode("x").InnerText);
+				int y = int.Parse(node.SelectSingleNode("y").InnerText);
+				int baseLayer = int.Parse(node.SelectSingleNode("base").InnerText);
+				int topLayer = int.Parse(node.SelectSingleNode("top").InnerText);
+				this.ladders[x, y] = new Ladder(layers[baseLayer], layers[topLayer]);
+			}
 		}
 
 		public Map(string name, Size size) {
 			this.name = name;
 			width = size.Width;
 			height = size.Height;
-			Layer layer = new Layer(size.Width, size.Height, "layer1");
+			Layer layer = new Layer(size.Width, size.Height, "layer1", this);
 			layers.Add(layer);
 		}
 
 		internal Layer CreateNewLayer(string name) {
 			int layerId = layers.Count;
-			Layer newLayer = new Layer(width, height, name);
+			Layer newLayer = new Layer(width, height, name, this);
 			layers.Add(newLayer);
 			return newLayer;
 		}
