@@ -3,7 +3,7 @@
   <object>
     <x>4</x>
     <y>4</y>
-    <layer>2</layer>
+    <layer>4</layer>
     <sprite>sticky</sprite>
     <action>map/blahblah</action>
     <movement>movement/random</movement>
@@ -11,7 +11,7 @@
   <object>
     <x>1</x>
     <y>5</y>
-    <layer>3</layer>
+    <layer>5</layer>
     <sprite>butterfly</sprite>
     <action>
     </action>

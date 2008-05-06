@@ -6,7 +6,7 @@
   <tilesize>32</tilesize>
   <startx>1</startx>
   <starty>0</starty>
-  <startl>2</startl>
+  <startl>4</startl>
   <screenwidth>640</screenwidth>
   <screenheight>480</screenheight>
   <party>
@@ -16,13 +16,13 @@
     <location name="HouseOutside">
       <x>7</x>
       <y>5</y>
-      <layer>2</layer>
+      <layer>4</layer>
       <map>lake</map>
     </location>
     <location name="TeleportDest">
       <x>0</x>
       <y>6</y>
-      <layer>2</layer>
+      <layer>4</layer>
       <map>lake</map>
     </location>
     <location name="HouseInside">

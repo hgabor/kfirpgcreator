@@ -3,19 +3,19 @@
   <event>
     <x>8</x>
     <y>0</y>
-    <layer>2</layer>
+    <layer>4</layer>
     <script>map/teleport</script>
   </event>
   <event>
     <x>1</x>
     <y>3</y>
-    <layer>2</layer>
+    <layer>4</layer>
     <script>map/bridgecreaks</script>
   </event>
   <event>
     <x>7</x>
     <y>4</y>
-    <layer>2</layer>
+    <layer>4</layer>
     <script>map/door</script>
   </event>
 </events>
