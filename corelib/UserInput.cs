@@ -29,10 +29,13 @@ namespace KFIRPG.corelib {
 			Back = 32
 		}
 		Buttons state = Buttons.None;
+		internal Buttons State { get { return state; } }
 		bool waitingForKeyUp = false;
+
 		internal bool IsPressed(Buttons buttons) {
 			return (state & buttons) == buttons;
 		}
+
 		public void Set(Buttons buttons) {
 			if (waitingForKeyUp) {
 				if (buttons == Buttons.None) {
@@ -48,6 +51,7 @@ namespace KFIRPG.corelib {
 				}
 			}
 		}
+
 		internal void WaitForKeyUp() {
 			waitingForKeyUp = true;
 			state = Buttons.None;

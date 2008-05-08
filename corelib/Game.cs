@@ -15,6 +15,9 @@ namespace KFIRPG.corelib {
 				case "lua":
 					vm = new LuaVM(this);
 					break;
+				case "taolua":
+					vm = new TaoLuaVM(this);
+					break;
 				default:
 					throw new InvalidValueException("Script VM", scriptvm);
 			}

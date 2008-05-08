@@ -6,7 +6,7 @@ namespace KFIRPG.corelib {
 	class ScriptedMovementAI: MovementAI {
 		Script script;
 		public ScriptedMovementAI(string scriptName, Game game) {
-			script = game.vm.LoadScript(game.loader.LoadText("scripts/" + scriptName));
+			script = game.vm.LoadNonBlockingScript(game.loader.LoadText("scripts/" + scriptName));
 		}
 
 		public override void TryDoingSomething(Sprite me, Map map) {

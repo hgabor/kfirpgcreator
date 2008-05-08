@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <settings>
-  <scriptvm>lua</scriptvm>
+  <scriptvm>taolua</scriptvm>
   <startscript>startup</startscript>
   <defaultmap>lake</defaultmap>
   <tilesize>32</tilesize>

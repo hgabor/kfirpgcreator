@@ -45,7 +45,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="LuaInterface, Version=2.0.0.29971, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=MSIL">
+    <Reference Include="LuaInterface, Version=1.5.3.0, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\LuaInterface.dll</HintPath>
     </Reference>
@@ -57,6 +57,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.Lua, Version=5.1.1.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\Tao.Lua.dll</HintPath>
+    </Reference>
     <Reference Include="Tao.Sdl, Version=1.2.11.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\Tao.Sdl.dll</HintPath>
@@ -69,18 +73,23 @@
     <Compile Include="AnimatedGraphics.cs" />
     <Compile Include="Audio.cs" />
     <Compile Include="CachedLoader.cs" />
+    <Compile Include="CustomScreen.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="LuaScript.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LuaVM.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Loader.cs" />
-    <Compile Include="LuaScript.cs" />
-    <Compile Include="LuaVM.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapScreen.cs" />
     <Compile Include="NoGraphics.cs" />
@@ -95,6 +104,8 @@
     <Compile Include="ScriptLib.cs" />
     <Compile Include="ScriptVM.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="TaoLuaScript.cs" />
+    <Compile Include="TaoLuaVM.cs" />
     <Compile Include="TextGraphics.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="ZipLoader.cs" />

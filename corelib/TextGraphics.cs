@@ -6,11 +6,16 @@ using System.Drawing;
 
 namespace KFIRPG.corelib {
 	class TextGraphics: Graphics {
-		int x, y;
+		Point coords;
+		public Point Coords {
+			get { return coords; }
+			set { coords = value; }
+		}
 		Game game;
 		Dialogs dialogs;
-		const int width = 500;
 		List<Surface> textSurfaces;
+		const int width = 500;
+		public int Width { get { return width; } }
 		public int Height {
 			get {
 				return textSurfaces.Count * dialogs.TextHeight;
@@ -19,9 +24,7 @@ namespace KFIRPG.corelib {
 
 		public enum Align { Left, Right, Center }
 		Align align;
-		public TextGraphics(string text, int x, int y, Align align, Dialogs dialogs, Game game) {
-			this.x = x;
-			this.y = y;
+		public TextGraphics(string text, Align align, Dialogs dialogs, Game game) {
 			this.game = game;
 			this.dialogs = dialogs;
 			this.align = align;
@@ -61,25 +64,24 @@ namespace KFIRPG.corelib {
 			return retLines;
 		}
 
-
-
+		//TODO: Candidate for optimization: two much Point creation
 		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) {
 			int yLocal = 0;
 			if (align == Align.Left) {
 				foreach (Surface surf in textSurfaces) {
-					dest.Blit(surf, new Point(x + this.x, yLocal + y + this.y));
+					dest.Blit(surf, new Point(x + coords.X, yLocal + y + coords.Y));
 					yLocal += surf.Height;
 				}
 			}
 			else if (align == Align.Right) {
 				foreach (Surface surf in textSurfaces) {
-					dest.Blit(surf, new Point(x + this.x + width - surf.Width, yLocal + y + this.y));
+					dest.Blit(surf, new Point(x + coords.X + width - surf.Width, yLocal + y + coords.Y));
 					yLocal += surf.Height;
 				}
 			}
 			else {
 				foreach (Surface surf in textSurfaces) {
-					dest.Blit(surf, new Point(x + this.x + (width - surf.Width) / 2, yLocal + y + this.y));
+					dest.Blit(surf, new Point(x + coords.X + (width - surf.Width) / 2, yLocal + y + coords.Y));
 					yLocal += surf.Height;
 				}
 			}

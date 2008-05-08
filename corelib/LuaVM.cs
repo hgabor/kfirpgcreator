@@ -43,6 +43,9 @@ namespace KFIRPG.corelib {
 
 		#region ScriptVM Members
 
+		public Script LoadNonBlockingScript(string script) {
+			return new LuaScript(script, vm);
+		}
 		public Script LoadScript(string script) {
 			return new LuaScript(script, vm);
 		}

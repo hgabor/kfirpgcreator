@@ -20,7 +20,8 @@ namespace KFIRPG.corelib {
 			anim.FromImage = game.TakeScreenshot();
 			Form form = new Form(dialogs, game);
 			Form.Menu menu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics text = new TextGraphics(message, 10, 10, TextGraphics.Align.Center, dialogs, game);
+			TextGraphics text = new TextGraphics(message, TextGraphics.Align.Center, dialogs, game);
+			text.Coords = new System.Drawing.Point(10, 10);
 			menu.Add(text);
 			form.AddPanel("message", menu);
 			game.PushScreen(form);
@@ -37,14 +38,16 @@ namespace KFIRPG.corelib {
 			anim.FromImage = game.TakeScreenshot();
 			Form form = new Form(dialogs, game);
 			Form.Menu qmenu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics qtext = new TextGraphics(question, 10, 10, TextGraphics.Align.Center, dialogs, game);
+			TextGraphics qtext = new TextGraphics(question, TextGraphics.Align.Center, dialogs, game);
+			qtext.Coords = new System.Drawing.Point(10, 10);
 			qmenu.Add(qtext);
 			form.AddPanel("message", qmenu);
 
 			int i = 0;
 			int position = 220;
 			foreach (string answer in answers) {
-				TextGraphics stext = new TextGraphics(answer, 0, 0, TextGraphics.Align.Left, dialogs, game);
+				TextGraphics stext = new TextGraphics(answer, TextGraphics.Align.Left, dialogs, game);
+				stext.Coords = new System.Drawing.Point(0, 0);
 				Form.Item aitem = new Form.Item(10 + dialogs.Border, position, 500 - 2 * dialogs.Border, stext.Height + 2 * dialogs.Border, form);
 				aitem.Add(stext);
 				++i;
@@ -110,6 +113,15 @@ namespace KFIRPG.corelib {
 			}
 			else {
 				LongJump(location);
+			}
+		}
+
+		List<string> includedScripts = new List<string>();
+		[Script]
+		public void include(string scriptName) {
+			if (!includedScripts.Contains(scriptName)) {
+				includedScripts.Add(scriptName);
+				game.vm.LoadNonBlockingScript(game.loader.LoadText("scripts/" + scriptName)).Run();
 			}
 		}
 
