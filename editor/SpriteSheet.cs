@@ -7,6 +7,15 @@ using System.Xml;
 
 namespace KFIRPG.editor {
 	class SpriteSheet {
+		Project project;
+		public string Name {
+			get {
+				foreach (KeyValuePair<string, SpriteSheet> sheet in project.sheets) {
+					if (sheet.Value == this) return sheet.Key;
+				}
+				throw new Exception("Project does not contain spritesheet!");
+			}
+		}
 		public int cols;
 		public Bitmap sheet;
 		public int spriteWidth, spriteHeight;
@@ -104,6 +113,7 @@ namespace KFIRPG.editor {
 		public Dictionary<AnimationType, Animation> animations = new Dictionary<AnimationType, Animation>();
 
 		public SpriteSheet(string name, Project project) {
+			this.project = project;
 			Loader loader = project.loader;
 			using (Bitmap bm = loader.LoadBitmap("img/" + name + ".png")) {
 				sheet = new Bitmap(bm);
@@ -127,6 +137,10 @@ namespace KFIRPG.editor {
 					animations.Add(new AnimationType(type, dir), new Animation(start, count, timeout));
 				}
 			}
+		}
+
+		public SpriteSheet(Project project) {
+			this.project = project;
 		}
 
 		public Gfx GetGfxById(int id) {

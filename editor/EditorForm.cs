@@ -34,13 +34,14 @@ namespace KFIRPG.editor {
 		Cursor cursor;
 
 		public void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
+			bool status = false;
 			form.FormClosing += (sender, args) => {
 				args.Cancel = true;
 				form.Hide();
 				menuitem.Checked = false;
 			};
 			menuitem.Click += (sender, args) => {
-				if (menuitem.Checked) {
+				if (status) {
 					form.Hide();
 					menuitem.Checked = false;
 				}
@@ -49,12 +50,13 @@ namespace KFIRPG.editor {
 					menuitem.Checked = true;
 				}
 			};
+			menuitem.VisibleChanged += (sender, args) => {
+				status = menuitem.Visible;
+			};
 		}
 
 		public EditorForm() {
 			InitializeComponent();
-			//currentProject = Project.FromFiles("TestGame");
-			//currentMap = currentProject.maps[currentProject.startupMapName];
 
 			//Layers toolbar
 			layers = new LayersToolbar();
@@ -253,7 +255,7 @@ namespace KFIRPG.editor {
 			XmlElement party = global.CreateElement("party");
 			globalRoot.AppendChild(party);
 			foreach (Sprite sp in currentProject.party) {
-				party.AppendChild(global.CreateElement("character")).InnerText = sp.name;
+				party.AppendChild(global.CreateElement("character")).InnerText = sp.Name;
 			}
 
 			//Locations.xml
@@ -290,6 +292,26 @@ namespace KFIRPG.editor {
 						image.AppendChild(doc.CreateElement("timeout")).InnerText = anim.Value.timeOut.ToString();
 					}
 					doc.Save("img/" + sheet.Key + ".xml");
+				}
+			}
+
+			//Sprites
+			using (StreamWriter sw = new StreamWriter(File.Create("sprites.list"))) {
+				foreach (KeyValuePair<string, Sprite> sprite in currentProject.sprites) {
+					XmlDocument doc = new XmlDocument();
+					doc.AppendChild(doc.CreateXmlDeclaration("1.0", null, null));
+					XmlElement root = doc.CreateElement("sprite");
+					doc.AppendChild(root);
+					root.AppendChild(doc.CreateElement("img")).InnerText = sprite.Value.sheet.Name;
+					root.AppendChild(doc.CreateElement("speed")).InnerText = sprite.Value.speed.ToString();
+					root.AppendChild(doc.CreateElement("noclip")).InnerText = sprite.Value.noclip ? "1" : "0";
+					XmlElement ext = doc.CreateElement("ext");
+					root.AppendChild(ext);
+					foreach (KeyValuePair<string, string> kvp in sprite.Value.ext) {
+						ext.AppendChild(doc.CreateElement(kvp.Key)).InnerText = kvp.Value;
+					}
+					doc.Save("sprites/" + sprite.Value.Name + ".xml");
+					sw.WriteLine(sprite.Key);
 				}
 			}
 
@@ -352,7 +374,7 @@ namespace KFIRPG.editor {
 										o.AppendChild(objects.CreateElement("x")).InnerText = i.ToString();
 										o.AppendChild(objects.CreateElement("y")).InnerText = j.ToString();
 										o.AppendChild(objects.CreateElement("layer")).InnerText = l.ToString();
-										o.AppendChild(objects.CreateElement("sprite")).InnerText = obj.Sprite.name;
+										o.AppendChild(objects.CreateElement("sprite")).InnerText = obj.Sprite.Name;
 										o.AppendChild(objects.CreateElement("action")).InnerText = obj.actionScript;
 										o.AppendChild(objects.CreateElement("movement")).InnerText = obj.movementAIScript;
 									}
@@ -504,6 +526,8 @@ namespace KFIRPG.editor {
 					break;
 				case DialogResult.Cancel:
 					e.Cancel = true;
+					break;
+				case DialogResult.No:
 					break;
 			}
 		}

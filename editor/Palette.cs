@@ -60,14 +60,18 @@ namespace KFIRPG.editor {
 				vScrollBar.LargeChange = tilesPanel.Height;
 			};
 
-			objectsListBox.Items.Clear();
-			objectsListBox.Items.Add("DELETE OBJECT");
-			foreach (string spriteName in project.sprites.Keys) {
-				objectsListBox.Items.Add(spriteName);
-			}
-			objectsListBox.SelectedIndex = -1;
+			LoadObjects();
 
 			tilePage.Invalidate();
+		}
+
+		public void LoadObjects() {
+			objectsListBox.Items.Clear();
+			objectsListBox.Items.Add("DELETE OBJECT");
+			foreach (Sprite sprite in currentProject.sprites.Values) {
+				objectsListBox.Items.Add(sprite);
+			}
+			objectsListBox.SelectedIndex = -1;
 		}
 
 		int selectedrow = 0;
@@ -123,8 +127,7 @@ namespace KFIRPG.editor {
 				tileSelected = false;
 			}
 			else if (objectsListBox.SelectedIndex != -1) {
-				string name = (string)objectsListBox.SelectedItem;
-				Sprite sprite = currentProject.sprites[name];
+				Sprite sprite = (Sprite)objectsListBox.SelectedItem;
 				Cursor cursor = new SpriteCursor(sprite, clearScriptCheckBox.Checked, currentProject);
 				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
@@ -144,6 +147,21 @@ namespace KFIRPG.editor {
 
 			objectsListBox.SelectedIndex = -1;
 			tileSelected = false;
+		}
+
+		private void addObjectButton_Click(object sender, EventArgs e) {
+			using (SpriteDialog sd = new SpriteDialog(currentProject, null)) {
+				sd.ShowDialog(this);
+			}
+			LoadObjects();
+		}
+
+		private void objectsListBox_DoubleClick(object sender, EventArgs e) {
+			if (objectsListBox.SelectedIndex == -1 || objectsListBox.SelectedIndex == 0) return;
+			using (SpriteDialog sd = new SpriteDialog(currentProject, (Sprite)objectsListBox.SelectedItem)) {
+				sd.ShowDialog(this);
+			}
+			LoadObjects();
 		}
 	}
 }

@@ -28,16 +28,18 @@
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.objectPage = new System.Windows.Forms.TabPage();
+			this.addObjectButton = new System.Windows.Forms.Button();
+			this.removeObjectButton = new System.Windows.Forms.Button();
 			this.clearScriptCheckBox = new System.Windows.Forms.CheckBox();
 			this.objectsListBox = new System.Windows.Forms.ListBox();
 			this.specialPage = new System.Windows.Forms.TabPage();
+			this.removeLadderButton = new System.Windows.Forms.Button();
+			this.ladderButton = new System.Windows.Forms.Button();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.impassableButton = new System.Windows.Forms.Button();
 			this.passableButton = new System.Windows.Forms.Button();
 			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.removeLadderButton = new System.Windows.Forms.Button();
-			this.ladderButton = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tilePage.SuspendLayout();
 			this.objectPage.SuspendLayout();
@@ -91,6 +93,8 @@
 			// 
 			// objectPage
 			// 
+			this.objectPage.Controls.Add(this.addObjectButton);
+			this.objectPage.Controls.Add(this.removeObjectButton);
 			this.objectPage.Controls.Add(this.clearScriptCheckBox);
 			this.objectPage.Controls.Add(this.objectsListBox);
 			this.objectPage.Location = new System.Drawing.Point(4, 22);
@@ -100,6 +104,25 @@
 			this.objectPage.TabIndex = 2;
 			this.objectPage.Text = "Objects";
 			this.objectPage.UseVisualStyleBackColor = true;
+			// 
+			// addObjectButton
+			// 
+			this.addObjectButton.Image = global::KFIRPG.editor.Properties.Resources.add;
+			this.addObjectButton.Location = new System.Drawing.Point(229, 0);
+			this.addObjectButton.Name = "addObjectButton";
+			this.addObjectButton.Size = new System.Drawing.Size(30, 30);
+			this.addObjectButton.TabIndex = 3;
+			this.addObjectButton.UseVisualStyleBackColor = true;
+			this.addObjectButton.Click += new System.EventHandler(this.addObjectButton_Click);
+			// 
+			// removeObjectButton
+			// 
+			this.removeObjectButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.removeObjectButton.Location = new System.Drawing.Point(259, 0);
+			this.removeObjectButton.Name = "removeObjectButton";
+			this.removeObjectButton.Size = new System.Drawing.Size(30, 30);
+			this.removeObjectButton.TabIndex = 2;
+			this.removeObjectButton.UseVisualStyleBackColor = true;
 			// 
 			// clearScriptCheckBox
 			// 
@@ -114,6 +137,7 @@
 			// 
 			// objectsListBox
 			// 
+			this.objectsListBox.DisplayMember = "Name";
 			this.objectsListBox.FormattingEnabled = true;
 			this.objectsListBox.IntegralHeight = false;
 			this.objectsListBox.Location = new System.Drawing.Point(0, 29);
@@ -121,6 +145,7 @@
 			this.objectsListBox.Size = new System.Drawing.Size(289, 227);
 			this.objectsListBox.TabIndex = 0;
 			this.objectsListBox.SelectedIndexChanged += new System.EventHandler(this.SelectObjectCursor_Handler);
+			this.objectsListBox.DoubleClick += new System.EventHandler(this.objectsListBox_DoubleClick);
 			// 
 			// specialPage
 			// 
@@ -137,6 +162,44 @@
 			this.specialPage.TabIndex = 3;
 			this.specialPage.Text = "Special";
 			this.specialPage.UseVisualStyleBackColor = true;
+			// 
+			// removeLadderButton
+			// 
+			this.removeLadderButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.removeLadderButton.Location = new System.Drawing.Point(44, 70);
+			this.removeLadderButton.Name = "removeLadderButton";
+			this.removeLadderButton.Size = new System.Drawing.Size(32, 32);
+			this.removeLadderButton.TabIndex = 5;
+			this.removeLadderButton.UseVisualStyleBackColor = true;
+			this.removeLadderButton.Click += new System.EventHandler(this.removeLadderButton_Click);
+			// 
+			// ladderButton
+			// 
+			this.ladderButton.Image = global::KFIRPG.editor.Properties.Resources.tick;
+			this.ladderButton.Location = new System.Drawing.Point(6, 70);
+			this.ladderButton.Name = "ladderButton";
+			this.ladderButton.Size = new System.Drawing.Size(32, 32);
+			this.ladderButton.TabIndex = 4;
+			this.ladderButton.UseVisualStyleBackColor = true;
+			this.ladderButton.Click += new System.EventHandler(this.ladderButton_Click);
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(3, 54);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(40, 13);
+			this.label2.TabIndex = 3;
+			this.label2.Text = "Ladder";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(3, 3);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(56, 13);
+			this.label1.TabIndex = 2;
+			this.label1.Text = "Passability";
 			// 
 			// impassableButton
 			// 
@@ -170,51 +233,13 @@
 			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
 			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
 			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(3, 3);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(56, 13);
-			this.label1.TabIndex = 2;
-			this.label1.Text = "Passability";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 54);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(40, 13);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "Ladder";
-			// 
-			// removeLadderButton
-			// 
-			this.removeLadderButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
-			this.removeLadderButton.Location = new System.Drawing.Point(44, 70);
-			this.removeLadderButton.Name = "removeLadderButton";
-			this.removeLadderButton.Size = new System.Drawing.Size(32, 32);
-			this.removeLadderButton.TabIndex = 5;
-			this.removeLadderButton.UseVisualStyleBackColor = true;
-			this.removeLadderButton.Click += new System.EventHandler(this.removeLadderButton_Click);
-			// 
-			// ladderButton
-			// 
-			this.ladderButton.Image = global::KFIRPG.editor.Properties.Resources.tick;
-			this.ladderButton.Location = new System.Drawing.Point(6, 70);
-			this.ladderButton.Name = "ladderButton";
-			this.ladderButton.Size = new System.Drawing.Size(32, 32);
-			this.ladderButton.TabIndex = 4;
-			this.ladderButton.UseVisualStyleBackColor = true;
-			this.ladderButton.Click += new System.EventHandler(this.ladderButton_Click);
-			// 
 			// Palette
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(297, 282);
 			this.Controls.Add(this.tabControl1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "Palette";
 			this.ShowInTaskbar = false;
 			this.Text = "Palette";
@@ -245,5 +270,7 @@
 		private System.Windows.Forms.Button ladderButton;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button addObjectButton;
+		private System.Windows.Forms.Button removeObjectButton;
 	}
 }

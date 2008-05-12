@@ -52,6 +52,7 @@
 			this.addbutton.Size = new System.Drawing.Size(30, 30);
 			this.addbutton.TabIndex = 1;
 			this.addbutton.UseVisualStyleBackColor = true;
+			this.addbutton.Click += new System.EventHandler(this.addbutton_Click);
 			// 
 			// removebutton
 			// 

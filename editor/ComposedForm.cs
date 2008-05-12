@@ -13,7 +13,8 @@ namespace KFIRPG.editor {
 		public enum Parts: uint {
 			None = 0,
 			Name = 1,
-			Size = 2
+			Size = 2,
+			Direction = 4
 		}
 
 		TextBox nameTextBox;
@@ -40,6 +41,16 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		ComboBox dirList;
+		public string GetDirection() {
+			if (dirList == null) throw new InvalidOperationException();
+			else return (string)dirList.SelectedItem;
+		}
+		public void SetDirection(string direction) {
+			if (dirList == null) throw new InvalidOperationException();
+			else dirList.SelectedItem = direction;
+		}
+
 		public ComposedForm(string caption, Parts parts)
 			: this(caption, parts, parts) { }
 
@@ -57,7 +68,7 @@ namespace KFIRPG.editor {
 				label.Text = "Name:";
 				label.Top = startHere + spacing;
 				label.Left = spacing;
-				label.Width = 50;
+				label.Width = 70;
 				label.TextAlign = ContentAlignment.MiddleRight;
 				Controls.Add(label);
 				nameTextBox = new TextBox();
@@ -79,7 +90,7 @@ namespace KFIRPG.editor {
 				label.Text = "Width:";
 				label.Top = startHere + spacing;
 				label.Left = spacing;
-				label.Width = 50;
+				label.Width = 70;
 				label.TextAlign = ContentAlignment.MiddleRight;
 				Controls.Add(label);
 				widthNum = new NumericUpDown();
@@ -94,7 +105,7 @@ namespace KFIRPG.editor {
 				label.Text = "Height:";
 				label.Top = startHere + spacing;
 				label.Left = widthNum.Right + spacing;
-				label.Width = 50;
+				label.Width = 70;
 				label.TextAlign = ContentAlignment.MiddleRight;
 				Controls.Add(label);
 				heightNum = new NumericUpDown();
@@ -108,25 +119,43 @@ namespace KFIRPG.editor {
 				if ((heightNum.Right + spacing) > maxWidth) maxWidth = heightNum.Right + spacing;
 				startHere = heightNum.Bottom + spacing;
 			}
+			if ((parts & Parts.Direction) == Parts.Direction) {
+				Label label = new Label();
+				label.Text = "Direction:";
+				label.Top = startHere + spacing;
+				label.Left = spacing;
+				label.Width = 70;
+				label.TextAlign = ContentAlignment.MiddleRight;
+				Controls.Add(label);
+				dirList = new ComboBox();
+				dirList.Top = startHere + spacing;
+				dirList.Left = label.Right + spacing;
+				dirList.DropDownStyle = ComboBoxStyle.DropDownList;
+				if ((required & Parts.Direction) != Parts.Direction) {
+					dirList.Items.Add("");
+				}
+				dirList.Items.AddRange(new string[] { "down", "up", "left", "right" });
+				dirList.SelectedIndex = 0;
+				Controls.Add(dirList);
+				if ((dirList.Right + spacing) > maxWidth) maxWidth = dirList.Right + spacing;
+				startHere = dirList.Bottom + spacing;
+			}
 
 
-			okButton.Text = "OK";
-			okButton.Click += (sender, args) => {
-				this.DialogResult = DialogResult.OK;
-			};
-			okButton.Top = startHere + spacing;
-			okButton.Left = maxWidth - spacing - okButton.Width;
-			Controls.Add(okButton);
-			this.AcceptButton = okButton;
 			Button cancelButton = new Button();
 			cancelButton.Text = "Cancel";
-			cancelButton.Click += (sender, args) => {
-				this.DialogResult = DialogResult.Cancel;
-			};
+			cancelButton.DialogResult = DialogResult.Cancel;
 			cancelButton.Top = startHere + spacing;
-			cancelButton.Left = okButton.Left - spacing - cancelButton.Width;
+			cancelButton.Left = maxWidth - spacing - cancelButton.Width;
 			Controls.Add(cancelButton);
 			this.CancelButton = cancelButton;
+
+			okButton.Text = "OK";
+			okButton.DialogResult = DialogResult.OK;
+			okButton.Top = startHere + spacing;
+			okButton.Left = cancelButton.Left - spacing - okButton.Width;
+			Controls.Add(okButton);
+			this.AcceptButton = okButton;
 
 			this.ClientSize = new Size(maxWidth, cancelButton.Bottom + spacing);
 		}
