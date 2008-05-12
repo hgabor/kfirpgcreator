@@ -1,1 +1,3 @@
+SetAnimation(self, "open")
+Wait(800)
 MoveTo("HouseInside")

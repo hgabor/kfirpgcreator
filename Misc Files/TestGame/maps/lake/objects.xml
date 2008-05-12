@@ -9,6 +9,15 @@
     <movement>movement/random</movement>
   </object>
   <object>
+    <x>7</x>
+    <y>4</y>
+    <layer>4</layer>
+    <sprite>door</sprite>
+    <action>map/door</action>
+    <movement>
+    </movement>
+  </object>
+  <object>
     <x>1</x>
     <y>5</y>
     <layer>5</layer>

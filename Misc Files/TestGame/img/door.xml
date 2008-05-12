@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<spritesheet>
+  <width>32</width>
+  <height>64</height>
+  <x>0</x>
+  <y>32</y>
+  <animation type="still" dir="up">
+    <start>0</start>
+    <count>1</count>
+    <timeout>1</timeout>
+  </animation>
+  <animation type="still" dir="down">
+    <start>0</start>
+    <count>1</count>
+    <timeout>1</timeout>
+  </animation>
+  <animation type="still" dir="left">
+    <start>0</start>
+    <count>1</count>
+    <timeout>1</timeout>
+  </animation>
+  <animation type="still" dir="right">
+    <start>0</start>
+    <count>1</count>
+    <timeout>1</timeout>
+  </animation>
+  <animation type="open" dir="up">
+    <start>0</start>
+    <count>4</count>
+    <timeout>10</timeout>
+  </animation>
+  <animation type="open" dir="down">
+    <start>0</start>
+    <count>4</count>
+    <timeout>10</timeout>
+  </animation>
+  <animation type="open" dir="left">
+    <start>0</start>
+    <count>4</count>
+    <timeout>10</timeout>
+  </animation>
+  <animation type="open" dir="right">
+    <start>0</start>
+    <count>4</count>
+    <timeout>10</timeout>
+  </animation>
+</spritesheet>

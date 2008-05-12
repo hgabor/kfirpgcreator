@@ -12,10 +12,4 @@
     <layer>4</layer>
     <script>map/bridgecreaks</script>
   </event>
-  <event>
-    <x>7</x>
-    <y>4</y>
-    <layer>4</layer>
-    <script>map/door</script>
-  </event>
 </events>
