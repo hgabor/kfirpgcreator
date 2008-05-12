@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// The screen where the terrain and objects are drawn.
+	/// </summary>
 	class MapScreen: Screen {
 		Game game;
+		//CustomScreen stats;
 
 		public MapScreen(Game game) {
 			this.game = game;

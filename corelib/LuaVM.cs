@@ -43,10 +43,10 @@ namespace KFIRPG.corelib {
 
 		#region ScriptVM Members
 
-		public Script LoadNonBlockingScript(string script) {
+		public Script LoadNonResumableScript(string script) {
 			return new LuaScript(script, vm);
 		}
-		public Script LoadScript(string script) {
+		public Script LoadResumableScript(string script) {
 			return new LuaScript(script, vm);
 		}
 
@@ -56,7 +56,7 @@ namespace KFIRPG.corelib {
 			"  internal_addcoroutine(\"{0}\")\n" +
 			"end";
 
-		public void ContinueWithValue(object value) {
+		public object ContinueWithValue(object value) {
 			if (runningCoroutines.Count == 0) {
 				throw new InvalidOperationException("LuaVM: Cannot continue - no coroutines are running");
 			}
@@ -64,6 +64,7 @@ namespace KFIRPG.corelib {
 			string coroutineName = runningCoroutines.Pop();
 			string resume = string.Format(continueBase, coroutineName);
 			vm.DoString(resume);
+			return null;
 		}
 
 		public object this[string var] {

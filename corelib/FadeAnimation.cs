@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// A screen-to-screen transition where one screen fades on top of another.
+	/// </summary>
 	class FadeAnimation: ScreenAnimation {
 		byte alphaCounter = 255;
 

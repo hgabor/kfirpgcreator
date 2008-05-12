@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// A sprite that can trigger OnStep events.
+	/// </summary>
 	class PlayerSprite: Sprite {
 		public PlayerSprite(string spriteId, Game game) : base(spriteId, game) { }
 

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace KFIRPG.corelib {
 	interface ScriptVM {
-		Script LoadScript(string script);
-		Script LoadNonBlockingScript(string script);
-		void ContinueWithValue(object value);
+		Script LoadResumableScript(string script);
+		Script LoadNonResumableScript(string script);
+		object ContinueWithValue(object value);
 		object this[string var] { get; set; }
 	}
 }

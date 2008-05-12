@@ -4,57 +4,112 @@ using System.Text;
 using System.Xml;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// An object that has a representation on the map.
+	/// </summary>
 	class Sprite: Entity {
-		AnimatedGraphics baseGraphic;
 		AnimatedGraphics graphic;
 
+		/// <summary>
+		/// Sets the animation of the sprite's graphic.
+		/// </summary>
+		/// <param name="animation"></param>
+		public void SetAnimation(string animation) {
+			graphic.SetState(animation);
+		}
+
+		/// <summary>
+		/// Loads a new sprite instance. The sprite's data must be in the "sprites" folder.
+		/// </summary>
+		/// <param name="spriteId">The name of the sprite.</param>
+		/// <param name="game"></param>
 		public Sprite(string spriteId, Game game) {
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = baseGraphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/img").InnerText, game);
+			graphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/img").InnerText, game);
 			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
 			noclip = int.Parse(doc.SelectSingleNode("sprite/noclip").InnerText) == 1;
 
-			foreach (XmlNode node in doc.SelectNodes("sprite/ext")) {
-				this[node.LocalName] = node.InnerText;
+			foreach (XmlNode node in doc.SelectSingleNode("sprite/ext").ChildNodes) {
+				this.SetProperty(node.LocalName, node.InnerText);
 			}
 
 			this.size = game.TileSize;
 		}
 
+		/// <summary>
+		/// Draws the sprite on the surface.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="surface"></param>
 		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
 			graphic.Blit(x + corrX, y + corrY, surface);
 		}
 
 		int size;
+		//TODO: Outfactor Height and Width - they are stored in the graphics.
 		public int Height { get { return size; } }
 		public int Width { get { return size; } }
 		int x = 0;
+		/// <summary>
+		/// Gets the X coordinate of the sprite on the map.
+		/// </summary>
 		public int X { get { return x; } }
 		int y = 0;
+		/// <summary>
+		/// Gets the Y coordinate of the sprite on the map.
+		/// </summary>
 		public int Y { get { return y; } }
 		int layer = 0;
+		/// <summary>
+		/// Gets the Layer coordinate of the sprite on the map.
+		/// </summary>
 		public int Layer { get { return layer; } }
+		/// <summary>
+		/// Sets the coordinates of the sprite on the map.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="layer"></param>
 		public void UpdateCoords(int x, int y, int layer) {
 			this.x = x;
 			this.y = y;
 			this.layer = layer;
 		}
 		int speed;
+		/// <summary>
+		/// Gets or sets the pixels travelled per frame.
+		/// </summary>
 		public int Speed {
 			get { return speed; }
 			set { speed = value; }
 		}
 		bool noclip;
+		/// <summary>
+		/// Gets the Noclip property. The sprite is "Noclip" if it can pass through other objects.
+		/// </summary>
 		public bool Noclip { get { return noclip; } }
 
 		Script action = null;
+		/// <summary>
+		/// Sets the script run when the player uses the action command on the sprite.
+		/// </summary>
 		public Script Action { set { action = value; } }
+		/// <summary>
+		/// Runs the action script.
+		/// </summary>
+		/// <see cref="Action"/>
 		public void DoAction() {
 			if (action != null) action.Run();
 		}
 
 		MovementAI movementAI = new NotMovingAI();
+		/// <summary>
+		/// Sets the controller that controls the sprites movement on the screen.
+		/// Default is NotMovingAI
+		/// </summary>
+		/// <see cref="NotMovingAI"/>
 		public MovementAI MovementAI {
 			set { movementAI = value; }
 		}
@@ -63,8 +118,14 @@ namespace KFIRPG.corelib {
 
 
 		int corrX = 0;
+		/// <summary>
+		/// Gets the sprite's X offset. It is used to show the sprite moving.
+		/// </summary>
 		public int CorrX { get { return corrX; } }
 		int corrY = 0;
+		/// <summary>
+		/// Gets the sprite's Y offset. It is used to show the sprite moving.
+		/// </summary>
 		public int CorrY { get { return corrY; } }
 		//TODO: Remove magic numbers
 		public enum Dir: int {
@@ -76,14 +137,28 @@ namespace KFIRPG.corelib {
 		}
 
 		Dir moving = Dir.None;
+		/// <summary>
+		/// Returns true if the sprite is currently moving.
+		/// </summary>
 		public bool IsMoving { get { return moving != Dir.None; } }
 		Dir nextMove = Dir.None;
 		Dir facing = Dir.Up;
+		/// <summary>
+		/// Sets the sprite's facing direction.
+		/// </summary>
+		/// <param name="direction"></param>
 		public void Turn(Dir direction) {
 			facing = direction;
 			graphic.SetDirection(direction);
 		}
 
+		/// <summary>
+		/// Sets the sprite's next move.
+		/// Used only by MovementAIs.
+		/// </summary>
+		/// <param name="direction"></param>
+		/// <param name="map"></param>
+		/// <seealso cref="PlanAction"/>
 		public void PlanMove(Dir direction, Map map) {
 			nextMove = Dir.None;
 			if (moving == Dir.None && direction != Dir.None) {
@@ -115,6 +190,12 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		/// <summary>
+		/// Plans the next movement to interact with another sprite.
+		/// Used only by MovementAIs.
+		/// </summary>
+		/// <param name="map"></param>
+		/// <seealso cref="PlanMove"/>
 		public void PlanAction(Map map) {
 			if (moving != Dir.None) return;
 			switch (facing) {
@@ -126,6 +207,10 @@ namespace KFIRPG.corelib {
 			map.OnAction(x, y, layer);
 		}
 
+		/// <summary>
+		/// Decides what to do next (move or interact) and tries to execute it.
+		/// </summary>
+		/// <param name="map"></param>
 		public void Think(Map map) {
 			movementAI.TryDoingSomething(this, map);
 			Dir oldMoving = moving;

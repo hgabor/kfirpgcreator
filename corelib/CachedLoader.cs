@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// Caches the resources of another loader to reduce the access to the local hard disk.
+	/// </summary>
 	class CachedLoader: Loader {
 		Loader source;
 		public CachedLoader(Loader source) {

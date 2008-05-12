@@ -4,6 +4,9 @@ using System.Text;
 using System.Drawing;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// This screen's contents can be customized by scripts.
+	/// </summary>
 	class CustomScreen: Screen {
 		Game game;
 		public CustomScreen(Game game) {

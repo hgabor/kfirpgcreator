@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// A script function that returns immediately.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]
 	class ScriptAttribute: Attribute { }
+	/// <summary>
+	/// A script function that does not return immediately, but waits for
+	/// events (e.g. user interaction, time etc.)
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]
 	class BlockingScriptAttribute: Attribute { }
 
+	/// <summary>
+	/// A library of common script functions.
+	/// </summary>
 	class ScriptLib {
 		Dialogs dialogs;
 		Game game;
 		Random random = new Random();
 
+		/// <summary>
+		/// Shows a message.
+		/// </summary>
+		/// <param name="message"></param>
 		[BlockingScript]
 		public void Message(string message) {
 			//dialogs.Message(message);
@@ -21,25 +35,36 @@ namespace KFIRPG.corelib {
 			Form form = new Form(dialogs, game);
 			Form.Menu menu = new Form.Menu(10, 10, 500, 300, form);
 			TextGraphics text = new TextGraphics(message, TextGraphics.Align.Center, dialogs, game);
-			text.Coords = new System.Drawing.Point(10, 10);
+			text.Location = new System.Drawing.Point(10, 10);
 			menu.Add(text);
 			form.AddPanel("message", menu);
 			game.PushScreen(form);
 			game.PushScreen(anim);
 		}
 
+		/// <summary>
+		/// Shows a message, and lets the user select one of the two answers.
+		/// </summary>
+		/// <param name="question"></param>
+		/// <param name="param1"></param>
+		/// <param name="param2"></param>
 		[BlockingScript]
 		public void Ask(string question, string param1, string param2) {
 			Ask(question, new string[] { param1, param2 });
 		}
 
+		/// <summary>
+		/// Shows a message, and lets the user select one of the possible answers.
+		/// </summary>
+		/// <param name="question"></param>
+		/// <param name="answers"></param>
 		public void Ask(string question, params string[] answers) {
 			FadeAnimation anim = new FadeAnimation(game);
 			anim.FromImage = game.TakeScreenshot();
 			Form form = new Form(dialogs, game);
 			Form.Menu qmenu = new Form.Menu(10, 10, 500, 300, form);
 			TextGraphics qtext = new TextGraphics(question, TextGraphics.Align.Center, dialogs, game);
-			qtext.Coords = new System.Drawing.Point(10, 10);
+			qtext.Location = new System.Drawing.Point(10, 10);
 			qmenu.Add(qtext);
 			form.AddPanel("message", qmenu);
 
@@ -47,7 +72,7 @@ namespace KFIRPG.corelib {
 			int position = 220;
 			foreach (string answer in answers) {
 				TextGraphics stext = new TextGraphics(answer, TextGraphics.Align.Left, dialogs, game);
-				stext.Coords = new System.Drawing.Point(0, 0);
+				stext.Location = new System.Drawing.Point(0, 0);
 				Form.Item aitem = new Form.Item(10 + dialogs.Border, position, 500 - 2 * dialogs.Border, stext.Height + 2 * dialogs.Border, form);
 				aitem.Add(stext);
 				++i;
@@ -62,11 +87,20 @@ namespace KFIRPG.corelib {
 			game.PushScreen(anim);
 		}
 
+		/// <summary>
+		/// Starts playing a music. The music file must be in the "music" folder.
+		/// </summary>
+		/// <param name="fileName"></param>
 		[Script]
 		public void StartMusic(string fileName) {
 			game.audio.StartMusic(fileName);
 		}
 
+		/// <summary>
+		/// Makes a sprite turn in the direction of another sprite.
+		/// </summary>
+		/// <param name="her"></param>
+		/// <param name="to"></param>
 		[Script]
 		public void Turn(Sprite her, Sprite to) {
 			int x = to.X - her.X;
@@ -81,11 +115,22 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		/// <summary>
+		/// Writes a string on the Console.
+		/// Debug only.
+		/// </summary>
+		/// <param name="text"></param>
 		[Script]
 		public void WriteLine(object text) {
 			Console.WriteLine(text.ToString());
 		}
 
+		/// <summary>
+		/// Moves the player to a location on the current map.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="layer"></param>
 		public void ShortJump(int x, int y, int layer) {
 			FadeAnimation anim = new FadeAnimation(game);
 			anim.FromImage = game.TakeScreenshot();
@@ -95,6 +140,10 @@ namespace KFIRPG.corelib {
 			game.PushScreen(anim);
 		}
 
+		/// <summary>
+		/// Moves the player to a location on another map.
+		/// </summary>
+		/// <param name="loc"></param>
 		public void LongJump(Location loc) {
 			FadeAnimation anim = new FadeAnimation(game);
 			anim.FromImage = game.TakeScreenshot();
@@ -105,6 +154,10 @@ namespace KFIRPG.corelib {
 			game.PushScreen(anim);
 		}
 
+		/// <summary>
+		/// Moves the player to a named location with a fade animation.
+		/// </summary>
+		/// <param name="locationStr"></param>
 		[Script]
 		public void MoveTo(string locationStr) {
 			Location location = game.GetLocation(locationStr);
@@ -117,12 +170,39 @@ namespace KFIRPG.corelib {
 		}
 
 		List<string> includedScripts = new List<string>();
+		/// <summary>
+		/// Includes another script. The script must be in the "scripts" folder.
+		/// Every file is included at most once per game.
+		/// </summary>
+		/// <param name="scriptName"></param>
 		[Script]
 		public void include(string scriptName) {
 			if (!includedScripts.Contains(scriptName)) {
 				includedScripts.Add(scriptName);
-				game.vm.LoadNonBlockingScript(game.loader.LoadText("scripts/" + scriptName)).Run();
+				game.vm.LoadNonResumableScript(game.loader.LoadText("scripts/" + scriptName)).Run();
 			}
+		}
+
+		/// <summary>
+		/// Changes the animation of a sprite.
+		/// </summary>
+		/// <param name="sprite"></param>
+		/// <param name="animation"></param>
+		[Script]
+		public void SetAnimation(Sprite sprite, string animation) {
+			sprite.SetAnimation(animation.ToLower().Trim());
+		}
+
+		/// <summary>
+		/// Blocks player input for a number of milliseconds.
+		/// </summary>
+		/// <param name="milliseconds"></param>
+		/// <remarks>This is approximate, the waiting time is rounded to the number of
+		/// frames to wait.</remarks>
+		[BlockingScript]
+		public void Wait(int milliseconds) {
+			int frames = milliseconds / 20;
+			game.PushScreen(new WaitingScreen(frames, game));
 		}
 
 		public ScriptLib(Game game) {

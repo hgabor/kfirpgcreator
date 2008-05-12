@@ -9,6 +9,9 @@ namespace KFIRPG.corelib {
 		IntPtr luaState;
 		TaoLuaVM vm;
 
+		/// <summary>
+		/// Wrapper for resumable scripts.
+		/// </summary>
 		static string scriptBase =
 			"{0} = coroutine.create( function() \n {1} \n end )\n" +
 			"local ok, retval = coroutine.resume({0})\n" +
@@ -20,6 +23,13 @@ namespace KFIRPG.corelib {
 		static ulong coroutineId = 0;
 
 		bool coroutine;
+		/// <summary>
+		/// Creates a new script.
+		/// </summary>
+		/// <param name="script">The code for the script.</param>
+		/// <param name="vm">The lua virtual machine to create the script in.</param>
+		/// <param name="luaState"></param>
+		/// <param name="createCoroutine">Create a resumable script.</param>
 		public TaoLuaScript(string script, TaoLuaVM vm, IntPtr luaState, bool createCoroutine) {
 			this.coroutine = createCoroutine;
 			if (coroutine) {
@@ -33,6 +43,14 @@ namespace KFIRPG.corelib {
 		}
 
 		Entity owner = null;
+		/// <summary>
+		/// Gets or sets the owner of the script. When the script is run, it will be available under
+		/// the global "self" variable.
+		/// </summary>
+		/// <remarks>The supported values are the same as the supported values of the
+		/// TaoLuaVM.Push() and Pop() methods, and the same restrictions apply.</remarks>
+		/// <see cref="TaoLuaVM.Push"/>
+		/// <see cref="TaoLuaVM.Pop"/>
 		public Entity Owner {
 			get {
 				return owner;
@@ -42,6 +60,10 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		/// <summary>
+		/// Runs the script.
+		/// </summary>
+		/// <returns>The return or yield value of the script.</returns>
 		public object Run() {
 			string scriptStr;
 			if (coroutine) {

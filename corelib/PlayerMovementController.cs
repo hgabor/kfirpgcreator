@@ -4,6 +4,9 @@ using System.Text;
 using SdlDotNet.Input;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// Controls the sprite with user input.
+	/// </summary>
 	class PlayerMovementController: MovementAI {
 		Game game;
 		public PlayerMovementController(Game game) { this.game = game; }

@@ -6,6 +6,9 @@ using System.Xml;
 using SdlDotNet.Graphics;
 
 namespace KFIRPG.corelib {
+	/// <summary>
+	/// A graphic that can have multiple frames and/or states.
+	/// </summary>
 	class AnimatedGraphics: Graphics {
 		Surface sheet;
 
@@ -34,8 +37,12 @@ namespace KFIRPG.corelib {
 		int y;
 		int columnsInRow;
 
+		/// <summary>
+		/// Loads an animated graphics from a sprite sheet. The sheet must be in the "img" folder.
+		/// </summary>
+		/// <param name="sheetName">The name of the sprite sheet.</param>
+		/// <param name="game"></param>
 		public AnimatedGraphics(string sheetName, Game game) {
-			//sheet = new Surface(game.loader.LoadBitmap("img/" + sheetName + ".png"));
 			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
@@ -68,6 +75,12 @@ namespace KFIRPG.corelib {
 			CalculateRows();
 		}
 
+		/// <summary>
+		/// Loads a still image from a sprite sheet. The sheet must be in the "img" folder.
+		/// </summary>
+		/// <param name="sheetName">The name of the sprite sheet.</param>
+		/// <param name="game"></param>
+		/// <param name="imageId">The zero-based index of the image in the sprite sheet.</param>
 		public AnimatedGraphics(string sheetName, Game game, int imageId)
 			: this(sheetName, game) {
 			currentAnimation = new Animation();
@@ -77,6 +90,10 @@ namespace KFIRPG.corelib {
 			CalculateRows();
 		}
 
+		/// <summary>
+		/// Selects a new animation to display, and sets it to display from the first frame.
+		/// </summary>
+		/// <param name="stateName">The name of the animation.</param>
 		public void SetState(string stateName) {
 			currentType.type = stateName;
 			currentAnimation = animations[currentType];
@@ -85,6 +102,10 @@ namespace KFIRPG.corelib {
 			CalculateRows();
 		}
 
+		/// <summary>
+		/// Selects the direction for the animation.
+		/// </summary>
+		/// <param name="dir">The new direction.</param>
 		public void SetDirection(Sprite.Dir dir) {
 			currentType.dir = dir;
 			currentAnimation = animations[currentType];
@@ -92,6 +113,9 @@ namespace KFIRPG.corelib {
 		}
 
 		int time = 0;
+		/// <summary>
+		/// Advances the animation by one frame.
+		/// </summary>
 		public void Advance() {
 			++time;
 			if (time >= currentAnimation.timeout) {
