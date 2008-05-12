@@ -8,6 +8,8 @@ using KFIRPG.corelib;
 namespace KFIRPG.runner {
 	public class Program {
 		public static void Main() {
+			//I'd like to get exception data from the IDE, not from logging.
+			//Should be turned on for production code.
 			//try {
 			Game game = Game.LoadFromFile("game.xml");
 			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height);
@@ -63,6 +65,8 @@ namespace KFIRPG.runner {
 					TimeSpan span = measure - lastMeasure;
 					int tickMeasure = advanced;
 					double mps = (tickMeasure - tpfLastTick) / span.TotalSeconds;
+					// If the game is too slow or too fast, this little trick adjusts the speed
+					// between 47~53 game frames / sec (MPS).
 					if (mps > 53) ++targetMSpM;
 					if (mps < 47) --targetMSpM;
 					Video.WindowCaption = string.Format("FPS: {0} FPS - MPS: {1} - TargetMSpM: {2}",
