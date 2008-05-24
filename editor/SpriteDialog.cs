@@ -14,20 +14,20 @@ namespace KFIRPG.editor {
 		public SpriteDialog(Project project, Sprite sprite) {
 			InitializeComponent();
 			this.project = project;
-			foreach (SpriteSheet sheet in project.sheets.Values) {
-				sheetComboBox.Items.Add(sheet);
+			foreach (var anim in project.animations.Values) {
+				animationComboBox.Items.Add(anim);
 			}
-			sheetComboBox.DisplayMember = "Name";
+			animationComboBox.DisplayMember = "Name";
 			if (sprite == null) {
 				this.sprite = new Sprite(project);
 				this.newSprite = true;
-				sheetComboBox.SelectedIndex = 0;
+				animationComboBox.SelectedIndex = 0;
 			}
 			else {
 				this.sprite = sprite;
 				this.newSprite = false;
 				nameTextBox.Text = sprite.Name;
-				sheetComboBox.SelectedItem = sprite.sheet;
+				animationComboBox.SelectedItem = sprite.animation;
 				speedNumericUpDown.Value = sprite.speed;
 				noclipCheckBox.Checked = sprite.noclip;
 				foreach (KeyValuePair<string, string> kvp in sprite.ext) {
@@ -71,7 +71,7 @@ namespace KFIRPG.editor {
 					}
 				}
 			}
-			sprite.sheet = (SpriteSheet)sheetComboBox.SelectedItem;
+			sprite.animation = (Animation)animationComboBox.SelectedItem;
 			sprite.speed = (int)speedNumericUpDown.Value;
 			sprite.noclip = noclipCheckBox.Checked;
 			sprite.ext.Clear();

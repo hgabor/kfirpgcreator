@@ -39,7 +39,7 @@ namespace KFIRPG.editor {
 
 			hScrollBar.Enabled = true;
 			hScrollBar.Minimum = 0;
-			hScrollBar.Maximum = sheet.cols * sheet.spriteWidth;
+			hScrollBar.Maximum = sheet.Cols * sheet.spriteWidth;
 			hScrollBar.LargeChange = tilesPanel.Width;
 			hScrollBar.SmallChange = sheet.spriteWidth;
 			hScrollBar.ValueChanged += (sender, args) => {
@@ -97,7 +97,7 @@ namespace KFIRPG.editor {
 		private void tilesPanel_MouseClick(object sender, MouseEventArgs e) {
 			selectedrow = (e.Y + offsetY) / sheet.spriteHeight;
 			selectedcol = (e.X + offsetX) / sheet.spriteWidth;
-			int tileId = selectedrow == 0 || selectedcol >= sheet.cols ? 0 : (selectedrow - 1) * sheet.cols + selectedcol + 1;
+			int tileId = selectedrow == 0 || selectedcol >= sheet.Cols ? 0 : (selectedrow - 1) * sheet.Cols + selectedcol + 1;
 			OnPaletteSelectionChanged(new CursorEventArgs(new TileCursor(tileId, currentProject)));
 
 			objectsListBox.SelectedIndex = -1;

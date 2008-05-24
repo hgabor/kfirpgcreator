@@ -22,7 +22,7 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		public SpriteSheet sheet;
+		public Animation animation;
 		public int speed;
 		public bool noclip;
 		public Dictionary<string, string> ext = new Dictionary<string, string>();
@@ -32,7 +32,7 @@ namespace KFIRPG.editor {
 			Loader loader = project.loader;
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(loader.LoadText("sprites/" + spriteName + ".xml"));
-			sheet = project.sheets[doc.SelectSingleNode("/sprite/img").InnerText];
+			animation = project.animations[doc.SelectSingleNode("/sprite/animation").InnerText];
 			speed = int.Parse(doc.SelectSingleNode("/sprite/speed").InnerText);
 			noclip = int.Parse(doc.SelectSingleNode("/sprite/noclip").InnerText) == 1;
 			foreach (XmlNode node in doc.SelectSingleNode("/sprite/ext").ChildNodes) {

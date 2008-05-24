@@ -14,7 +14,7 @@ namespace KFIRPG.editor {
 			this.sprite = sprite;
 			this.clearScriptInfo = clearScriptInfo;
 			size = project.tileSize;
-			gfx = sprite.sheet.GetGfxById(1);
+			gfx = sprite.animation.sheet.GetGfxById(1);
 		}
 
 		public override void Click(Map.Layer layer) {

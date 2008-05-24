@@ -8,57 +8,62 @@ using System.Windows.Forms;
 
 namespace KFIRPG.editor {
 	partial class AnimationSelector: Form {
-		public int Start { get { return begin; } }
-		public int Count { get { return end - begin + 1; } }
-		public int Timeout { get { return (int)timeoutNumericUpDown.Value; } }
+		Animation.Frame[] selectedFrames;
+		public Animation.Frame[] SelectedFrames {
+			get { return selectedFrames; }
+		}
 
-		Bitmap bm;
-		int spriteWidth, spriteHeight;
-		int cols;
-		public AnimationSelector(Bitmap bm, int spriteWidth, int spriteHeight) : this(bm, spriteWidth, spriteHeight, 0, 0, 1) { }
-		public AnimationSelector(Bitmap bm, int spriteWidth, int spriteHeight, int begin, int end, int timeout) {
+		public AnimationSelector(Animation.Group group, SpriteSheet sheet, Project project){
 			InitializeComponent();
-			this.bm = bm;
-			this.spriteWidth = spriteWidth;
-			this.spriteHeight = spriteHeight;
-			this.begin = begin;
-			this.end = end;
-			this.timeoutNumericUpDown.Value = timeout;
-			cols = bm.Width / spriteWidth;
-			pictureBox.Image = bm;
-			beginEndComboBox.SelectedValueChanged += (sender, args) => pictureBox.Invalidate();
-			beginEndComboBox.SelectedIndex = 0;
-		}
-		int begin = 0;
-		int end = 0;
-		Pen pen = Pens.Red;
-		Brush brush = new SolidBrush(Color.FromArgb(128 + 64, Color.Red));
+			spriteSelector.Image = sheet.sheet;
+			spriteSelector.SpriteWidth = sheet.spriteWidth;
+			spriteSelector.SpriteHeight = sheet.spriteHeight;
+			selectedFrames = group.frames.ToArray();
 
-		bool BeginSelected {
-			get {
-				return (string)beginEndComboBox.SelectedItem == "Begin";
+			//Must be set last because their events are already hooked up
+			maxFramesNumUpDown.Value = group.frames.Count;
+			spriteSelector.SelectedIndex = selectedFrames[0].sheetId;
+			timeoutNumericUpDown.Value = selectedFrames[0].time;
+		}
+
+		public AnimationSelector(SpriteSheet sheet, Project project) {
+			InitializeComponent();
+			spriteSelector.Image = sheet.sheet;
+			spriteSelector.SpriteWidth = sheet.spriteWidth;
+			spriteSelector.SpriteHeight = sheet.spriteHeight;
+			selectedFrames = new Animation.Frame[1];
+			selectedFrames[0] = new Animation.Frame(0, 1);
+		}
+
+		private void maxFramesNumUpDown_ValueChanged(object sender, EventArgs e) {
+			currentFrameNumUpDown.Maximum = maxFramesNumUpDown.Value;
+			Animation.Frame[] newFrames = new Animation.Frame[(int)maxFramesNumUpDown.Value];
+			Array.Copy(selectedFrames, newFrames, (int)Math.Min(selectedFrames.Length, newFrames.Length));
+			Animation.Frame frame = selectedFrames[selectedFrames.Length - 1];
+			for (int i = selectedFrames.Length; i < newFrames.Length; ++i) {
+				newFrames[i] = new Animation.Frame(frame.sheetId, frame.time);
+			}
+			selectedFrames = newFrames;
+		}
+
+		bool updateSelection = true;
+
+		private void currentFrameNumUpDown_ValueChanged(object sender, EventArgs e) {
+			updateSelection = false;
+			spriteSelector.SelectedIndex = selectedFrames[(int)currentFrameNumUpDown.Value - 1].sheetId;
+			timeoutNumericUpDown.Value = selectedFrames[(int)currentFrameNumUpDown.Value - 1].time;
+			updateSelection = true;
+		}
+
+		private void spriteSelector_SelectedIndexChanged(object sender, EventArgs e) {
+			if (updateSelection) {
+				selectedFrames[(int)currentFrameNumUpDown.Value - 1].sheetId = spriteSelector.SelectedIndex;
 			}
 		}
 
-		private void pictureBox_Paint(object sender, PaintEventArgs e) {
-			int x, y;
-			if (BeginSelected) {
-				x = begin % cols * spriteWidth;
-				y = begin / cols * spriteHeight;
-			}
-			else {
-				x = end % cols * spriteWidth;
-				y = end / cols * spriteHeight;
-			}
-			e.Graphics.FillRectangle(brush, x, y, spriteWidth - 1, spriteHeight - 1);
-			e.Graphics.DrawRectangle(pen, x, y, spriteWidth - 1, spriteHeight - 1);
+		private void timeoutNumericUpDown_ValueChanged(object sender, EventArgs e) {
+			selectedFrames[(int)currentFrameNumUpDown.Value - 1].time = (int)timeoutNumericUpDown.Value;
 		}
 
-		private void pictureBox_MouseClick(object sender, MouseEventArgs e) {
-			if (e.X >= bm.Width || e.Y >= bm.Height) return;
-			int id = e.X / spriteWidth + e.Y / spriteHeight * cols;
-			if (BeginSelected) begin = id; else end = id;
-			pictureBox.Invalidate();
-		}
 	}
 }

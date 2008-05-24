@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<animation>
+  <sheet>butterfly</sheet>
+  <group name="still.down">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="still.up">
+    <frame>
+      <sheetid>2</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="still.left">
+    <frame>
+      <sheetid>4</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>5</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="still.right">
+    <frame>
+      <sheetid>6</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>7</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="move.down">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="move.up">
+    <frame>
+      <sheetid>2</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="move.left">
+    <frame>
+      <sheetid>4</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>5</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+  <group name="move.right">
+    <frame>
+      <sheetid>6</sheetid>
+      <time>15</time>
+    </frame>
+    <frame>
+      <sheetid>7</sheetid>
+      <time>15</time>
+    </frame>
+  </group>
+</animation>

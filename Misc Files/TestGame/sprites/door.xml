@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sprite>
-  <img>door</img>
+  <animation>door</animation>
   <speed>0</speed>
   <noclip>0</noclip>
   <ext>

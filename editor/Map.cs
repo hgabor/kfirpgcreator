@@ -34,7 +34,7 @@ namespace KFIRPG.editor {
 				get { return gfx; }
 			}*/
 			public SpriteSheet.Gfx Gfx {
-				get { return sprite.sheet.GetGfxById(1); }
+				get { return sprite.animation.sheet.GetGfxById(1); }
 			}
 			public string movementAIScript;
 			public string actionScript;

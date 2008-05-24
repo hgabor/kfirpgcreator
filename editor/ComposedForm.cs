@@ -17,6 +17,9 @@ namespace KFIRPG.editor {
 			Direction = 4
 		}
 
+		#region Name
+
+		Predicate<string> nameChecker;
 		TextBox nameTextBox;
 		public string GetName() {
 			if (nameTextBox == null) throw new InvalidOperationException();
@@ -26,6 +29,13 @@ namespace KFIRPG.editor {
 			if (nameTextBox == null) throw new InvalidOperationException();
 			else nameTextBox.Text = name;
 		}
+		public void AddNameChecker(Predicate<string> pred) {
+			nameChecker += pred;
+		}
+
+		#endregion
+
+		#region Size
 
 		NumericUpDown widthNum;
 		NumericUpDown heightNum;
@@ -41,6 +51,10 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		#endregion
+
+		#region Direction
+
 		ComboBox dirList;
 		public string GetDirection() {
 			if (dirList == null) throw new InvalidOperationException();
@@ -50,6 +64,8 @@ namespace KFIRPG.editor {
 			if (dirList == null) throw new InvalidOperationException();
 			else dirList.SelectedItem = direction;
 		}
+
+		#endregion
 
 		public ComposedForm(string caption, Parts parts)
 			: this(caption, parts, parts) { }
@@ -74,12 +90,18 @@ namespace KFIRPG.editor {
 				nameTextBox = new TextBox();
 				nameTextBox.Top = startHere + spacing;
 				nameTextBox.Left = label.Right + spacing;
+				nameTextBox.TextChanged += (sender, args) => {
+					if (nameChecker == null) return;
+					foreach (Predicate<string> pred in nameChecker.GetInvocationList()) {
+						if (!pred(nameTextBox.Text)) {
+							okButton.Enabled = false;
+							return;
+						}
+						okButton.Enabled = true;
+					}
+				};
 				if ((required & Parts.Name) == Parts.Name) {
-					nameTextBox.Text = "unnamed";
-					nameTextBox.TextChanged += (sender, args) => {
-						if (string.IsNullOrEmpty(nameTextBox.Text)) okButton.Enabled = false;
-						else okButton.Enabled = true;
-					};
+					AddNameChecker(s => !string.IsNullOrEmpty(s));
 				}
 				Controls.Add(nameTextBox);
 				if ((nameTextBox.Right + spacing) > maxWidth) maxWidth = nameTextBox.Right + spacing;

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sprite>
-  <img>butterfly</img>
+  <animation>butterfly</animation>
   <speed>1</speed>
   <noclip>1</noclip>
   <ext>

@@ -26,7 +26,7 @@
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.speedNumericUpDown = new System.Windows.Forms.NumericUpDown();
 			this.noclipCheckBox = new System.Windows.Forms.CheckBox();
-			this.sheetComboBox = new System.Windows.Forms.ComboBox();
+			this.animationComboBox = new System.Windows.Forms.ComboBox();
 			this.listBox = new System.Windows.Forms.ListBox();
 			this.cancelButton = new System.Windows.Forms.Button();
 			this.okButton = new System.Windows.Forms.Button();
@@ -61,16 +61,16 @@
 			this.noclipCheckBox.Text = "No clip";
 			this.noclipCheckBox.UseVisualStyleBackColor = true;
 			// 
-			// sheetComboBox
+			// animationComboBox
 			// 
-			this.sheetComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this.animationComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.sheetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.sheetComboBox.FormattingEnabled = true;
-			this.sheetComboBox.Location = new System.Drawing.Point(12, 38);
-			this.sheetComboBox.Name = "sheetComboBox";
-			this.sheetComboBox.Size = new System.Drawing.Size(149, 21);
-			this.sheetComboBox.TabIndex = 0;
+			this.animationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.animationComboBox.FormattingEnabled = true;
+			this.animationComboBox.Location = new System.Drawing.Point(12, 38);
+			this.animationComboBox.Name = "animationComboBox";
+			this.animationComboBox.Size = new System.Drawing.Size(149, 21);
+			this.animationComboBox.TabIndex = 0;
 			// 
 			// listBox
 			// 
@@ -135,7 +135,7 @@
 			this.Controls.Add(this.noclipCheckBox);
 			this.Controls.Add(this.speedNumericUpDown);
 			this.Controls.Add(this.nameTextBox);
-			this.Controls.Add(this.sheetComboBox);
+			this.Controls.Add(this.animationComboBox);
 			this.Name = "SpriteDialog";
 			this.Text = "SpriteDialog";
 			((System.ComponentModel.ISupportInitialize)(this.speedNumericUpDown)).EndInit();
@@ -153,7 +153,7 @@
 		private System.Windows.Forms.TextBox nameTextBox;
 		private System.Windows.Forms.NumericUpDown speedNumericUpDown;
 		private System.Windows.Forms.CheckBox noclipCheckBox;
-		private System.Windows.Forms.ComboBox sheetComboBox;
+		private System.Windows.Forms.ComboBox animationComboBox;
 		private System.Windows.Forms.ListBox listBox;
 
 

@@ -30,10 +30,14 @@ namespace KFIRPG.editor {
 		AudioLibrary audio;
 		ImageLibrary images;
 		Palette palette;
+		AnimationLibrary animations;
 
 		Cursor cursor;
 
-		public void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
+		private void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
+			// Do NOT set the owner of the forms in the Show method, as it will not allow
+			// to close the parent form.
+
 			bool status = false;
 			form.FormClosing += (sender, args) => {
 				args.Cancel = true;
@@ -58,7 +62,6 @@ namespace KFIRPG.editor {
 		public EditorForm() {
 			InitializeComponent();
 
-			//Layers toolbar
 			layers = new LayersToolbar();
 			BindFormWithMenuItem(layers, layersToolStripMenuItem);
 			layers.checkedListBox.ItemCheck += UpdateEventHandler;
@@ -75,6 +78,9 @@ namespace KFIRPG.editor {
 			palette.PaletteSelectionChanged += (sender, args) => {
 				this.cursor = args.Cursor;
 			};
+
+			animations = new AnimationLibrary();
+			BindFormWithMenuItem(animations, animationLibraryToolStripMenuItem);
 
 			specialViewComboBox.SelectedIndex = 0;
 
@@ -118,6 +124,7 @@ namespace KFIRPG.editor {
 			layers.Show();
 			//audio.Show();
 			//images.Show();
+			//animations.Show();
 			palette.Show();
 		}
 
@@ -155,6 +162,7 @@ namespace KFIRPG.editor {
 			images.Load(currentProject);
 			palette.Load(currentProject);
 			layers.Load(currentMap);
+			animations.Load(currentProject);
 
 			layers.addbutton.Click += (sender, args) => {
 				using (ComposedForm form = new ComposedForm("New layer", ComposedForm.Parts.Name)) {
@@ -302,7 +310,7 @@ namespace KFIRPG.editor {
 					doc.AppendChild(doc.CreateXmlDeclaration("1.0", null, null));
 					XmlElement root = doc.CreateElement("sprite");
 					doc.AppendChild(root);
-					root.AppendChild(doc.CreateElement("img")).InnerText = sprite.Value.sheet.Name;
+					root.AppendChild(doc.CreateElement("animation")).InnerText = sprite.Value.animation.Name;
 					root.AppendChild(doc.CreateElement("speed")).InnerText = sprite.Value.speed.ToString();
 					root.AppendChild(doc.CreateElement("noclip")).InnerText = sprite.Value.noclip ? "1" : "0";
 					XmlElement ext = doc.CreateElement("ext");
@@ -416,6 +424,32 @@ namespace KFIRPG.editor {
 				foreach (Script script in currentProject.scripts) {
 					sw.WriteLine(script.name);
 					File.WriteAllText("scripts/" + script.name, script.text);
+				}
+			}
+
+			//Animations
+			Directory.CreateDirectory("animations");
+			using (StreamWriter sw = new StreamWriter(File.Create("animations.list"))) {
+				foreach (KeyValuePair<string, Animation> animKvp in currentProject.animations) {
+					Animation anim = animKvp.Value;
+					XmlDocument docAnim = new XmlDocument();
+					docAnim.AppendChild(docAnim.CreateXmlDeclaration("1.0", null, null));
+					XmlElement rootAnim = docAnim.CreateElement("animation");
+					docAnim.AppendChild(rootAnim);
+					rootAnim.AppendChild(docAnim.CreateElement("sheet")).InnerText = anim.sheet.Name;
+					foreach (KeyValuePair<string, Animation.Group> groupKvp in anim.groups) {
+						XmlElement group = docAnim.CreateElement("group");
+						rootAnim.AppendChild(group);
+						group.SetAttribute("name", groupKvp.Key);
+						foreach (Animation.Frame frame in groupKvp.Value.frames) {
+							XmlElement elemFrame = docAnim.CreateElement("frame");
+							group.AppendChild(elemFrame);
+							elemFrame.AppendChild(docAnim.CreateElement("sheetid")).InnerText = frame.sheetId.ToString();
+							elemFrame.AppendChild(docAnim.CreateElement("time")).InnerText = frame.time.ToString();
+						}
+					}
+					sw.WriteLine(animKvp.Key);
+					docAnim.Save("animations/" + animKvp.Key + ".xml");
 				}
 			}
 

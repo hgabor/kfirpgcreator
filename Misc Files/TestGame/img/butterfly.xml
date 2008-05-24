@@ -4,44 +4,4 @@
   <height>32</height>
   <x>0</x>
   <y>0</y>
-  <animation type="still" dir="down">
-    <start>0</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="still" dir="up">
-    <start>2</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="still" dir="left">
-    <start>4</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="still" dir="right">
-    <start>6</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="move" dir="down">
-    <start>0</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="move" dir="up">
-    <start>2</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="move" dir="left">
-    <start>4</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
-  <animation type="move" dir="right">
-    <start>6</start>
-    <count>2</count>
-    <timeout>15</timeout>
-  </animation>
 </spritesheet>

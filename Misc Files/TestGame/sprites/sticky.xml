@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sprite>
-  <img>stickman</img>
+  <animation>stickman</animation>
   <speed>2</speed>
   <noclip>0</noclip>
   <ext>

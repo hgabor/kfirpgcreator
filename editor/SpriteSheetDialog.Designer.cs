@@ -35,9 +35,6 @@
 			this.yNumericUpDown = new System.Windows.Forms.NumericUpDown();
 			this.label4 = new System.Windows.Forms.Label();
 			this.xNumericUpDown = new System.Windows.Forms.NumericUpDown();
-			this.listBox = new System.Windows.Forms.ListBox();
-			this.addAnimationButton = new System.Windows.Forms.Button();
-			this.delAnimationButton = new System.Windows.Forms.Button();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.label5 = new System.Windows.Forms.Label();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
@@ -51,7 +48,7 @@
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.Location = new System.Drawing.Point(168, 359);
+			this.okButton.Location = new System.Drawing.Point(168, 222);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 0;
@@ -62,7 +59,7 @@
 			// 
 			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.cancelButton.Location = new System.Drawing.Point(249, 359);
+			this.cancelButton.Location = new System.Drawing.Point(249, 222);
 			this.cancelButton.Name = "cancelButton";
 			this.cancelButton.Size = new System.Drawing.Size(75, 23);
 			this.cancelButton.TabIndex = 1;
@@ -81,7 +78,8 @@
 			// 
 			// pictureBox
 			// 
-			this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBox.Location = new System.Drawing.Point(93, 38);
 			this.pictureBox.Name = "pictureBox";
@@ -91,6 +89,7 @@
 			// 
 			// widthNumericUpDown
 			// 
+			this.widthNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.widthNumericUpDown.Location = new System.Drawing.Point(56, 161);
 			this.widthNumericUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -113,6 +112,7 @@
 			// 
 			// label1
 			// 
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(12, 163);
 			this.label1.Name = "label1";
@@ -122,6 +122,7 @@
 			// 
 			// label2
 			// 
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label2.AutoSize = true;
 			this.label2.Location = new System.Drawing.Point(137, 163);
 			this.label2.Name = "label2";
@@ -131,6 +132,7 @@
 			// 
 			// HeightNumericUpDown
 			// 
+			this.HeightNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.HeightNumericUpDown.Location = new System.Drawing.Point(181, 161);
 			this.HeightNumericUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -153,6 +155,7 @@
 			// 
 			// label3
 			// 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label3.AutoSize = true;
 			this.label3.Location = new System.Drawing.Point(137, 189);
 			this.label3.Name = "label3";
@@ -162,6 +165,7 @@
 			// 
 			// yNumericUpDown
 			// 
+			this.yNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.yNumericUpDown.Location = new System.Drawing.Point(181, 187);
 			this.yNumericUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -179,6 +183,7 @@
 			// 
 			// label4
 			// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(12, 189);
 			this.label4.Name = "label4";
@@ -188,6 +193,7 @@
 			// 
 			// xNumericUpDown
 			// 
+			this.xNumericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.xNumericUpDown.Location = new System.Drawing.Point(56, 187);
 			this.xNumericUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -202,41 +208,6 @@
 			this.xNumericUpDown.Name = "xNumericUpDown";
 			this.xNumericUpDown.Size = new System.Drawing.Size(75, 20);
 			this.xNumericUpDown.TabIndex = 8;
-			// 
-			// listBox
-			// 
-			this.listBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.listBox.FormattingEnabled = true;
-			this.listBox.IntegralHeight = false;
-			this.listBox.Location = new System.Drawing.Point(11, 220);
-			this.listBox.Name = "listBox";
-			this.listBox.Size = new System.Drawing.Size(277, 133);
-			this.listBox.TabIndex = 12;
-			this.listBox.DoubleClick += new System.EventHandler(this.listBox_DoubleClick);
-			// 
-			// addAnimationButton
-			// 
-			this.addAnimationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.addAnimationButton.Image = global::KFIRPG.editor.Properties.Resources.add;
-			this.addAnimationButton.Location = new System.Drawing.Point(294, 220);
-			this.addAnimationButton.Name = "addAnimationButton";
-			this.addAnimationButton.Size = new System.Drawing.Size(30, 30);
-			this.addAnimationButton.TabIndex = 13;
-			this.addAnimationButton.UseVisualStyleBackColor = true;
-			this.addAnimationButton.Click += new System.EventHandler(this.addAnimationButton_Click);
-			// 
-			// delAnimationButton
-			// 
-			this.delAnimationButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.delAnimationButton.Image = global::KFIRPG.editor.Properties.Resources.cross;
-			this.delAnimationButton.Location = new System.Drawing.Point(294, 256);
-			this.delAnimationButton.Name = "delAnimationButton";
-			this.delAnimationButton.Size = new System.Drawing.Size(30, 30);
-			this.delAnimationButton.TabIndex = 14;
-			this.delAnimationButton.UseVisualStyleBackColor = true;
-			this.delAnimationButton.Click += new System.EventHandler(this.delAnimationButton_Click);
 			// 
 			// openFileDialog
 			// 
@@ -263,12 +234,9 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(336, 394);
+			this.ClientSize = new System.Drawing.Size(336, 257);
 			this.Controls.Add(this.nameTextBox);
 			this.Controls.Add(this.label5);
-			this.Controls.Add(this.delAnimationButton);
-			this.Controls.Add(this.addAnimationButton);
-			this.Controls.Add(this.listBox);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.yNumericUpDown);
 			this.Controls.Add(this.label4);
@@ -283,7 +251,6 @@
 			this.Controls.Add(this.okButton);
 			this.Name = "SpriteSheetDialog";
 			this.Text = "Add/edit sprite sheet";
-			this.DoubleClick += new System.EventHandler(this.listBox_DoubleClick);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.widthNumericUpDown)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.HeightNumericUpDown)).EndInit();
@@ -302,10 +269,7 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Button addAnimationButton;
-		private System.Windows.Forms.Button delAnimationButton;
 		public System.Windows.Forms.PictureBox pictureBox;
-		public System.Windows.Forms.ListBox listBox;
 		public System.Windows.Forms.NumericUpDown widthNumericUpDown;
 		public System.Windows.Forms.NumericUpDown HeightNumericUpDown;
 		public System.Windows.Forms.NumericUpDown yNumericUpDown;

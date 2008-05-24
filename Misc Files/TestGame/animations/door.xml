@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<animation>
+  <sheet>door</sheet>
+  <group name="still.up">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>1</time>
+    </frame>
+  </group>
+  <group name="still.down">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>1</time>
+    </frame>
+  </group>
+  <group name="still.left">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>1</time>
+    </frame>
+  </group>
+  <group name="still.right">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>1</time>
+    </frame>
+  </group>
+  <group name="open.up">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>2</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>10</time>
+    </frame>
+  </group>
+  <group name="open.down">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>2</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>10</time>
+    </frame>
+  </group>
+  <group name="open.left">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>2</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>10</time>
+    </frame>
+  </group>
+  <group name="open.right">
+    <frame>
+      <sheetid>0</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>1</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>2</sheetid>
+      <time>10</time>
+    </frame>
+    <frame>
+      <sheetid>3</sheetid>
+      <time>10</time>
+    </frame>
+  </group>
+</animation>

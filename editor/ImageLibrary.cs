@@ -56,10 +56,6 @@ namespace KFIRPG.editor {
 					dialog.HeightNumericUpDown.Value = sheet.spriteHeight;
 					dialog.xNumericUpDown.Value = sheet.x;
 					dialog.yNumericUpDown.Value = sheet.y;
-					dialog.listBox.DisplayMember = "Key";
-					foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> anim in sheet.animations) {
-						dialog.listBox.Items.Add(anim);
-					}
 					if (dialog.ShowDialog(this) == DialogResult.OK) {
 						if (dialog.nameTextBox.Text != oldName) {
 							project.sheets.Remove(oldName);
@@ -70,10 +66,6 @@ namespace KFIRPG.editor {
 						sheet.spriteHeight = (int)dialog.HeightNumericUpDown.Value;
 						sheet.x = (int)dialog.xNumericUpDown.Value;
 						sheet.y = (int)dialog.yNumericUpDown.Value;
-						sheet.animations.Clear();
-						foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> kvp in dialog.listBox.Items) {
-							sheet.animations.Add(kvp.Key, kvp.Value);
-						}
 						int index = listbox.SelectedIndex;
 						LoadItems();
 						listbox.SelectedIndex = index;
@@ -114,9 +106,6 @@ namespace KFIRPG.editor {
 					sheet.spriteHeight = (int)dialog.HeightNumericUpDown.Value;
 					sheet.x = (int)dialog.xNumericUpDown.Value;
 					sheet.y = (int)dialog.yNumericUpDown.Value;
-					foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> kvp in dialog.listBox.Items) {
-						sheet.animations.Add(kvp.Key, kvp.Value);
-					}
 					int index = listbox.SelectedIndex;
 					LoadItems();
 					listbox.SelectedIndex = index;

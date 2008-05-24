@@ -26,7 +26,7 @@ namespace KFIRPG.corelib {
 		public Sprite(string spriteId, Game game) {
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/img").InnerText, game);
+			graphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/animation").InnerText, game);
 			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
 			noclip = int.Parse(doc.SelectSingleNode("sprite/noclip").InnerText) == 1;
 

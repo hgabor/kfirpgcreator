@@ -175,7 +175,7 @@ namespace KFIRPG.corelib {
 					Lua.lua_register(luaState, method.Name, ToLuaFunction(method, scriptLib));
 				}
 			}
-			Lua.lua_register(luaState, "internal_addcoroutine", ToLuaFunction(this.GetType().GetMethod("AddCoroutine"), this));
+			Lua.lua_register(luaState, "internal_addcoroutine", ToLuaFunction(runningCoroutines.GetType().GetMethod("Push"), runningCoroutines));
 		}
 
 		/// <summary>

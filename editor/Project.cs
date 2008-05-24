@@ -8,6 +8,7 @@ namespace KFIRPG.editor {
 		public Dictionary<string, SpriteSheet> sheets = new Dictionary<string, SpriteSheet>();
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+		public Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;
@@ -36,10 +37,17 @@ namespace KFIRPG.editor {
 			screenWidth = int.Parse(global.SelectSingleNode("/settings/screenwidth").InnerText);
 			screenHeight = int.Parse(global.SelectSingleNode("/settings/screenheight").InnerText);
 
+			//Create LoadList<T>(listName, loader, Converter<string, T> adder);
 			foreach (string strImg in loader.LoadText("img.list").Split('\n')) {
 				string img = strImg.Trim();
 				if (img == "") continue;
 				sheets.Add(img, new SpriteSheet(img, this));
+			}
+
+			foreach (string strAnim in loader.LoadText("animations.list").Split('\n')) {
+				string anim = strAnim.Trim();
+				if (anim == "") continue;
+				animations.Add(anim, new Animation(anim, this));
 			}
 
 			foreach (string strSprite in loader.LoadText("sprites.list").Split('\n')) {
