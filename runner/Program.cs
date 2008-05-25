@@ -4,6 +4,7 @@ using System.Text;
 using SdlDotNet.Core;
 using SdlDotNet.Graphics;
 using KFIRPG.corelib;
+using System.Xml;
 
 namespace KFIRPG.runner {
 	public class Program {
@@ -12,7 +13,22 @@ namespace KFIRPG.runner {
 			//Should be turned on for production code.
 			//try {
 			Game game = Game.LoadFromFile("game.xml");
-			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height);
+
+			XmlDocument settings = new XmlDocument();
+			try {
+				settings.Load("game_settings.xml");
+			}
+			catch (System.IO.FileNotFoundException) {
+				//Create settings file
+				settings.AppendChild(settings.CreateXmlDeclaration("1.0", null, null));
+				XmlElement root = settings.CreateElement("settings");
+				settings.AppendChild(root);
+				root.AppendChild(settings.CreateElement("fullscreen")).InnerText = "0";
+			}
+
+
+			bool fullScreen = settings.SelectSingleNode("/settings/fullscreen").InnerText == "1";
+			Surface screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height, false, false, fullScreen);
 
 			SdlDotNet.Input.Joystick joy = null;
 			if (SdlDotNet.Input.Joysticks.NumberOfJoysticks > 0) {
@@ -33,6 +49,9 @@ namespace KFIRPG.runner {
 			int tpfLastTick = 0;
 			int advanced = 0;
 			int targetMSpM = 20; // ms/movement
+			bool AltPressed = false;
+			bool F4Pressed = false;
+			bool ReturnPressed = false;
 			while (!quit) {
 				Events.Poll();
 				UserInput.Buttons buttons = UserInput.Buttons.None;
@@ -79,7 +98,27 @@ namespace KFIRPG.runner {
 				}
 				game.Render(screen);
 				Video.Update();
+
+
+				AltPressed = SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.RightAlt) || SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.LeftAlt);
+
+				//Check for Alt+Enter, but not for Enter+Alt
+				if (AltPressed && !ReturnPressed && SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Return)) {
+					fullScreen = !fullScreen;
+					screen = SdlDotNet.Graphics.Video.SetVideoMode(game.Width, game.Height, false, false, fullScreen);
+				}
+				ReturnPressed = SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Return);
+
+				//Check for Alt+F4, but not for F4+Alt
+				if (AltPressed && !F4Pressed && SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.F4)) {
+					quit = true;
+				}
+				F4Pressed = SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.F4);
 			}
+
+			settings.SelectSingleNode("/settings/fullscreen").InnerText = fullScreen ? "1" : "0";
+			settings.Save("game_settings.xml");
+
 			//}
 			//catch(Exception ex) {
 			//	System.Windows.Forms.MessageBox.Show(ex.ToString(), "Exception");
