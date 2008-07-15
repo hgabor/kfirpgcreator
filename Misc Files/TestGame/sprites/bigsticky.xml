@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<sprite>
+  <animation>bigstickman</animation>
+  <speed>2</speed>
+  <noclip>0</noclip>
+  <ext>
+    <name>BigSticky</name>
+    <bio>BigSticky is the main character.</bio>
+  </ext>
+</sprite>
