@@ -10,7 +10,7 @@
   <screenwidth>640</screenwidth>
   <screenheight>480</screenheight>
   <party>
-    <character>sticky</character>
+    <character>bigsticky</character>
   </party>
   <locations>
     <location name="HouseOutside">
