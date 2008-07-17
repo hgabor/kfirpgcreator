@@ -214,13 +214,13 @@ namespace KFIRPG.corelib {
 		/// <param name="surface"></param>
 		internal void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
 			for (int layer = 0; layer < layers.Length; ++layer) {
-				for (int i = 0; i < cols; ++i) {
-					for (int j = 0; j < rows; ++j) {
+				for (int j = 0; j < rows; ++j) {
+					for (int i = 0; i < cols; ++i) {
 						layers[layer].tiles[i, j].Blit(i * tileSize - x, j * tileSize - y, surface);
 					}
 				}
-				for (int i = 0; i < cols; ++i) {
-					for (int j = 0; j < rows; ++j) {
+				for (int j = 0; j < rows; ++j) {
+					for (int i = 0; i < cols; ++i) {
 						layers[layer].objects[i, j].ForEach((a) => a.Draw(i * tileSize - x, j * tileSize - y, surface));
 					}
 				}
