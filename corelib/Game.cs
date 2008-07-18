@@ -16,10 +16,9 @@ namespace KFIRPG.corelib {
 		/// <param name="loader">The loader to load the game with.</param>
 		private Game(Loader loader) {
 			this.loader = new CachedLoader(loader);
-			XmlDocument globalSettings = new XmlDocument();
-			globalSettings.LoadXml(loader.LoadText("global.xml"));
+			PropertyReader globalSettings = loader.GetPropertyReader().Select("global.xml");
 
-			string scriptvm = globalSettings.SelectSingleNode("/settings/scriptvm").InnerText;
+			string scriptvm = globalSettings.GetString("scriptvm");
 			switch (scriptvm) {
 				case "lua":
 					vm = new LuaVM(this);
@@ -33,35 +32,35 @@ namespace KFIRPG.corelib {
 
 			audio = new Audio(this);
 
-			width = int.Parse(globalSettings.SelectSingleNode("/settings/screenwidth").InnerText);
-			height = int.Parse(globalSettings.SelectSingleNode("/settings/screenheight").InnerText);
-			tileSize = int.Parse(globalSettings.SelectSingleNode("/settings/tilesize").InnerText);
+			width = globalSettings.GetInt("screenwidth");
+			height = globalSettings.GetInt("screenheight");
+			tileSize = globalSettings.GetInt("tilesize");
 
-			Map defaultMap = new Map(globalSettings.SelectSingleNode("/settings/defaultmap").InnerText, this);
-			int startX = int.Parse(globalSettings.SelectSingleNode("/settings/startx").InnerText);
-			int startY = int.Parse(globalSettings.SelectSingleNode("/settings/starty").InnerText);
-			int startL = int.Parse(globalSettings.SelectSingleNode("/settings/startl").InnerText);
+			Map defaultMap = new Map(globalSettings.GetString("defaultmap"), this);
+			int startX = globalSettings.GetInt("startx");
+			int startY = globalSettings.GetInt("starty");
+			int startL = globalSettings.GetInt("startl");
 			currentMap = defaultMap;
 
 			party = new Party(this);
-			foreach (XmlNode node in globalSettings.SelectNodes("/settings/party")) {
-				party.Add(new PlayerSprite(node.InnerText, this));
+			foreach (PropertyReader node in globalSettings.SelectAll("party/character")) {
+				party.Add(new PlayerSprite(node.GetString(""), this));
 			}
 			party.Leader.MovementAI = new PlayerMovementController(this);
 
-			foreach(XmlNode loc in globalSettings.SelectNodes("/settings/locations/location")) {
-				locations.Add(loc.Attributes["name"].InnerText.Trim(),
-					new Location(int.Parse(loc.SelectSingleNode("x").InnerText),
-						int.Parse(loc.SelectSingleNode("y").InnerText),
-						int.Parse(loc.SelectSingleNode("layer").InnerText),
-						loc.SelectSingleNode("map").InnerText.Trim()));
+			foreach(PropertyReader loc in globalSettings.SelectAll("locations/location")) {
+				locations.Add(loc.GetString("name").Trim(),
+					new Location(loc.GetInt("x"),
+						loc.GetInt("y"),
+						loc.GetInt("layer"),
+						loc.GetString("map").Trim()));
 			}
 
 			currentMap.Place(party.Leader, startX, startY, startL);
 
 			PushScreen(new MapScreen(this));
 
-			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.SelectSingleNode("/settings/startscript").InnerText));
+			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("startscript")));
 			startupScript.Run();
 		}
 
@@ -170,7 +169,7 @@ namespace KFIRPG.corelib {
 					throw new InvalidValueException("Loader", loaderType);
 			}
 
-			Game game = new Game(loader);
+			Game game = new Game(new CachedLoader(loader));
 
 			return game;
 		}
