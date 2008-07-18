@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <objects>
   <object>
+    <x>3</x>
+    <y>3</y>
+    <layer>2</layer>
+    <sprite>sticky</sprite>
+    <action>map/blahblah</action>
+    <movement>
+    </movement>
+  </object>
+  <object>
     <x>4</x>
     <y>4</y>
     <layer>4</layer>
