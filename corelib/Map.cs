@@ -189,7 +189,7 @@ namespace KFIRPG.corelib {
 			layers[layer].objects[x, y].ForEach(sprite => sprite.DoAction());
 		}
 
-		private bool ObjectPassable(Sprite obj) {
+		private static bool ObjectPassable(Sprite obj) {
 			return obj.Noclip;
 		}
 
@@ -202,8 +202,15 @@ namespace KFIRPG.corelib {
 		/// <param name="layer"></param>
 		/// <returns></returns>
 		internal bool IsPassable(int x, int y, int layer) {
-			return x >= 0 && y >= 0 && x < cols && y < rows && layers[layer].passable[x, y] &&
-				layers[layer].objects[x, y].TrueForAll(ObjectPassable);
+			if (x < 0 || y < 0 || x >= cols || y >= rows) return false;
+			if (layers[layer].ladderMove[x, y] == null) {
+				return layers[layer].passable[x, y] &&
+					layers[layer].objects[x, y].TrueForAll(ObjectPassable);
+			}
+			else {
+				return layers[layer].ladderMove[x, y].passable[x, y] &&
+					layers[layer].ladderMove[x, y].objects[x, y].TrueForAll(ObjectPassable);
+			}
 		}
 
 		/// <summary>
