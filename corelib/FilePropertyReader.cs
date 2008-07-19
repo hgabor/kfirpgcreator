@@ -15,9 +15,7 @@ namespace KFIRPG.corelib {
 		const string PartXmlRegex = @"^(.*\.xml)/(.+)$";
 		const string FullXmlRegex = @"^(.*\.xml)$";
 
-		#region PropertyReader Members
-
-		public PropertyReader Select(string path) {
+		public override PropertyReader Select(string path) {
 			string fullPath = System.IO.Path.Combine(basePath, path);
 			Match matchFull = Regex.Match(fullPath, FullXmlRegex);
 			if (matchFull.Success) {
@@ -32,22 +30,12 @@ namespace KFIRPG.corelib {
 			return null;
 		}
 
-		public List<PropertyReader> SelectAll(string path) {
+		public override List<PropertyReader> SelectAll(string path) {
 			throw new NotImplementedException();
 		}
 
-		public int GetInt(string path) {
+		protected override string GetStringRaw(string path) {
 			throw new NotImplementedException();
 		}
-
-		public bool GetBool(string path) {
-			throw new NotImplementedException();
-		}
-
-		public string GetString(string path) {
-			throw new NotImplementedException();
-		}
-
-		#endregion
 	}
 }

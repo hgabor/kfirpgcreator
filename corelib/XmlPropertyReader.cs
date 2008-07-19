@@ -10,13 +10,11 @@ namespace KFIRPG.corelib {
 			this.baseNode = baseNode;
 		}
 
-		#region PropertyReader Members
-
-		public PropertyReader Select(string path) {
+		public override PropertyReader Select(string path) {
 			return new XmlPropertyReader(baseNode.SelectSingleNode(path));
 		}
 
-		public List<PropertyReader> SelectAll(string path) {
+		public override List<PropertyReader> SelectAll(string path) {
 			List<PropertyReader> list = new List<PropertyReader>();
 			foreach (XmlNode node in baseNode.SelectNodes(path)) {
 				list.Add(new XmlPropertyReader(node));
@@ -24,19 +22,21 @@ namespace KFIRPG.corelib {
 			return list;
 		}
 
-		public int GetInt(string path) {
-			return int.Parse(GetString(path));
-		}
-
-		public bool GetBool(string path) {
-			return GetString(path) == "1";
-		}
-
-		public string GetString(string path) {
+		protected override string GetStringRaw(string path) {
 			if (path == "") return baseNode.InnerText;
-			else return baseNode.SelectSingleNode(path).InnerText;
+			else {
+				//Check for old format attributes
+				XmlNode node;
+				if ((node=baseNode.SelectSingleNode(path)) != null) {
+					return node.InnerText;
+				}
+				else if ((node = baseNode.Attributes[path]) != null) {
+					return node.InnerText;
+				}
+				else {
+					throw new KFIRPG.corelib.Game.SettingsException(string.Format("Setting {0} no found!", path));
+				}
+			}
 		}
-
-		#endregion
 	}
 }

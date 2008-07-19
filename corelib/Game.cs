@@ -14,8 +14,8 @@ namespace KFIRPG.corelib {
 		/// Loads a new game using the selected loader.
 		/// </summary>
 		/// <param name="loader">The loader to load the game with.</param>
-		private Game(Loader loader) {
-			this.loader = new CachedLoader(loader);
+		public Game(Loader loader) {
+			this.loader = loader;
 			PropertyReader globalSettings = loader.GetPropertyReader().Select("global.xml");
 
 			string scriptvm = globalSettings.GetString("scriptvm");

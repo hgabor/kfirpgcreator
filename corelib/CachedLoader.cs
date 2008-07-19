@@ -68,26 +68,16 @@ namespace KFIRPG.corelib {
 				this.basePath = basePath;
 			}
 
-			#region PropertyReader Members
-
-			public PropertyReader Select(string path) {
+			public override PropertyReader Select(string path) {
 				return new PropertyCacheAccessor(baseReader.Select(path), propertyCache, basePath + "/" + path);
 			}
 
 			//TODO: SelectAll is not cached
-			public List<PropertyReader> SelectAll(string path) {
+			public override List<PropertyReader> SelectAll(string path) {
 				return baseReader.SelectAll(path);
 			}
 
-			public int GetInt(string path) {
-				return int.Parse(GetString(path));
-			}
-
-			public bool GetBool(string path) {
-				return GetString(path) == "1";
-			}
-
-			public string GetString(string path) {
+			protected override string GetStringRaw(string path) {
 				string key = basePath + "/" + path;
 				if (propertyCache.ContainsKey(key)) {
 					return propertyCache[key];
@@ -98,8 +88,6 @@ namespace KFIRPG.corelib {
 					return data;
 				}
 			}
-
-			#endregion
 		}
 	}
 }

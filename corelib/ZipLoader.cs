@@ -24,11 +24,6 @@ namespace KFIRPG.corelib {
 			throw new NotImplementedException();
 		}
 
-		#endregion
-
-		#region Loader Members
-
-
 		public PropertyReader GetPropertyReader() {
 			throw new NotImplementedException();
 		}

@@ -3,8 +3,14 @@
   <animation>stickman</animation>
   <speed>2</speed>
   <noclip>0</noclip>
-  <ext>
-    <name>Sticky</name>
-    <bio>Sticky is not the main character. He is angry about it and wants to attack everyone because of it.</bio>
-  </ext>
+  <exts>
+    <ext>
+      <key>name</key>
+      <value>Sticky</value>
+    </ext>
+    <ext>
+      <key>bio</key>
+      <value>Sticky is not the main character. He is angry about it and wants to attack everyone.</value>
+    </ext>
+  </exts>
 </sprite>

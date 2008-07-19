@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-using System.Xml;
 using SdlDotNet.Graphics;
 
 namespace KFIRPG.corelib {
@@ -45,12 +44,11 @@ namespace KFIRPG.corelib {
 
 		private void LoadSpriteSheet(string sheetName, Game game) {
 			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(game.loader.LoadText("img/" + sheetName + ".xml"));
-			width = int.Parse(doc.SelectSingleNode("spritesheet/width").InnerText);
-			height = int.Parse(doc.SelectSingleNode("spritesheet/height").InnerText);
-			x = int.Parse(doc.SelectSingleNode("spritesheet/x").InnerText);
-			y = int.Parse(doc.SelectSingleNode("spritesheet/y").InnerText);
+			PropertyReader props = game.loader.GetPropertyReader().Select("img/" + sheetName + ".xml");
+			width = props.GetInt("width");
+			height = props.GetInt("height");
+			x = props.GetInt("x");
+			y = props.GetInt("y");
 			columnsInRow = sheet.Width / width;
 		}
 
@@ -61,19 +59,18 @@ namespace KFIRPG.corelib {
 		/// <param name="animationName">The name of the animation.</param>
 		/// <param name="game"></param>
 		public AnimatedGraphics(string animationName, Game game) {
-			XmlDocument docAnim = new XmlDocument();
-			docAnim.LoadXml(game.loader.LoadText("animations/" + animationName + ".xml"));
-			foreach (XmlNode groupNode in docAnim.SelectNodes("/animation/group")) {
+			PropertyReader props = game.loader.GetPropertyReader().Select("animations/" + animationName + ".xml");
+			foreach (PropertyReader group in props.SelectAll("group")) {
 				Animation current = new Animation();
-				string[] animName = groupNode.Attributes["name"].InnerText.Split('.');
+				string[] animName = group.GetString("name").Split('.');
 				string type = animName[0];
 				Sprite.Dir dir = (Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), animName[1], true);
 				AnimationType animType = new AnimationType(type, dir);
 				List<Frame> frames = new List<Frame>();
-				foreach (XmlNode frameNode in groupNode.SelectNodes("frame")) {
+				foreach (PropertyReader frameProp in group.SelectAll("frame")) {
 					Frame frame = new Frame();
-					frame.id = int.Parse(frameNode.SelectSingleNode("sheetid").InnerText);
-					frame.time = int.Parse(frameNode.SelectSingleNode("time").InnerText);
+					frame.id = frameProp.GetInt("sheetid");
+					frame.time = frameProp.GetInt("time");
 					frames.Add(frame);
 				}
 				current.frames = frames.ToArray();
@@ -83,22 +80,8 @@ namespace KFIRPG.corelib {
 					this.currentType = animType;
 				}
 			}
-			LoadSpriteSheet(docAnim.SelectSingleNode("/animation/sheet").InnerText, game);
+			LoadSpriteSheet(props.GetString("sheet"), game);
 
-			/*foreach (XmlNode node in doc.SelectNodes("spritesheet/animation")) {
-				Animation current = new Animation();
-				string type = node.Attributes["type"].InnerText;
-				Sprite.Dir dir = (Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), node.Attributes["dir"].InnerText, true);
-				current.start = int.Parse(node.SelectSingleNode("start").InnerText);
-				current.count = int.Parse(node.SelectSingleNode("count").InnerText);
-				current.timeout = int.Parse(node.SelectSingleNode("timeout").InnerText);
-				AnimationType animType = new AnimationType(type, dir);
-				animations.Add(animType, current);
-				if (this.currentAnimation == null) {
-					this.currentAnimation = current;
-					this.currentType = animType;
-				}
-			}*/
 			if (currentAnimation == null) {
 				throw new Game.SettingsException(string.Format("Animation descriptor file \"{0}.xml\" does not contain animation!", animationName));
 			}

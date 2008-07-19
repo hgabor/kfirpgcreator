@@ -3,8 +3,14 @@
   <animation>bigstickman</animation>
   <speed>2</speed>
   <noclip>0</noclip>
-  <ext>
-    <name>BigSticky</name>
-    <bio>BigSticky is the main character.</bio>
-  </ext>
+  <exts>
+    <ext>
+      <key>name</key>
+      <value>BigSticky</value>
+    </ext>
+    <ext>
+      <key>bio</key>
+      <value>BigSticky is the main character.</value>
+    </ext>
+  </exts>
 </sprite>

@@ -3,7 +3,10 @@
   <animation>door</animation>
   <speed>0</speed>
   <noclip>0</noclip>
-  <ext>
-    <name>Door</name>
-  </ext>
+  <exts>
+    <ext>
+      <key>name</key>
+      <value>Door</value>
+    </ext>
+  </exts>
 </sprite>

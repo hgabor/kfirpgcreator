@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 
 namespace KFIRPG.corelib {
 	/// <summary>
@@ -24,14 +23,13 @@ namespace KFIRPG.corelib {
 		/// <param name="spriteId">The name of the sprite.</param>
 		/// <param name="game"></param>
 		public Sprite(string spriteId, Game game) {
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(game.loader.LoadText(string.Concat("sprites/", spriteId, ".xml")));
-			graphic = new AnimatedGraphics(doc.SelectSingleNode("sprite/animation").InnerText, game);
-			speed = int.Parse(doc.SelectSingleNode("sprite/speed").InnerText);
-			noclip = int.Parse(doc.SelectSingleNode("sprite/noclip").InnerText) == 1;
+			PropertyReader sprite = game.loader.GetPropertyReader().Select("sprites/" + spriteId + ".xml");
+			graphic = new AnimatedGraphics(sprite.GetString("animation"), game);
+			speed = sprite.GetInt("speed");
+			noclip = sprite.GetBool("noclip");
 
-			foreach (XmlNode node in doc.SelectSingleNode("sprite/ext").ChildNodes) {
-				this.SetProperty(node.LocalName, node.InnerText);
+			foreach (PropertyReader ext in sprite.SelectAll("exts/ext")) {
+				this.SetProperty(ext.GetString("key"), ext.GetString("value"));
 			}
 
 			this.size = game.TileSize;
