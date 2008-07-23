@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using KFIRPG.corelib;
-using System.Xml;
 
 namespace KFIRPG.editor {
 	class Animation: ICloneable {
@@ -36,19 +35,18 @@ namespace KFIRPG.editor {
 		public Animation(string animationName, Project project) {
 			this.project = project;
 			Loader loader = project.loader;
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(loader.LoadText("animations/" + animationName + ".xml"));
-			foreach (XmlNode animationNode in doc.SelectNodes("/animation/group")) {
-				string groupName = animationNode.Attributes["name"].InnerText.Trim();
+			PropertyReader props = loader.GetPropertyReader().Select("animations/" + animationName + ".xml");
+			foreach (PropertyReader animation in props.SelectAll("group")) {
+				string groupName = animation.GetString("name");
 				Group group = new Group();
-				foreach (XmlNode frameNode in animationNode.SelectNodes("frame")) {
-					int id = int.Parse(frameNode.SelectSingleNode("sheetid").InnerText);
-					int time = int.Parse(frameNode.SelectSingleNode("time").InnerText);
+				foreach (PropertyReader frame in animation.SelectAll("frame")) {
+					int id = frame.GetInt("sheetid");
+					int time = frame.GetInt("time");
 					group.frames.Add(new Frame(id, time));
 				}
 				groups.Add(groupName, group);
 			}
-			this.sheet = project.sheets[doc.SelectSingleNode("/animation/sheet").InnerText.Trim()];
+			this.sheet = project.sheets[props.GetString("sheet")];
 		}
 
 		public Animation(SpriteSheet sheet, Project project) {

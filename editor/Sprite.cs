@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using KFIRPG.corelib;
-using System.Xml;
 
 namespace KFIRPG.editor {
 	class Sprite {
@@ -29,14 +28,12 @@ namespace KFIRPG.editor {
 
 		public Sprite(string spriteName, Project project) {
 			this.project = project;
-			Loader loader = project.loader;
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(loader.LoadText("sprites/" + spriteName + ".xml"));
-			animation = project.animations[doc.SelectSingleNode("/sprite/animation").InnerText];
-			speed = int.Parse(doc.SelectSingleNode("/sprite/speed").InnerText);
-			noclip = int.Parse(doc.SelectSingleNode("/sprite/noclip").InnerText) == 1;
-			foreach (XmlNode node in doc.SelectSingleNode("/sprite/ext").ChildNodes) {
-				ext.Add(node.Name, node.InnerText.Trim());
+			PropertyReader props = project.loader.GetPropertyReader().Select("sprites/" + spriteName + ".xml");
+			animation = project.animations[props.GetString("animation")];
+			speed = props.GetInt("speed");
+			noclip = props.GetBool("noclip");
+			foreach (PropertyReader extNode in props.SelectAll("exts/ext")) {
+				ext.Add(extNode.GetString("key"), extNode.GetString("value"));
 			}
 		}
 

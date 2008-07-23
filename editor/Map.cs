@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using KFIRPG.corelib;
 using System.Drawing;
-using System.Xml;
 
 namespace KFIRPG.editor {
 	class Map {
@@ -123,26 +122,24 @@ namespace KFIRPG.editor {
 		public Map(string name, Project project) {
 			this.name = name;
 			Loader loader = project.loader;
-			XmlDocument info = new XmlDocument();
-			info.LoadXml(loader.LoadText("maps/" + name + "/info.xml"));
-			int numLayers = int.Parse(info.SelectSingleNode("/map/layers").InnerText);
-			width = int.Parse(info.SelectSingleNode("/map/width").InnerText);
-			height = int.Parse(info.SelectSingleNode("/map/height").InnerText);
+			PropertyReader info = loader.GetPropertyReader().Select("maps/" + name + "/info.xml");
+			int numLayers = info.GetInt("layers");
+			width = info.GetInt("width");
+			height = info.GetInt("height");
 			for (int i = 0; i < numLayers; ++i) {
 				Layer layer = new Layer(width, height, "maps/" + name + "/layers/{0}." + i.ToString(), this, project);
 				layers.Add(layer);
 			}
 			this.ladders = new Ladder[width, height];
 
-			XmlDocument objects = new XmlDocument();
-			objects.LoadXml(loader.LoadText("maps/" + name + "/objects.xml"));
-			foreach (XmlNode node in objects.SelectNodes("/objects/object")) {
-				string spriteName = node.SelectSingleNode("sprite").InnerText.Trim();
-				int x = int.Parse(node.SelectSingleNode("x").InnerText);
-				int y = int.Parse(node.SelectSingleNode("y").InnerText);
-				int layer = int.Parse(node.SelectSingleNode("layer").InnerText);
-				string move = node.SelectSingleNode("movement").InnerText.Trim();
-				string action = node.SelectSingleNode("action").InnerText.Trim();
+			PropertyReader objects = loader.GetPropertyReader().Select("maps/" + name + "/objects.xml");
+			foreach (PropertyReader obj in objects.SelectAll("object")) {
+				string spriteName = obj.GetString("sprite");
+				int x = obj.GetInt("x");
+				int y = obj.GetInt("y");
+				int layer = obj.GetInt("layer");
+				string move = obj.GetString("movement");
+				string action = obj.GetString("action");
 				Obj o = new Obj();
 				o.Sprite = project.sprites[spriteName];
 				o.movementAIScript = move;
@@ -150,23 +147,21 @@ namespace KFIRPG.editor {
 				layers[layer].objects[x, y] = o;
 			}
 
-			XmlDocument events = new XmlDocument();
-			events.LoadXml(loader.LoadText("maps/" + name + "/onstep.xml"));
-			foreach (XmlNode node in events.SelectNodes("/events/event")) {
-				int x = int.Parse(node.SelectSingleNode("x").InnerText);
-				int y = int.Parse(node.SelectSingleNode("y").InnerText);
-				int layer = int.Parse(node.SelectSingleNode("layer").InnerText);
-				string script = node.SelectSingleNode("script").InnerText.Trim();
+			PropertyReader events = loader.GetPropertyReader().Select("maps/" + name + "/onstep.xml");
+			foreach (PropertyReader e in events.SelectAll("event")) {
+				int x = e.GetInt("x");
+				int y = e.GetInt("y");
+				int layer = e.GetInt("layer");
+				string script = e.GetString("script");
 				layers[layer].tiles[x, y].onStep = script;
 			}
 
-			XmlDocument ladders = new XmlDocument();
-			ladders.LoadXml(loader.LoadText("maps/" + name + "/ladders.xml"));
-			foreach (XmlNode node in ladders.SelectNodes("/ladders/ladder")) {
-				int x = int.Parse(node.SelectSingleNode("x").InnerText);
-				int y = int.Parse(node.SelectSingleNode("y").InnerText);
-				int baseLayer = int.Parse(node.SelectSingleNode("base").InnerText);
-				int topLayer = int.Parse(node.SelectSingleNode("top").InnerText);
+			PropertyReader ladders = loader.GetPropertyReader().Select("maps/" + name + "/ladders.xml");
+			foreach (PropertyReader ladder in ladders.SelectAll("ladder")) {
+				int x = ladder.GetInt("x");
+				int y = ladder.GetInt("y");
+				int baseLayer = ladder.GetInt("base");
+				int topLayer = ladder.GetInt("top");
 				this.ladders[x, y] = new Ladder(layers[baseLayer], layers[topLayer]);
 			}
 		}

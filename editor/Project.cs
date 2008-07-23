@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
+using KFIRPG.corelib;
 
 namespace KFIRPG.editor {
 	class Project {
@@ -27,15 +27,14 @@ namespace KFIRPG.editor {
 
 		private Project(KFIRPG.corelib.Loader loader) {
 			this.loader = loader;
-			XmlDocument global = new XmlDocument();
-			global.LoadXml(loader.LoadText("global.xml"));
+			PropertyReader global = loader.GetPropertyReader().Select("global.xml");
 
-			tileSize = int.Parse(global.SelectSingleNode("/settings/tilesize").InnerText);
-			startupMapName = global.SelectSingleNode("/settings/defaultmap").InnerText.Trim();
-			startupScriptName = global.SelectSingleNode("/settings/startscript").InnerText.Trim();
-			scriptvm = global.SelectSingleNode("/settings/scriptvm").InnerText.Trim();
-			screenWidth = int.Parse(global.SelectSingleNode("/settings/screenwidth").InnerText);
-			screenHeight = int.Parse(global.SelectSingleNode("/settings/screenheight").InnerText);
+			tileSize = global.GetInt("tilesize");
+			startupMapName = global.GetString("defaultmap");
+			startupScriptName = global.GetString("startscript");
+			scriptvm = global.GetString("scriptvm");
+			screenWidth = global.GetInt("screenwidth");
+			screenHeight = global.GetInt("screenheight");
 
 			//Create LoadList<T>(listName, loader, Converter<string, T> adder);
 			foreach (string strImg in loader.LoadText("img.list").Split('\n')) {
@@ -68,18 +67,18 @@ namespace KFIRPG.editor {
 				scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
 			}
 
-			startX = int.Parse(global.SelectSingleNode("/settings/startx").InnerText);
-			startY = int.Parse(global.SelectSingleNode("/settings/starty").InnerText);
-			startLayer = int.Parse(global.SelectSingleNode("/settings/startl").InnerText);
-			foreach (XmlNode node in global.SelectNodes("/settings/party/character")) {
-				party.Add(sprites[node.InnerText.Trim()]);
+			startX = global.GetInt("startx");
+			startY = global.GetInt("starty");
+			startLayer = global.GetInt("startl");
+			foreach (PropertyReader character in global.SelectAll("party/character")) {
+				party.Add(sprites[character.GetString("")]);
 			}
-			foreach (XmlNode node in global.SelectNodes("/settings/locations/location")) {
-				string locName = node.Attributes["name"].InnerText.Trim();
-				int x = int.Parse(node.SelectSingleNode("x").InnerText);
-				int y = int.Parse(node.SelectSingleNode("y").InnerText);
-				int l = int.Parse(node.SelectSingleNode("layer").InnerText);
-				string mapName = node.SelectSingleNode("map").InnerText.Trim();
+			foreach (PropertyReader loc in global.SelectAll("locations/location")) {
+				string locName = loc.GetString("name");
+				int x = loc.GetInt("x");
+				int y = loc.GetInt("y");
+				int l = loc.GetInt("layer");
+				string mapName = loc.GetString("map");
 				maps[mapName].layers[l].tiles[x, y].locationName = locName;
 			}
 		}

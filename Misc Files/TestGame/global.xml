@@ -13,19 +13,22 @@
     <character>bigsticky</character>
   </party>
   <locations>
-    <location name="HouseOutside">
+    <location>
+      <name>HouseOutside</name>
       <x>7</x>
       <y>5</y>
       <layer>4</layer>
       <map>lake</map>
     </location>
-    <location name="TeleportDest">
+    <location>
+      <name>TeleportDest</name>
       <x>0</x>
       <y>6</y>
       <layer>4</layer>
       <map>lake</map>
     </location>
-    <location name="HouseInside">
+    <location>
+      <name>HouseInside</name>
       <x>2</x>
       <y>4</y>
       <layer>0</layer>

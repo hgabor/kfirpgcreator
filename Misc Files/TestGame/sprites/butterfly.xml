@@ -3,8 +3,14 @@
   <animation>butterfly</animation>
   <speed>1</speed>
   <noclip>1</noclip>
-  <ext>
-    <name>Butterfly</name>
-    <bio>A pretty butterfly</bio>
-  </ext>
+  <exts>
+    <ext>
+      <key>name</key>
+      <value>Butterfly</value>
+    </ext>
+    <ext>
+      <key>bio</key>
+      <value>A pretty butterfly</value>
+    </ext>
+  </exts>
 </sprite>

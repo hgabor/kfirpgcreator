@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using KFIRPG.corelib;
 using System.Drawing;
-using System.Xml;
 
 namespace KFIRPG.editor {
 	class SpriteSheet {
@@ -22,23 +21,6 @@ namespace KFIRPG.editor {
 		public Bitmap sheet;
 		public int spriteWidth, spriteHeight;
 		public int x, y;
-		public class Animation {
-			public int startFrame;
-			public int frameCount;
-			public int interval;
-			public int timeOut;
-			public Animation(int startFrame, int frameCount, int interval, int timeOut) {
-				this.startFrame = startFrame;
-				this.frameCount = frameCount;
-				this.interval = interval;
-				this.timeOut = timeOut;
-			}
-			public Animation(int startFrame, int frameCount, int timeOut) {
-				this.startFrame = startFrame;
-				this.frameCount = frameCount;
-				this.timeOut = timeOut;
-			}
-		}
 
 		public class Gfx {
 			SpriteSheet sheet;
@@ -64,33 +46,17 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		public struct AnimationType {
-			public readonly string type;
-			public readonly string dir;
-			public AnimationType(string type, string dir) {
-				this.type = type;
-				this.dir = dir;
-			}
-
-			public override string ToString() {
-				return type + " " + dir;
-			}
-		}
-
-		public Dictionary<AnimationType, Animation> animations = new Dictionary<AnimationType, Animation>();
-
 		public SpriteSheet(string name, Project project) {
 			this.project = project;
 			Loader loader = project.loader;
 			using (Bitmap bm = loader.LoadBitmap("img/" + name + ".png")) {
 				sheet = new Bitmap(bm);
 			}
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(loader.LoadText("img/" + name + ".xml"));
-			spriteWidth = int.Parse(doc.SelectSingleNode("/spritesheet/width").InnerText);
-			spriteHeight = int.Parse(doc.SelectSingleNode("/spritesheet/height").InnerText);
-			x = int.Parse(doc.SelectSingleNode("/spritesheet/x").InnerText);
-			y = int.Parse(doc.SelectSingleNode("/spritesheet/y").InnerText);
+			PropertyReader props = loader.GetPropertyReader().Select("img/" + name + ".xml");
+			spriteWidth = props.GetInt("width");
+			spriteHeight = props.GetInt("height");
+			x = props.GetInt("x");
+			y = props.GetInt("y");
 		}
 
 		public SpriteSheet(Project project) {

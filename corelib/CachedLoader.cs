@@ -46,6 +46,48 @@ namespace KFIRPG.corelib {
 			return rawData[path];
 		}
 
+		public PropertyReader GetPropertyReader() {
+			return new PropertyCacheAccessor(source.GetPropertyReader(), propertyCache);
+		}
+
 		#endregion
+
+		Dictionary<string, string> propertyCache = new Dictionary<string, string>();
+
+		class PropertyCacheAccessor: PropertyReader {
+			PropertyReader baseReader;
+			Dictionary<string, string> propertyCache;
+			string basePath;
+
+			public PropertyCacheAccessor(PropertyReader baseReader, Dictionary<string, string> propertyCache)
+				: this(baseReader, propertyCache, "") { }
+
+			public PropertyCacheAccessor(PropertyReader baseReader, Dictionary<string, string> propertyCache, string basePath) {
+				this.baseReader = baseReader;
+				this.propertyCache = propertyCache;
+				this.basePath = basePath;
+			}
+
+			public override PropertyReader Select(string path) {
+				return new PropertyCacheAccessor(baseReader.Select(path), propertyCache, basePath + "/" + path);
+			}
+
+			//TODO: SelectAll is not cached
+			public override List<PropertyReader> SelectAll(string path) {
+				return baseReader.SelectAll(path);
+			}
+
+			protected override string GetStringRaw(string path) {
+				string key = basePath + "/" + path;
+				if (propertyCache.ContainsKey(key)) {
+					return propertyCache[key];
+				}
+				else {
+					string data = baseReader.GetString(path);
+					propertyCache.Add(key, data);
+					return data;
+				}
+			}
+		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 using System.Drawing;
 using SdlDotNet.Graphics;
 
@@ -19,28 +18,26 @@ namespace KFIRPG.corelib {
 
 		public Dialogs(Game game) {
 			this.game = game;
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(game.loader.LoadText("dialog/dialog.xml"));
-			Border = int.Parse(doc.SelectSingleNode("/dialog/border").InnerText);
-			int red = int.Parse(doc.SelectSingleNode("/dialog/background/red").InnerText);
-			int green = int.Parse(doc.SelectSingleNode("/dialog/background/green").InnerText);
-			int blue = int.Parse(doc.SelectSingleNode("/dialog/background/blue").InnerText);
-			int alpha = int.Parse(doc.SelectSingleNode("/dialog/background/alpha").InnerText);
-			string fontName = doc.SelectSingleNode("/dialog/font").InnerText.Trim();
-			int fontSize = int.Parse(doc.SelectSingleNode("/dialog/fontsize").InnerText);
+			PropertyReader props = game.loader.GetPropertyReader().Select("dialog/dialog.xml");
+			Border = props.GetInt("border");
+			string fontName = props.GetString("font");
+			int fontSize = props.GetInt("fontsize");
 			Font = new SdlDotNet.Graphics.Font(game.loader.LoadRaw("dialog/" + fontName), fontSize);
-			bgColor = Color.FromArgb(alpha, red, green, blue);
-
+			bgColor = Color.FromArgb(
+				props.GetInt("background/alpha"),
+				props.GetInt("background/red"),
+				props.GetInt("background/green"),
+				props.GetInt("background/blue"));
 			selectedBorder = Color.FromArgb(
-				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/alpha").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/red").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/green").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedborder/blue").InnerText));
+				props.GetInt("selectedborder/alpha"),
+				props.GetInt("selectedborder/red"),
+				props.GetInt("selectedborder/green"),
+				props.GetInt("selectedborder/blue"));
 			selectedBg = Color.FromArgb(
-				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/alpha").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/red").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/green").InnerText),
-				int.Parse(doc.SelectSingleNode("/dialog/selectedbackground/blue").InnerText));
+				props.GetInt("selectedbackground/alpha"),
+				props.GetInt("selectedbackground/red"),
+				props.GetInt("selectedbackground/green"),
+				props.GetInt("selectedbackground/blue"));
 
 			TextHeight = Font.SizeText(" ").Height;
 

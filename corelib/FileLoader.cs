@@ -51,6 +51,10 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		public PropertyReader GetPropertyReader() {
+			return new FilePropertyReader(basePath);
+		}
+
 		#endregion
 	}
 }

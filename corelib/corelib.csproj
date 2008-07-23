@@ -80,6 +80,7 @@
     <Compile Include="CustomScreen.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
+    <Compile Include="FilePropertyReader.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Location.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Party.cs" />
     <Compile Include="PlayerMovementController.cs" />
     <Compile Include="PlayerSprite.cs" />
+    <Compile Include="PropertyReader.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenAnimation.cs" />
     <Compile Include="Script.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="TextGraphics.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="WaitingScreen.cs" />
+    <Compile Include="XmlPropertyReader.cs" />
     <Compile Include="ZipLoader.cs" />
   </ItemGroup>
 </Project>
