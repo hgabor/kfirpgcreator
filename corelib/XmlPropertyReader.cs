@@ -25,12 +25,8 @@ namespace KFIRPG.corelib {
 		protected override string GetStringRaw(string path) {
 			if (path == "") return baseNode.InnerText;
 			else {
-				//Check for old format attributes
 				XmlNode node;
-				if ((node=baseNode.SelectSingleNode(path)) != null) {
-					return node.InnerText;
-				}
-				else if ((node = baseNode.Attributes[path]) != null) {
+				if ((node = baseNode.SelectSingleNode(path)) != null) {
 					return node.InnerText;
 				}
 				else {
