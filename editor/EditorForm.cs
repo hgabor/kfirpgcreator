@@ -287,18 +287,6 @@ namespace KFIRPG.editor {
 					rootNode.AppendChild(doc.CreateElement("height")).InnerText = sheet.Value.spriteHeight.ToString();
 					rootNode.AppendChild(doc.CreateElement("x")).InnerText = sheet.Value.x.ToString();
 					rootNode.AppendChild(doc.CreateElement("y")).InnerText = sheet.Value.y.ToString();
-					//XmlElement cols = doc.CreateElement("cols");
-					//rootNode.AppendChild(doc.CreateElement("cols")).InnerText = sheet.Value.cols.ToString();
-					foreach (KeyValuePair<SpriteSheet.AnimationType, SpriteSheet.Animation> anim in sheet.Value.animations) {
-						XmlElement image = doc.CreateElement("animation");
-						rootNode.AppendChild(image);
-						image.SetAttribute("type", anim.Key.type);
-						image.SetAttribute("dir", anim.Key.dir);
-						image.AppendChild(doc.CreateElement("start")).InnerText = anim.Value.startFrame.ToString();
-						image.AppendChild(doc.CreateElement("count")).InnerText = anim.Value.frameCount.ToString();
-						//image.AppendChild(doc.CreateElement("interval")).InnerText = anim.Value.interval.ToString();
-						image.AppendChild(doc.CreateElement("timeout")).InnerText = anim.Value.timeOut.ToString();
-					}
 					doc.Save("img/" + sheet.Key + ".xml");
 				}
 			}
@@ -313,10 +301,13 @@ namespace KFIRPG.editor {
 					root.AppendChild(doc.CreateElement("animation")).InnerText = sprite.Value.animation.Name;
 					root.AppendChild(doc.CreateElement("speed")).InnerText = sprite.Value.speed.ToString();
 					root.AppendChild(doc.CreateElement("noclip")).InnerText = sprite.Value.noclip ? "1" : "0";
-					XmlElement ext = doc.CreateElement("ext");
-					root.AppendChild(ext);
+					XmlElement exts = doc.CreateElement("exts");
+					root.AppendChild(exts);
 					foreach (KeyValuePair<string, string> kvp in sprite.Value.ext) {
-						ext.AppendChild(doc.CreateElement(kvp.Key)).InnerText = kvp.Value;
+						XmlElement ext = doc.CreateElement("ext");
+						exts.AppendChild(ext);
+						ext.AppendChild(doc.CreateElement("key")).InnerText = kvp.Key;
+						ext.AppendChild(doc.CreateElement("value")).InnerText = kvp.Value;
 					}
 					doc.Save("sprites/" + sprite.Value.Name + ".xml");
 					sw.WriteLine(sprite.Key);
@@ -369,7 +360,7 @@ namespace KFIRPG.editor {
 										string locName = layer.tiles[i, j].locationName;
 										XmlElement location = global.CreateElement("location");
 										locations.AppendChild(location);
-										location.SetAttribute("name", locName);
+										location.AppendChild(global.CreateElement("name")).InnerText = locName;
 										location.AppendChild(global.CreateElement("x")).InnerText = i.ToString();
 										location.AppendChild(global.CreateElement("y")).InnerText = j.ToString();
 										location.AppendChild(global.CreateElement("layer")).InnerText = l.ToString();
@@ -440,7 +431,7 @@ namespace KFIRPG.editor {
 					foreach (KeyValuePair<string, Animation.Group> groupKvp in anim.groups) {
 						XmlElement group = docAnim.CreateElement("group");
 						rootAnim.AppendChild(group);
-						group.SetAttribute("name", groupKvp.Key);
+						group.AppendChild(docAnim.CreateElement("name")).InnerText = groupKvp.Key;
 						foreach (Animation.Frame frame in groupKvp.Value.frames) {
 							XmlElement elemFrame = docAnim.CreateElement("frame");
 							group.AppendChild(elemFrame);
