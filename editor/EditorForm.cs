@@ -34,28 +34,22 @@ namespace KFIRPG.editor {
 
 		Cursor cursor;
 
-		private void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
-			// Do NOT set the owner of the forms in the Show method, as it will not allow
-			// to close the parent form.
-
-			bool status = false;
-			form.FormClosing += (sender, args) => {
-				args.Cancel = true;
-				form.Hide();
-				menuitem.Checked = false;
+		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
+			form.DockHandler.HideOnClose = true;
+			form.DockHandler.DockStateChanged += (sender, args) => {
+				if (form.DockHandler.IsHidden) {
+					menuitem.Checked = false;
+				}
 			};
 			menuitem.Click += (sender, args) => {
-				if (status) {
-					form.Hide();
+				if (menuitem.Checked) {
+					form.DockHandler.Hide();
 					menuitem.Checked = false;
 				}
 				else {
-					form.Show();
+					form.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight);
 					menuitem.Checked = true;
 				}
-			};
-			menuitem.VisibleChanged += (sender, args) => {
-				status = menuitem.Visible;
 			};
 		}
 
@@ -121,11 +115,11 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
-			layers.Show();
+			//layers.Show();
 			//audio.Show();
 			//images.Show();
 			//animations.Show();
-			palette.Show();
+			//palette.Show();
 		}
 
 		private void RecreateMRUList() {

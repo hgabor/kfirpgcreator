@@ -5,9 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace KFIRPG.editor {
-	public partial class AudioLibrary: Form {
+	partial class AudioLibrary: DockableForm {
 		class Audio {
 			string outerLocation = null;
 			public string OuterLocation {
