@@ -48,8 +48,6 @@
 			this.passabilityButton = new System.Windows.Forms.ToolStripButton();
 			this.specialViewComboBox = new System.Windows.Forms.ToolStripComboBox();
 			this.mapComboBox = new System.Windows.Forms.ToolStripComboBox();
-			this.hScrollBar = new System.Windows.Forms.HScrollBar();
-			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.statusStrip = new System.Windows.Forms.StatusStrip();
 			this.folderDialog = new System.Windows.Forms.FolderBrowserDialog();
 			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -58,7 +56,6 @@
 			this.onActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-			this.mainPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -274,24 +271,6 @@
 			this.mapComboBox.Sorted = true;
 			this.mapComboBox.ToolTipText = "Selects the map to work with";
 			// 
-			// hScrollBar
-			// 
-			this.hScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.hScrollBar.Location = new System.Drawing.Point(53, 324);
-			this.hScrollBar.Name = "hScrollBar";
-			this.hScrollBar.Size = new System.Drawing.Size(295, 16);
-			this.hScrollBar.TabIndex = 1;
-			// 
-			// vScrollBar
-			// 
-			this.vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.vScrollBar.Location = new System.Drawing.Point(348, 117);
-			this.vScrollBar.Name = "vScrollBar";
-			this.vScrollBar.Size = new System.Drawing.Size(16, 207);
-			this.vScrollBar.TabIndex = 0;
-			// 
 			// statusStrip
 			// 
 			this.statusStrip.Location = new System.Drawing.Point(0, 398);
@@ -346,36 +325,17 @@
 			// 
 			this.dockPanel.ActiveAutoHideContent = null;
 			this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
+			this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingSdi;
 			this.dockPanel.Location = new System.Drawing.Point(0, 49);
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.Size = new System.Drawing.Size(499, 349);
 			this.dockPanel.TabIndex = 5;
-			// 
-			// mainPanel
-			// 
-			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.mainPanel.BackColor = System.Drawing.Color.Black;
-			this.mainPanel.Location = new System.Drawing.Point(53, 117);
-			this.mainPanel.Name = "mainPanel";
-			this.mainPanel.Size = new System.Drawing.Size(295, 207);
-			this.mainPanel.TabIndex = 4;
-			this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
-			this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
-			this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseClick);
-			this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
-			this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
 			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(499, 420);
-			this.Controls.Add(this.vScrollBar);
-			this.Controls.Add(this.hScrollBar);
-			this.Controls.Add(this.mainPanel);
 			this.Controls.Add(this.dockPanel);
 			this.Controls.Add(this.statusStrip);
 			this.Controls.Add(this.toolStrip);
@@ -399,13 +359,10 @@
 
 		private System.Windows.Forms.MenuStrip menuStrip;
 		private System.Windows.Forms.ToolStrip toolStrip;
-		private System.Windows.Forms.VScrollBar vScrollBar;
 		private System.Windows.Forms.StatusStrip statusStrip;
-		private System.Windows.Forms.HScrollBar hScrollBar;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem layersToolStripMenuItem;
-		private DoubleBufferedPanel mainPanel;
 		private System.Windows.Forms.ToolStripMenuItem newProjectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem loadProjectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveProjectToolStripMenuItem;

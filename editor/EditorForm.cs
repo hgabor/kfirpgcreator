@@ -31,6 +31,9 @@ namespace KFIRPG.editor {
 		ImageLibrary images;
 		Palette palette;
 		AnimationLibrary animations;
+		DoubleBufferedPanel mainPanel;
+		HScrollBar hScrollBar;
+		VScrollBar vScrollBar;
 
 		Cursor cursor;
 
@@ -55,6 +58,17 @@ namespace KFIRPG.editor {
 
 		public EditorForm() {
 			InitializeComponent();
+
+			MainPanelForm mainPanelForm = new MainPanelForm();
+			mainPanel = mainPanelForm.mainPanel;
+			hScrollBar = mainPanelForm.hScrollBar;
+			vScrollBar = mainPanelForm.vScrollBar;
+			mainPanelForm.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+			mainPanel.MouseClick += this.mainPanel_MouseClick;
+			mainPanel.Paint += this.mainPanel_Paint;
+			mainPanel.MouseDown += this.mainPanel_MouseDown;
+			mainPanel.MouseUp += this.mainPanel_MouseUp;
+			mainPanel.MouseMove += this.mainPanel_MouseMove;
 
 			layers = new LayersToolbar();
 			BindFormWithMenuItem(layers, layersToolStripMenuItem);
