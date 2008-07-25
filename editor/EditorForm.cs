@@ -153,8 +153,18 @@ namespace KFIRPG.editor {
 							}
 							goto case DialogResult.No;
 						case DialogResult.No:
-							this.savePath = menuItem.Text;
-							Load();
+							string path = menuItem.Text;
+							if (!Directory.Exists(path)) {
+								if (MessageBox.Show(this, "The specified directory does not exist!\nDo you want to remove it from the list?",
+									"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+									mru.Remove(path);
+									RecreateMRUList();
+								}
+							}
+							else {
+								this.savePath = path;
+								Load();
+							}
 							break;
 					}
 				};
