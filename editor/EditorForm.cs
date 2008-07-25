@@ -31,36 +31,44 @@ namespace KFIRPG.editor {
 		ImageLibrary images;
 		Palette palette;
 		AnimationLibrary animations;
+		DoubleBufferedPanel mainPanel;
+		HScrollBar hScrollBar;
+		VScrollBar vScrollBar;
 
 		Cursor cursor;
 
-		private void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
-			// Do NOT set the owner of the forms in the Show method, as it will not allow
-			// to close the parent form.
-
-			bool status = false;
-			form.FormClosing += (sender, args) => {
-				args.Cancel = true;
-				form.Hide();
-				menuitem.Checked = false;
+		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
+			form.DockHandler.HideOnClose = true;
+			form.DockHandler.DockStateChanged += (sender, args) => {
+				if (form.DockHandler.IsHidden) {
+					menuitem.Checked = false;
+				}
 			};
 			menuitem.Click += (sender, args) => {
-				if (status) {
-					form.Hide();
+				if (menuitem.Checked) {
+					form.DockHandler.Hide();
 					menuitem.Checked = false;
 				}
 				else {
-					form.Show();
+					form.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight);
 					menuitem.Checked = true;
 				}
-			};
-			menuitem.VisibleChanged += (sender, args) => {
-				status = menuitem.Visible;
 			};
 		}
 
 		public EditorForm() {
 			InitializeComponent();
+
+			MainPanelForm mainPanelForm = new MainPanelForm();
+			mainPanel = mainPanelForm.mainPanel;
+			hScrollBar = mainPanelForm.hScrollBar;
+			vScrollBar = mainPanelForm.vScrollBar;
+			mainPanelForm.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+			mainPanel.MouseClick += this.mainPanel_MouseClick;
+			mainPanel.Paint += this.mainPanel_Paint;
+			mainPanel.MouseDown += this.mainPanel_MouseDown;
+			mainPanel.MouseUp += this.mainPanel_MouseUp;
+			mainPanel.MouseMove += this.mainPanel_MouseMove;
 
 			layers = new LayersToolbar();
 			BindFormWithMenuItem(layers, layersToolStripMenuItem);
@@ -121,11 +129,11 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
-			layers.Show();
+			//layers.Show();
 			//audio.Show();
 			//images.Show();
 			//animations.Show();
-			palette.Show();
+			//palette.Show();
 		}
 
 		private void RecreateMRUList() {
