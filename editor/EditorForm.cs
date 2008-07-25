@@ -162,8 +162,15 @@ namespace KFIRPG.editor {
 								}
 							}
 							else {
-								this.savePath = path;
-								Load();
+								savePath = path;
+								if (!Load()) {
+									if (MessageBox.Show(this, "Do you want to remove it from the list?",
+										"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+										mru.Remove(path);
+										RecreateMRUList();
+										savePath = null;
+									}
+								}
 							}
 							break;
 					}
@@ -172,8 +179,17 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		private new void Load() {
-			currentProject = Project.FromFiles(savePath);
+		private new bool Load() {
+			try {
+				currentProject = Project.FromFiles(savePath);
+
+			}
+			catch (Project.LoadException ex) {
+				MessageBox.Show(this, "The selected folder is not a project, or it is corrupted.", "Invalid folder");
+				savePath = null;
+				return false;
+			}
+
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
 			audio.Load(currentProject);
@@ -258,6 +274,7 @@ namespace KFIRPG.editor {
 			RecreateMRUList();
 			EnableControls();
 			mainPanel.Invalidate();
+			return true;
 		}
 
 		private void Save() {

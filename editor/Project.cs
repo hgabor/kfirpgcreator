@@ -5,6 +5,11 @@ using KFIRPG.corelib;
 
 namespace KFIRPG.editor {
 	class Project {
+		public class LoadException:Exception {
+			public LoadException(Exception innerException)
+				: base("Project could not be loaded! See the inner exception for details.", innerException) { }
+		}
+
 		public Dictionary<string, SpriteSheet> sheets = new Dictionary<string, SpriteSheet>();
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
@@ -84,7 +89,15 @@ namespace KFIRPG.editor {
 		}
 
 		public static Project FromFiles(string path) {
-			return new Project(new KFIRPG.corelib.FileLoader(path));
+			try {
+				return new Project(new KFIRPG.corelib.FileLoader(path));
+			}
+			catch (System.IO.FileNotFoundException ex) {
+				throw new LoadException(ex);
+			}
+			catch (KFIRPG.corelib.Game.SettingsException ex) {
+				throw new LoadException(ex);
+			}
 		}
 	}
 }
