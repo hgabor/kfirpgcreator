@@ -58,6 +58,8 @@ namespace KFIRPG.editor {
 			tilesPanel.Resize += (sender, args) => {
 				hScrollBar.LargeChange = tilesPanel.Width;
 				vScrollBar.LargeChange = tilesPanel.Height;
+				hScrollBar.Enabled = hScrollBar.LargeChange <= hScrollBar.Maximum;
+				vScrollBar.Enabled = vScrollBar.LargeChange <= vScrollBar.Maximum;
 			};
 
 			LoadObjects();

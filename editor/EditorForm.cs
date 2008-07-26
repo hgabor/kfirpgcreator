@@ -92,7 +92,7 @@ namespace KFIRPG.editor {
 
 			specialViewComboBox.SelectedIndex = 0;
 
-			this.Resize += (sender, args) => CalculateScrollbars();
+			mainPanel.Resize += (sender, args) => CalculateScrollbars();
 			CalculateScrollbars();
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
@@ -110,18 +110,20 @@ namespace KFIRPG.editor {
 			}
 			vScrollBar.Enabled = true;
 			vScrollBar.Minimum = 0;
-			vScrollBar.Maximum = currentMap.height;
+			vScrollBar.Maximum = currentMap.height - 1;
 			vScrollBar.LargeChange = mainPanel.Height / currentProject.tileSize;
 			if (vScrollBar.Maximum >= vScrollBar.LargeChange && vScrollBar.Value >= vScrollBar.Maximum - vScrollBar.LargeChange) {
 				vScrollBar.Value = vScrollBar.Maximum - vScrollBar.LargeChange;
 			}
+			vScrollBar.Enabled = vScrollBar.LargeChange <= vScrollBar.Maximum;
 			hScrollBar.Enabled = true;
 			hScrollBar.Minimum = 0;
-			hScrollBar.Maximum = currentMap.width;
+			hScrollBar.Maximum = currentMap.width - 1;
 			hScrollBar.LargeChange = mainPanel.Width / currentProject.tileSize;
 			if (hScrollBar.Maximum >= hScrollBar.LargeChange && hScrollBar.Value >= hScrollBar.Maximum - hScrollBar.LargeChange) {
 				hScrollBar.Value = hScrollBar.Maximum - hScrollBar.LargeChange;
 			}
+			hScrollBar.Enabled = hScrollBar.LargeChange <= hScrollBar.Maximum;
 		}
 
 		private void EnableControls() {
