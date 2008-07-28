@@ -62,10 +62,13 @@ namespace KFIRPG.runner {
 				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Space)) buttons |= UserInput.Buttons.Action;
 				if (SdlDotNet.Input.Keyboard.IsKeyPressed(SdlDotNet.Input.Key.Escape)) buttons |= UserInput.Buttons.Back;
 				if (joy != null) {
-					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) == 0) buttons |= UserInput.Buttons.Up;
-					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) == 1) buttons |= UserInput.Buttons.Down;
-					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) == 0) buttons |= UserInput.Buttons.Left;
-					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) == 1) buttons |= UserInput.Buttons.Right;
+					//On Windows, the return values are 0, 1, or ~0.5
+					//On Linux, the return values are ~0, 1, or ~0.5
+					//Thus, the equality operator cannot be used - in my opinion these are safe approximations.
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) < 0.2 ) buttons |= UserInput.Buttons.Up;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Vertical) > 0.8) buttons |= UserInput.Buttons.Down;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) < 0.2) buttons |= UserInput.Buttons.Left;
+					if (joy.GetAxisPosition(SdlDotNet.Input.JoystickAxis.Horizontal) > 0.8) buttons |= UserInput.Buttons.Right;
 					if (joy.GetButtonState(0) == SdlDotNet.Input.ButtonKeyState.Pressed) buttons |= UserInput.Buttons.Action;
 					if (joy.GetButtonState(1) == SdlDotNet.Input.ButtonKeyState.Pressed) buttons |= UserInput.Buttons.Back;
 				}

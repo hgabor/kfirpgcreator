@@ -33,6 +33,11 @@ namespace KFIRPG.editor {
 			Save();
 		}
 
+		public void Remove(string item) {
+			if (items.Contains(item)) items.Remove(item);
+			Save();
+		}
+
 		#region IEnumerable<string> Members
 
 		public IEnumerator<string> GetEnumerator() {

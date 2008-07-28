@@ -18,6 +18,9 @@ namespace KFIRPG.editor {
 		}
 
 		public override void Click(Map.Layer layer) {
+			if (tileX >= layer.objects.GetLength(0)|| tileY >= layer.objects.GetLength(1)) {
+				return;
+			}
 			if (layer.objects[tileX, tileY] == null) {
 				layer.objects[tileX, tileY] = new Map.Obj();
 			}

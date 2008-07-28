@@ -117,6 +117,15 @@ namespace KFIRPG.editor {
 			width = newX;
 			height = newY;
 			layers.ForEach((Layer l) => l.Resize(newX, newY));
+			Ladder[,] newLadders = new Ladder[newX, newY];
+			int oldX = ladders.GetLength(0);
+			int oldY = ladders.GetLength(1);
+			for (int i = 0; i < newX && i < oldX; ++i) {
+				for (int j = 0; j < newY && j < oldY; ++j) {
+					newLadders[i, j] = ladders[i, j];
+				}
+			}
+			ladders = newLadders;
 		}
 
 		public Map(string name, Project project) {

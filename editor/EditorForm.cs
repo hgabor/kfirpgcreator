@@ -31,36 +31,44 @@ namespace KFIRPG.editor {
 		ImageLibrary images;
 		Palette palette;
 		AnimationLibrary animations;
+		DoubleBufferedPanel mainPanel;
+		HScrollBar hScrollBar;
+		VScrollBar vScrollBar;
 
 		Cursor cursor;
 
-		private void BindFormWithMenuItem(Form form, ToolStripMenuItem menuitem) {
-			// Do NOT set the owner of the forms in the Show method, as it will not allow
-			// to close the parent form.
-
-			bool status = false;
-			form.FormClosing += (sender, args) => {
-				args.Cancel = true;
-				form.Hide();
-				menuitem.Checked = false;
+		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
+			form.DockHandler.HideOnClose = true;
+			form.DockHandler.DockStateChanged += (sender, args) => {
+				if (form.DockHandler.IsHidden) {
+					menuitem.Checked = false;
+				}
 			};
 			menuitem.Click += (sender, args) => {
-				if (status) {
-					form.Hide();
+				if (menuitem.Checked) {
+					form.DockHandler.Hide();
 					menuitem.Checked = false;
 				}
 				else {
-					form.Show();
+					form.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight);
 					menuitem.Checked = true;
 				}
-			};
-			menuitem.VisibleChanged += (sender, args) => {
-				status = menuitem.Visible;
 			};
 		}
 
 		public EditorForm() {
 			InitializeComponent();
+
+			MainPanelForm mainPanelForm = new MainPanelForm();
+			mainPanel = mainPanelForm.mainPanel;
+			hScrollBar = mainPanelForm.hScrollBar;
+			vScrollBar = mainPanelForm.vScrollBar;
+			mainPanelForm.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+			mainPanel.MouseClick += this.mainPanel_MouseClick;
+			mainPanel.Paint += this.mainPanel_Paint;
+			mainPanel.MouseDown += this.mainPanel_MouseDown;
+			mainPanel.MouseUp += this.mainPanel_MouseUp;
+			mainPanel.MouseMove += this.mainPanel_MouseMove;
 
 			layers = new LayersToolbar();
 			BindFormWithMenuItem(layers, layersToolStripMenuItem);
@@ -84,7 +92,7 @@ namespace KFIRPG.editor {
 
 			specialViewComboBox.SelectedIndex = 0;
 
-			this.Resize += (sender, args) => CalculateScrollbars();
+			mainPanel.Resize += (sender, args) => CalculateScrollbars();
 			CalculateScrollbars();
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
@@ -102,18 +110,20 @@ namespace KFIRPG.editor {
 			}
 			vScrollBar.Enabled = true;
 			vScrollBar.Minimum = 0;
-			vScrollBar.Maximum = currentMap.height;
+			vScrollBar.Maximum = currentMap.height - 1;
 			vScrollBar.LargeChange = mainPanel.Height / currentProject.tileSize;
 			if (vScrollBar.Maximum >= vScrollBar.LargeChange && vScrollBar.Value >= vScrollBar.Maximum - vScrollBar.LargeChange) {
 				vScrollBar.Value = vScrollBar.Maximum - vScrollBar.LargeChange;
 			}
+			vScrollBar.Enabled = vScrollBar.LargeChange <= vScrollBar.Maximum;
 			hScrollBar.Enabled = true;
 			hScrollBar.Minimum = 0;
-			hScrollBar.Maximum = currentMap.width;
+			hScrollBar.Maximum = currentMap.width - 1;
 			hScrollBar.LargeChange = mainPanel.Width / currentProject.tileSize;
 			if (hScrollBar.Maximum >= hScrollBar.LargeChange && hScrollBar.Value >= hScrollBar.Maximum - hScrollBar.LargeChange) {
 				hScrollBar.Value = hScrollBar.Maximum - hScrollBar.LargeChange;
 			}
+			hScrollBar.Enabled = hScrollBar.LargeChange <= hScrollBar.Maximum;
 		}
 
 		private void EnableControls() {
@@ -121,11 +131,11 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
-			layers.Show();
+			//layers.Show();
 			//audio.Show();
 			//images.Show();
 			//animations.Show();
-			palette.Show();
+			//palette.Show();
 		}
 
 		private void RecreateMRUList() {
@@ -145,8 +155,25 @@ namespace KFIRPG.editor {
 							}
 							goto case DialogResult.No;
 						case DialogResult.No:
-							this.savePath = menuItem.Text;
-							Load();
+							string path = menuItem.Text;
+							if (!Directory.Exists(path)) {
+								if (MessageBox.Show(this, "The specified directory does not exist!\nDo you want to remove it from the list?",
+									"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+									mru.Remove(path);
+									RecreateMRUList();
+								}
+							}
+							else {
+								savePath = path;
+								if (!Load()) {
+									if (MessageBox.Show(this, "Do you want to remove it from the list?",
+										"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+										mru.Remove(path);
+										RecreateMRUList();
+										savePath = null;
+									}
+								}
+							}
 							break;
 					}
 				};
@@ -154,8 +181,17 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		private new void Load() {
-			currentProject = Project.FromFiles(savePath);
+		private new bool Load() {
+			try {
+				currentProject = Project.FromFiles(savePath);
+
+			}
+			catch (Project.LoadException ex) {
+				MessageBox.Show(this, "The selected folder is not a project, or it is corrupted.", "Invalid folder");
+				savePath = null;
+				return false;
+			}
+
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
 			audio.Load(currentProject);
@@ -240,6 +276,7 @@ namespace KFIRPG.editor {
 			RecreateMRUList();
 			EnableControls();
 			mainPanel.Invalidate();
+			return true;
 		}
 
 		private void Save() {

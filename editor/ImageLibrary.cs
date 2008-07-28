@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace KFIRPG.editor {
-	public partial class ImageLibrary: Form {
+	partial class ImageLibrary: DockableForm {
 		public ImageLibrary() {
 			InitializeComponent();
 		}
