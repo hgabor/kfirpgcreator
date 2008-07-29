@@ -86,6 +86,7 @@
     <Compile Include="EditorForm.Designer.cs">
       <DependentUpon>EditorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileSaver.cs" />
     <Compile Include="ImageLibrary.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +129,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PropertyWriter.cs" />
+    <Compile Include="Saver.cs" />
     <Compile Include="ScriptSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,6 +169,7 @@
       <DependentUpon>SpriteSheetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="TileCursor.cs" />
+    <Compile Include="XmlPropertyWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
