@@ -82,6 +82,7 @@ namespace KFIRPG.corelib {
 				int l = obj.GetInt("layer");
 				string action = obj.GetString("action");
 				string movement = obj.GetString("movement");
+				string collide = obj.GetString("collide");
 				Sprite sp = new Sprite(name, game);
 				this.Place(sp, x, y, l);
 				if (action != "") {
@@ -92,6 +93,11 @@ namespace KFIRPG.corelib {
 				if (movement != "") {
 					MovementAI ai = new ScriptedMovementAI(movement, game);
 					sp.MovementAI = ai;
+				}
+				if (collide != "") {
+					Script script = game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + collide));
+					script.Owner = sp;
+					sp.Collide = script;
 				}
 			}
 
@@ -210,6 +216,32 @@ namespace KFIRPG.corelib {
 			else {
 				return layers[layer].ladderMove[x, y].passable[x, y] &&
 					layers[layer].ladderMove[x, y].objects[x, y].TrueForAll(ObjectPassable);
+			}
+		}
+
+		internal void OnCollide(int x, int y, int layer, Sprite asker) {
+			if (asker.Noclip || x < 0 || y < 0 || x >= cols || y >= rows) return;
+			if (layers[layer].ladderMove[x, y] == null) {
+				if (asker is PlayerSprite) {
+					layers[layer].objects[x, y].ForEach(o => {
+						if (!o.Noclip) o.OnCollide();
+					});
+				}
+				else {
+					Sprite s = layers[layer].objects[x, y].Find(o => o is PlayerSprite);
+					if (s != null) asker.OnCollide();
+				}
+			}
+			else {
+				if (asker is PlayerSprite) {
+					layers[layer].ladderMove[x, y].objects[x, y].ForEach(o => {
+						if (!o.Noclip) o.OnCollide();
+					});
+				}
+				else {
+					Sprite s = layers[layer].ladderMove[x, y].objects[x, y].Find(o => o is PlayerSprite);
+					if (s != null) s.OnCollide();
+				}
 			}
 		}
 
