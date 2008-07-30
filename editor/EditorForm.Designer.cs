@@ -56,6 +56,7 @@
 			this.onActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+			this.onCollideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -285,9 +286,10 @@
             this.locationMenuItem,
             this.onstepMenuItem,
             this.onActionToolStripMenuItem,
+            this.onCollideToolStripMenuItem,
             this.movementScriptToolStripMenuItem});
 			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(162, 92);
+			this.contextMenu.Size = new System.Drawing.Size(162, 136);
 			this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
 			// 
 			// locationMenuItem
@@ -330,6 +332,14 @@
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.Size = new System.Drawing.Size(499, 349);
 			this.dockPanel.TabIndex = 5;
+			// 
+			// onCollideToolStripMenuItem
+			// 
+			this.onCollideToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
+			this.onCollideToolStripMenuItem.Name = "onCollideToolStripMenuItem";
+			this.onCollideToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.onCollideToolStripMenuItem.Text = "OnCollide...";
+			this.onCollideToolStripMenuItem.Click += new System.EventHandler(this.onCollideToolStripMenuItem_Click);
 			// 
 			// EditorForm
 			// 
@@ -389,5 +399,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem animationLibraryToolStripMenuItem;
 		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
+		private System.Windows.Forms.ToolStripMenuItem onCollideToolStripMenuItem;
 	}
 }

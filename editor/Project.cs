@@ -200,6 +200,7 @@ namespace KFIRPG.editor {
 								pObject.Set("sprite", obj.Sprite.Name);
 								pObject.Set("action", obj.actionScript);
 								pObject.Set("movement", obj.movementAIScript);
+								pObject.Set("collide", obj.collideScript);
 							}
 						}
 						tileList.Add(string.Join(" ", tileLine));
