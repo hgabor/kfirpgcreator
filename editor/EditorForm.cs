@@ -513,6 +513,16 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		private void onCollideToolStripMenuItem_Click(object sender, EventArgs e) {
+			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			string currentScript = obj.collideScript;
+			using (ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
+				if (selector.ShowDialog(this) == DialogResult.OK) {
+					obj.collideScript = selector.Script;
+				}
+			}
+		}
+
 		private void movementScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
 			string currentScript = obj.movementAIScript;
@@ -527,6 +537,7 @@ namespace KFIRPG.editor {
 			bool isObject = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y] != null;
 			onActionToolStripMenuItem.Enabled = isObject;
 			movementScriptToolStripMenuItem.Enabled = isObject;
+			onCollideToolStripMenuItem.Enabled = isObject;
 		}
 	}
 }

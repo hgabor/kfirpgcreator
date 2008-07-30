@@ -102,6 +102,14 @@ namespace KFIRPG.corelib {
 			if (action != null) action.Run();
 		}
 
+		public Script Collide {
+			private get;
+			set;
+		}
+		public void OnCollide() {
+			if (Collide != null) Collide.Run();
+		}
+
 		MovementAI movementAI = new NotMovingAI();
 		/// <summary>
 		/// Sets the controller that controls the sprites movement on the screen.
@@ -169,20 +177,32 @@ namespace KFIRPG.corelib {
 					if (map.IsPassable(x, y - 1, layer)) {
 						nextMove = Dir.Up;
 					}
+					else if (moving == Dir.None) {
+						map.OnCollide(x, y - 1, layer, this);
+					}
 					break;
 				case Dir.Down:
 					if (map.IsPassable(x, y + 1, layer)) {
 						nextMove = Dir.Down;
+					}
+					else if (moving == Dir.None) {
+						map.OnCollide(x, y + 1, layer, this);
 					}
 					break;
 				case Dir.Left:
 					if (map.IsPassable(x - 1, y, layer)) {
 						nextMove = Dir.Left;
 					}
+					else if (moving == Dir.None) {
+						map.OnCollide(x - 1, y, layer, this);
+					}
 					break;
 				case Dir.Right:
 					if (map.IsPassable(x + 1, y, layer)) {
 						nextMove = Dir.Right;
+					}
+					else if (moving == Dir.None) {
+						map.OnCollide(x + 1, y, layer, this);
 					}
 					break;
 			}

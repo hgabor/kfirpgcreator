@@ -8,14 +8,17 @@
     <action>map/blahblah</action>
     <movement>
     </movement>
+    <collide>
+    </collide>
   </object>
   <object>
     <x>4</x>
     <y>4</y>
     <layer>4</layer>
     <sprite>sticky</sprite>
-    <action>map/blahblah</action>
+    <action>map/watchstep</action>
     <movement>movement/random</movement>
+    <collide>map/watchstep</collide>
   </object>
   <object>
     <x>7</x>
@@ -25,6 +28,7 @@
     <action>map/door</action>
     <movement>
     </movement>
+    <collide>map/door</collide>
   </object>
   <object>
     <x>1</x>
@@ -34,5 +38,7 @@
     <action>
     </action>
     <movement>movement/random_nostop</movement>
+    <collide>
+    </collide>
   </object>
 </objects>

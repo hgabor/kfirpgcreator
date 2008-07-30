@@ -23,20 +23,15 @@ namespace KFIRPG.editor {
 				get { return sprite; }
 				set {
 					sprite = value;
-			//		gfx = sprite.sheet.GetGfxById(1);
 				}
 			}
 
-			/*
-			SpriteSheet.Gfx gfx;
-			public SpriteSheet.Gfx Gfx {
-				get { return gfx; }
-			}*/
 			public SpriteSheet.Gfx Gfx {
 				get { return sprite.animation.sheet.GetGfxById(1); }
 			}
 			public string movementAIScript;
 			public string actionScript;
+			public string collideScript;
 		}
 
 		public class Layer {
@@ -147,12 +142,11 @@ namespace KFIRPG.editor {
 				int x = obj.GetInt("x");
 				int y = obj.GetInt("y");
 				int layer = obj.GetInt("layer");
-				string move = obj.GetString("movement");
-				string action = obj.GetString("action");
 				Obj o = new Obj();
 				o.Sprite = project.sprites[spriteName];
-				o.movementAIScript = move;
-				o.actionScript = action;
+				o.movementAIScript = obj.GetString("movement");
+				o.actionScript = obj.GetString("action");
+				o.collideScript = obj.GetString("collide");
 				layers[layer].objects[x, y] = o;
 			}
 

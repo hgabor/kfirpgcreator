@@ -7,5 +7,7 @@
     <sprite>sticky</sprite>
     <action>map/innkeepernorooms</action>
     <movement>movement/random</movement>
+    <collide>
+    </collide>
   </object>
 </objects>
