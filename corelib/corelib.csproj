@@ -107,6 +107,7 @@
     <Compile Include="ScreenAnimation.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="ScriptedMovementAI.cs" />
+    <Compile Include="ScriptFunction.cs" />
     <Compile Include="ScriptLib.cs" />
     <Compile Include="ScriptVM.cs" />
     <Compile Include="Sprite.cs" />

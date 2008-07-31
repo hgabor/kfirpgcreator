@@ -1,0 +1,9 @@
+include("Screen")
+
+function Message(msg)
+  gfx = TextGraphics(msg, "center")
+  screen = Screen()
+  screen:Add(0, 0, gfx)
+  screen:OnKeyPress(function(key) if IsPressed(btnAction, key) then screen:Hide() end end)
+  screen:Show()
+end

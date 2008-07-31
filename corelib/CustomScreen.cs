@@ -31,6 +31,13 @@ namespace KFIRPG.corelib {
 			graphics.Add(new ScreenGraphics(gfx, coords));
 		}
 
+		bool hide = false;
+		internal void Hide() {
+			hide = true;
+		}
+
+		public event EventHandler<UserInput.ButtonEventArgs> KeyPressed;
+
 		public override void Draw(SdlDotNet.Graphics.Surface surface) {
 			foreach (ScreenGraphics gfx in graphics) {
 				gfx.graphics.Blit(gfx.coords.X, gfx.coords.Y, surface);
@@ -38,10 +45,24 @@ namespace KFIRPG.corelib {
 		}
 
 		public override void Think() {
-			UserInput.Buttons buttons = game.Input.State;
-			if (buttons != UserInput.Buttons.None) {
-				game.vm.ContinueWithValue((int)buttons);
+			if (hide) {
+				FadeAnimation animation = new FadeAnimation(game);
+				animation.FromImage = game.TakeScreenshot();
+				game.PopScreen();
+				game.vm.ContinueWithValue(null);
+				game.PushScreen(animation);
 			}
+			else {
+				UserInput.Buttons keyState = game.Input.State;
+				if (keyState != UserInput.Buttons.None) {
+					if (KeyPressed != null) KeyPressed(this, new UserInput.ButtonEventArgs(keyState));
+				}
+				game.Input.WaitForKeyUp();
+			}
+			//UserInput.Buttons buttons = game.Input.State;
+			//if (buttons != UserInput.Buttons.None) {
+			//	game.vm.ContinueWithValue((int)buttons);
+			//}
 		}
 	}
 }

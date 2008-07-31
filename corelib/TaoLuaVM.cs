@@ -9,6 +9,26 @@ namespace KFIRPG.corelib {
 	/// A script VM using the Tao.Lua framework - that is, the raw lua interface.
 	/// </summary>
 	class TaoLuaVM: ScriptVM {
+		class Function: ScriptFunction {
+			IntPtr luaState;
+			string funcName;
+			public Function(IntPtr state, string funcName) {
+				this.luaState = state;
+				this.funcName = funcName;
+			}
+
+			public void Run(params object[] args) {
+				int stackTop = Lua.lua_gettop(luaState);
+				int status = 0;
+				Lua.lua_getglobal(luaState, funcName);
+				foreach (object arg in args) Push(arg, luaState);
+				status = Lua.lua_pcall(luaState, args.Length, 0, 0);
+				if (status != 0) {
+					throw new Error(Lua.lua_tostring(luaState, -1));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Thrown when an error occurs in one of the scripts.
 		/// </summary>
@@ -77,6 +97,7 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		static int functionCount = 0;
 		/// <summary>
 		/// Pops the topmost value from the lua stack.
 		/// </summary>
@@ -109,6 +130,12 @@ namespace KFIRPG.corelib {
 					break;
 				case Lua.LUA_TLIGHTUSERDATA:
 					ret = lightUserData[Lua.lua_touserdata(luaState, -1)];
+					break;
+				case Lua.LUA_TFUNCTION:
+					++functionCount;
+					string funcName = "internal_function_" + functionCount;
+					Lua.lua_setglobal(luaState, funcName);
+					return new Function(luaState, funcName);
 					break;
 				default:
 					throw new TaoLuaVM.Error("Type of return value is not suported.");

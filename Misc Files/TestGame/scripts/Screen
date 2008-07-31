@@ -1,0 +1,45 @@
+include("class")
+include("luabit/bit.lua")
+
+-- Mimics the UserInput.Buttons enum
+btnNone = 0
+btnDown = 1
+btnUp = 2
+btnLeft = 4
+btnRight = 8
+btnAction = 16
+btnBack = 32
+
+function IsPressed(btn, state)
+  return (bit.band(btn, state) == btn)
+end
+
+
+
+Screen = class(function(self)
+  self.handle = CustomScreen_New()
+end)
+
+function Screen:Add(x, y, gfx)
+  CustomScreen_Add(self.handle, x, y, gfx.handle)
+end
+
+function Screen:Show()
+  CustomScreen_Show(self.handle)
+end
+
+function Screen:Hide()
+  CustomScreen_Hide(self.handle)
+end
+
+function Screen:OnKeyPress(func)
+  --WriteLine(func)
+  CustomScreen_OnKey_Add(self.handle, func)
+end
+
+
+TextGraphics = class(function(self, msg)
+  self.handle = TextGraphics_New(msg, "center")
+  self.Width = 500
+end)
+

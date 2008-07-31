@@ -23,11 +23,48 @@ namespace KFIRPG.corelib {
 		Game game;
 		Random random = new Random();
 
+		[Script]
+		public CustomScreen CustomScreen_New() {
+			return new CustomScreen(game);
+		}
+		[Script]
+		public void CustomScreen_Add(CustomScreen screen, int x, int y, Graphics gfx) {
+			screen.Add(gfx, new System.Drawing.Point(x, y));
+		}
+		[BlockingScript]
+		public void CustomScreen_Show(CustomScreen screen) {
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = game.TakeScreenshot();
+			game.PushScreen(screen);
+			game.PushScreen(anim);
+		}
+		[Script]
+		public void CustomScreen_Hide(CustomScreen screen) {
+			screen.Hide();
+		}
+		[Script]
+		public void CustomScreen_OnKey_Add(CustomScreen screen, ScriptFunction script) {
+			screen.KeyPressed += (sender, args) => script.Run((int)args.Button);
+		}
+		[Script]
+		public void CustomScreen_Delete() {
+			//No-op for now...
+		}
+
+		[Script]
+		public TextGraphics TextGraphics_New(string text, string align) {
+			return new TextGraphics(
+				text,
+				(TextGraphics.Align)Enum.Parse(typeof(TextGraphics.Align), align, true),
+				dialogs,
+				game);
+		}
+
 		/// <summary>
 		/// Shows a message.
 		/// </summary>
 		/// <param name="message"></param>
-		[BlockingScript]
+		//[BlockingScript]
 		public void Message(string message) {
 			//dialogs.Message(message);
 			FadeAnimation anim = new FadeAnimation(game);
