@@ -1,9 +1,13 @@
 include("Screen")
 
 function Message(msg)
-  gfx = TextGraphics(msg, "center")
-  screen = Screen()
-  screen:Add(0, 0, gfx)
-  screen:OnKeyPress(function(key) if IsPressed(btnAction, key) then screen:Hide() end end)
+  local text = TextGraphics(msg, "center")
+  local window = WindowGraphics(text.width-1, text.height)
+  local screen = Screen()
+  local x = (screenWidth - text.width) / 2
+  local y = (screenHeight - text.height) / 2
+  screen:Add(x, y, window)
+  screen:Add(x, y, text)
+  screen:OnKeyPress(function(key) if key:IsPressed(btnAction) then screen:Hide() end end)
   screen:Show()
 end

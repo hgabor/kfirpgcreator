@@ -60,6 +60,21 @@ namespace KFIRPG.corelib {
 				game);
 		}
 
+		[Script]
+		public int Graphics_GetWidth(Graphics graphics) {
+			return graphics.Width;
+		}
+
+		[Script]
+		public int Graphics_GetHeight(Graphics graphics) {
+			return graphics.Height;
+		}
+
+		[Script]
+		public WindowGraphics WindowGraphics_New(int width, int height) {
+			return new WindowGraphics(width, height, dialogs);
+		}
+
 		/// <summary>
 		/// Shows a message.
 		/// </summary>

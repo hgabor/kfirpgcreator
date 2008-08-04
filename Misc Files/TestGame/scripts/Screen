@@ -10,10 +10,13 @@ btnRight = 8
 btnAction = 16
 btnBack = 32
 
-function IsPressed(btn, state)
-  return (bit.band(btn, state) == btn)
-end
+ButtonState = class(function(self, state)
+  self.state = state
+end)
 
+function ButtonState:IsPressed(btn, state)
+  return (bit.band(btn, self.state) == btn)
+end
 
 
 Screen = class(function(self)
@@ -33,13 +36,20 @@ function Screen:Hide()
 end
 
 function Screen:OnKeyPress(func)
-  --WriteLine(func)
-  CustomScreen_OnKey_Add(self.handle, func)
+  CustomScreen_OnKey_Add(self.handle, function(state) func(ButtonState(state)) end)
 end
 
 
 TextGraphics = class(function(self, msg)
   self.handle = TextGraphics_New(msg, "center")
-  self.Width = 500
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
 end)
+
+WindowGraphics = class(function(self, width, height)
+  self.handle = WindowGraphics_New(width, height)
+  self.width = width
+  self.height = height
+end)
+
 

@@ -116,6 +116,7 @@
     <Compile Include="TextGraphics.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="WaitingScreen.cs" />
+    <Compile Include="WindowGraphics.cs" />
     <Compile Include="XmlPropertyReader.cs" />
     <Compile Include="ZipLoader.cs" />
   </ItemGroup>

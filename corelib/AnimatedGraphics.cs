@@ -42,6 +42,14 @@ namespace KFIRPG.corelib {
 		int y;
 		int columnsInRow;
 
+		public override int Width {
+			get { return width; }
+		}
+
+		public override int Height {
+			get { return Height; }
+		}
+
 		private void LoadSpriteSheet(string sheetName, Game game) {
 			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
 			PropertyReader props = game.loader.GetPropertyReader().Select("img/" + sheetName + ".xml");
