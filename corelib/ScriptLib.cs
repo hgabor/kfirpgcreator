@@ -28,8 +28,8 @@ namespace KFIRPG.corelib {
 			return new CustomScreen(game);
 		}
 		[Script]
-		public void CustomScreen_Add(CustomScreen screen, int x, int y, Graphics gfx) {
-			screen.Add(gfx, new System.Drawing.Point(x, y));
+		public void CustomScreen_Place(CustomScreen screen, int x, int y, Graphics gfx) {
+			screen.Place(gfx, new System.Drawing.Point(x, y));
 		}
 		[BlockingScript]
 		public void CustomScreen_Show(CustomScreen screen) {
@@ -75,68 +75,9 @@ namespace KFIRPG.corelib {
 			return new WindowGraphics(width, height, dialogs);
 		}
 
-		/// <summary>
-		/// Shows a message.
-		/// </summary>
-		/// <param name="message"></param>
-		//[BlockingScript]
-		public void Message(string message) {
-			//dialogs.Message(message);
-			FadeAnimation anim = new FadeAnimation(game);
-			anim.FromImage = game.TakeScreenshot();
-			Form form = new Form(dialogs, game);
-			Form.Menu menu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics text = new TextGraphics(message, TextGraphics.Align.Center, dialogs, game);
-			text.Location = new System.Drawing.Point(10, 10);
-			menu.Add(text);
-			form.AddPanel("message", menu);
-			game.PushScreen(form);
-			game.PushScreen(anim);
-		}
-
-		/// <summary>
-		/// Shows a message, and lets the user select one of the two answers.
-		/// </summary>
-		/// <param name="question"></param>
-		/// <param name="param1"></param>
-		/// <param name="param2"></param>
-		[BlockingScript]
-		public void Ask(string question, string param1, string param2) {
-			Ask(question, new string[] { param1, param2 });
-		}
-
-		/// <summary>
-		/// Shows a message, and lets the user select one of the possible answers.
-		/// </summary>
-		/// <param name="question"></param>
-		/// <param name="answers"></param>
-		public void Ask(string question, params string[] answers) {
-			FadeAnimation anim = new FadeAnimation(game);
-			anim.FromImage = game.TakeScreenshot();
-			Form form = new Form(dialogs, game);
-			Form.Menu qmenu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics qtext = new TextGraphics(question, TextGraphics.Align.Center, dialogs, game);
-			qtext.Location = new System.Drawing.Point(10, 10);
-			qmenu.Add(qtext);
-			form.AddPanel("message", qmenu);
-
-			int i = 0;
-			int position = 220;
-			foreach (string answer in answers) {
-				TextGraphics stext = new TextGraphics(answer, TextGraphics.Align.Left, dialogs, game);
-				stext.Location = new System.Drawing.Point(0, 0);
-				Form.Item aitem = new Form.Item(10 + dialogs.Border, position, 500 - 2 * dialogs.Border, stext.Height + 2 * dialogs.Border, form);
-				aitem.Add(stext);
-				++i;
-				int j = i;
-				aitem.Selected += (sender, args) => {
-					form.ReturnValue = j;
-				};
-				qmenu.AddMenuItem(aitem);
-				position += stext.Height + 2 * dialogs.Border;
-			}
-			game.PushScreen(form);
-			game.PushScreen(anim);
+		[Script]
+		public PanelGraphics MenuItemBackground_New(int width, int height) {
+			return new PanelGraphics(width, height, dialogs.selectedBg, dialogs.selectedBorder);
 		}
 
 		/// <summary>

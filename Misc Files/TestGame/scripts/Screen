@@ -23,8 +23,8 @@ Screen = class(function(self)
   self.handle = CustomScreen_New()
 end)
 
-function Screen:Add(x, y, gfx)
-  CustomScreen_Add(self.handle, x, y, gfx.handle)
+function Screen:Place(x, y, gfx)
+  CustomScreen_Place(self.handle, x, y, gfx.handle)
 end
 
 function Screen:Show()
@@ -40,8 +40,8 @@ function Screen:OnKeyPress(func)
 end
 
 
-TextGraphics = class(function(self, msg)
-  self.handle = TextGraphics_New(msg, "center")
+TextGraphics = class(function(self, msg, align)
+  self.handle = TextGraphics_New(msg, align or "center")
   self.width = Graphics_GetWidth(self.handle)
   self.height = Graphics_GetHeight(self.handle)
 end)
@@ -52,4 +52,8 @@ WindowGraphics = class(function(self, width, height)
   self.height = height
 end)
 
-
+MenuItemBackground = class(function(self, width, height)
+  self.handle = MenuItemBackground_New(width, height)
+  self.width = width
+  self.height = height
+end)

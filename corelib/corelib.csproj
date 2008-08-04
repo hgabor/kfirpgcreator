@@ -81,7 +81,6 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="FilePropertyReader.cs" />
-    <Compile Include="Form.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LuaScript.cs">
@@ -99,6 +98,7 @@
     <Compile Include="MapScreen.cs" />
     <Compile Include="NoGraphics.cs" />
     <Compile Include="NotMovingAI.cs" />
+    <Compile Include="PanelGraphics.cs" />
     <Compile Include="Party.cs" />
     <Compile Include="PlayerMovementController.cs" />
     <Compile Include="PlayerSprite.cs" />

@@ -27,8 +27,14 @@ namespace KFIRPG.corelib {
 			graphics = new List<ScreenGraphics>();
 		}
 
-		public void Add(Graphics gfx, Point coords) {
-			graphics.Add(new ScreenGraphics(gfx, coords));
+		public void Place(Graphics gfx, Point coords) {
+			ScreenGraphics sg = graphics.Find(s => s.graphics == gfx);
+			if (sg == null) {
+				graphics.Add(new ScreenGraphics(gfx, coords));
+			}
+			else {
+				sg.coords = coords;
+			}
 		}
 
 		bool hide = false;
@@ -59,10 +65,6 @@ namespace KFIRPG.corelib {
 				}
 				game.Input.WaitForKeyUp();
 			}
-			//UserInput.Buttons buttons = game.Input.State;
-			//if (buttons != UserInput.Buttons.None) {
-			//	game.vm.ContinueWithValue((int)buttons);
-			//}
 		}
 	}
 }
