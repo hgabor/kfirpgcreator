@@ -136,7 +136,6 @@ namespace KFIRPG.corelib {
 					string funcName = "internal_function_" + functionCount;
 					Lua.lua_setglobal(luaState, funcName);
 					return new Function(luaState, funcName);
-					break;
 				default:
 					throw new TaoLuaVM.Error("Type of return value is not suported.");
 			}
