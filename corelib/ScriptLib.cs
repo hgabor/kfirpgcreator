@@ -80,6 +80,26 @@ namespace KFIRPG.corelib {
 			return new PanelGraphics(width, height, dialogs.selectedBg, dialogs.selectedBorder);
 		}
 
+		[Script]
+		public AnimatedGraphics AnimatedGraphics_New(string name) {
+			return new AnimatedGraphics(name, game);
+		}
+
+		[Script]
+		public void AnimatedGraphics_SetState(AnimatedGraphics gfx, string state) {
+			gfx.SetState(state);
+		}
+
+		[Script]
+		public void AnimatedGraphics_SetDir(AnimatedGraphics gfx, string dir) {
+			gfx.SetDirection((Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), dir, true));
+		}
+
+		[Script]
+		public ImageGraphics ImageGraphics_New(string name) {
+			return new ImageGraphics(name, game);
+		}
+
 		/// <summary>
 		/// Starts playing a music. The music file must be in the "music" folder.
 		/// </summary>

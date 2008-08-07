@@ -1,0 +1,34 @@
+
+function Battle(enemyParty)
+  local screen = Screen()
+  
+  local bg = ImageGraphics("Bg1")
+  screen:Place(0, 0, bg)
+  
+  for i, char in ipairs(PlayerParty) do
+    char.gfx:State("still")
+    char.gfx:Direction("left")
+    screen:Place(screenWidth - char.gfx.width - 100, screenHeight / 2 + (i-1) * 70, char.gfx)
+  end
+  
+  for i, char in ipairs(enemyParty) do
+    char.gfx:State("still")
+    char.gfx:Direction("right")
+    screen:Place(100, screenHeight / 2 + (i-1) * 70, char.gfx)
+  end
+  
+  local retVal = false
+  screen:OnKeyPress(function(key)
+    if key:IsPressed(btnAction) then
+      retVal = true
+      screen:Hide()
+    elseif key:IsPressed(btnBack) then
+      retVal = false
+      screen:Hide()
+    end
+  end)
+  
+  screen:Show()
+  
+  return retVal
+end

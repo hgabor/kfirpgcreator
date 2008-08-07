@@ -1,1 +1,18 @@
-Message("Hey! Watch your step!")
+if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Please, spare me!") == 1 then
+  local enemy = Character()
+  enemy.Name = "Sticky"
+  enemy.MaxHp = 5
+  enemy.Attack = 10
+  enemy.AttackDelta = 2
+  enemy.Defense = 5
+  enemy.gfx = AnimatedGraphics("stickman")
+  
+  local party = { enemy }
+  if Battle(party) then
+    Message("Don't think you defeated me, it was just a warm up!")
+  else
+    Message("You're a wimp!")
+  end
+else
+  Message("I'm not surprised you're such a sissy!")
+end

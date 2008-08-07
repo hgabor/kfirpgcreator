@@ -57,3 +57,23 @@ MenuItemBackground = class(function(self, width, height)
   self.width = width
   self.height = height
 end)
+
+AnimatedGraphics = class(function(self, name)
+  self.handle = AnimatedGraphics_New(name)
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
+end)
+
+function AnimatedGraphics:State(newState)
+  AnimatedGraphics_SetState(self.handle, newState)
+end
+
+function AnimatedGraphics:Direction(newDir)
+  AnimatedGraphics_SetDir(self.handle, newDir)
+end
+
+ImageGraphics = class(function(self, name)
+  self.handle = ImageGraphics_New(name)
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
+end)

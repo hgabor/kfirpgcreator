@@ -82,6 +82,7 @@
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="FilePropertyReader.cs" />
     <Compile Include="Graphics.cs" />
+    <Compile Include="ImageGraphics.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LuaScript.cs">
       <SubType>Code</SubType>

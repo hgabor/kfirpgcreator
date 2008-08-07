@@ -12,6 +12,8 @@ function Message(msg)
   screen:Show()
 end
 
+local referenceHeight = TextGraphics("test").height
+
 function Ask(msg, ...)
   if arg.n == 0 then
     Message(msg)
@@ -29,17 +31,17 @@ function Ask(msg, ...)
   end
   local selectedFrame = MenuItemBackground(answers[1].width+10, answers[1].height+10)
   
-  local window = WindowGraphics(text.width-1, text.height + 2*sumHeight)
+  local window = WindowGraphics(text.width-1, text.height + sumHeight + arg.n*referenceHeight)
   
   local x = (screenWidth - text.width) / 2
   local y = (screenHeight - text.height - sumHeight) / 2
   
   screen:Place(x, y, window)
   screen:Place(x, y, text)
-  screen:Place(x-5, y+sumHeight-5, selectedFrame)
+  screen:Place(x-5, y+text.height+referenceHeight-5, selectedFrame)
   
   for i, value in ipairs(answers) do
-    y = y + sumHeight
+    y = y + value.height + referenceHeight
     screen:Place(x, y, value)
     value.y = y
   end
