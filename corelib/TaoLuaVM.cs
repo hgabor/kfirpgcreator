@@ -158,6 +158,7 @@ namespace KFIRPG.corelib {
 				List<object> paramList = new List<object>();
 				ParameterInfo[] paramInfos = method.GetParameters();
 				int paramCount = Lua.lua_gettop(state);
+				if (paramInfos.Length != paramCount) throw new Error("Parameter count does not match!");
 				for (int i = 0; i < paramCount; ++i) {
 					if (paramInfos[i].ParameterType == typeof(int)) {
 						paramList.Add(Convert.ToInt32(Pop(state)));
@@ -168,12 +169,7 @@ namespace KFIRPG.corelib {
 				}
 				paramList.Reverse();
 				object returnValue;
-				try {
-					returnValue = method.Invoke(self, paramList.ToArray());
-				}
-				catch (TargetParameterCountException ex) {
-					throw new Error("Parameter count does not match!", ex);
-				}
+				returnValue = method.Invoke(self, paramList.ToArray());
 
 				if (method.ReturnType == typeof(void)) return 0;
 				else {
