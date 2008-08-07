@@ -47,7 +47,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public override int Height {
-			get { return Height; }
+			get { return height; }
 		}
 
 		private void LoadSpriteSheet(string sheetName, Game game) {
