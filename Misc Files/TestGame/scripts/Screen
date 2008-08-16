@@ -77,3 +77,18 @@ ImageGraphics = class(function(self, name)
   self.width = Graphics_GetWidth(self.handle)
   self.height = Graphics_GetHeight(self.handle)
 end)
+
+CounterBarGraphics = class(function(self, color, border, width, height)
+  self.handle = CounterBarGraphics_New(color, border, width, height)
+  self.width = width
+  self.height = height
+end)
+
+function CounterBarGraphics:Value(value)
+  CounterBarGraphics_SetValue(self.handle, value)
+end
+
+function CounterBarGraphics:MaxValue(value)
+  CounterBarGraphics_SetMaxValue(self.handle, value)
+end
+

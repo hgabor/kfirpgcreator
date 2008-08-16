@@ -100,6 +100,32 @@ namespace KFIRPG.corelib {
 			return new ImageGraphics(name, game);
 		}
 
+		[Script]
+		public int RGB(int r, int g, int b) {
+			return System.Drawing.Color.FromArgb(r, g, b).ToArgb();
+		}
+		[Script]
+		public int ARGB(int a, int r, int g, int b) {
+			return System.Drawing.Color.FromArgb(a, r, g, b).ToArgb();
+		}
+
+		[Script]
+		public CounterBarGraphics CounterBarGraphics_New(int bg, int border, int height, int width) {
+			return new CounterBarGraphics(
+				System.Drawing.Color.FromArgb(bg),
+				System.Drawing.Color.FromArgb(border),
+				height, width);
+		}
+
+		[Script]
+		public void CounterBarGraphics_SetValue(CounterBarGraphics cbg, int val) {
+			cbg.Value = val;
+		}
+		[Script]
+		public void CounterBarGraphics_SetMaxValue(CounterBarGraphics cbg, int maxval) {
+			cbg.MaxValue = maxval;
+		}
+
 		/// <summary>
 		/// Starts playing a music. The music file must be in the "music" folder.
 		/// </summary>

@@ -1,14 +1,27 @@
 
+local actAttack = 1;
+local actRunaway = 2;
+
+local function ComputerAction()
+  return actAttack, 1;
+end
+
 function Battle(enemyParty)
   local screen = Screen()
   
   local bg = ImageGraphics("Bg1")
   screen:Place(0, 0, bg)
   
+  local hpBars = {}
+  
   for i, char in ipairs(PlayerParty) do
     char.gfx:State("still")
     char.gfx:Direction("left")
     screen:Place(screenWidth - char.gfx.width - 100, screenHeight / 2 + (i-1) * 70, char.gfx)
+    hpBars[i] = CounterBarGraphics(RGB(255,0,0), RGB(255,255,255), 100, 10)
+    hpBars[i]:MaxValue(char.MaxHp)
+    hpBars[i]:Value(char.Hp)
+    screen:Place(20 + (i-1)*120, 20, hpBars[i])
   end
   
   for i, char in ipairs(enemyParty) do
@@ -20,9 +33,41 @@ function Battle(enemyParty)
   local retVal = false
   screen:OnKeyPress(function(key)
     if key:IsPressed(btnAction) then
-      retVal = true
-      screen:Hide()
+      --Player attacks
+      for i, char in ipairs(PlayerParty) do
+        WriteLine(char.Name .. " attacks")
+        local action, target = actAttack, 1
+        Attack(char, enemyParty[target])
+        WriteLine(enemyParty[target].Name .. ": " .. enemyParty[target].Hp .. " HP")
+        if (enemyParty[target].Hp == 0) then
+          WriteLine(char.Name .. " wins")
+          --victory
+          retVal = true
+          screen:Hide()
+          return
+        end
+      end
+      
+      --Computer Attacks
+      for i, char in ipairs(enemyParty) do
+        WriteLine(char.Name .. " attacks")
+        local action, target = ComputerAction()
+        Attack(char, PlayerParty[target])
+        WriteLine(PlayerParty[target].Name .. ": " .. PlayerParty[target].Hp .. " HP")
+        hpBars[target]:Value(char.Hp)
+        if (PlayerParty[target].Hp == 0) then
+          WriteLine(char.Name .. " loses")
+          --defeat
+          retVal = false
+          screen:Hide()
+          return
+        end
+      end
+      
+      --Next Round
+      
     elseif key:IsPressed(btnBack) then
+      --RunAway
       retVal = false
       screen:Hide()
     end

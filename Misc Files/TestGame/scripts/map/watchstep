@@ -1,7 +1,8 @@
 if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Please, spare me!") == 1 then
   local enemy = Character()
   enemy.Name = "Sticky"
-  enemy.MaxHp = 5
+  enemy.MaxHp = 30
+  enemy.Hp = 30
   enemy.Attack = 10
   enemy.AttackDelta = 2
   enemy.Defense = 5

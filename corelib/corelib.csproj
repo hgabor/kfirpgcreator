@@ -77,6 +77,7 @@
     <Compile Include="AnimatedGraphics.cs" />
     <Compile Include="Audio.cs" />
     <Compile Include="CachedLoader.cs" />
+    <Compile Include="CounterBarGraphics.cs" />
     <Compile Include="CustomScreen.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />

@@ -4,7 +4,8 @@ include("Battle")
 
 local char = Character()
 char.Name = "Bigsticky"
-char.MaxHp = 10
+char.MaxHp = 30
+char.Hp = char.MaxHp
 char.Attack = 10
 char.AttackDelta = 2
 char.Defense = 5
