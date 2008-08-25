@@ -37,15 +37,11 @@ namespace KFIRPG.editor {
 			InitializeComponent();
 		}
 
+		BindingList<KeyValuePair<string, byte[]>> musicList;
 		internal new void Load(Project project) {
-			this.list.Items.Clear();
-			string[] list = project.loader.LoadText("music.list").Split('\n');
-			foreach (string itemName in list) {
-				if (itemName.Trim() == "") continue;
-				Audio item = new Audio();
-				item.InnerName = itemName.Trim();
-				this.list.Items.Add(item);
-			}
+			musicList = new BindingList<KeyValuePair<string, byte[]>>(new ListDictionaryAdapter<string, byte[]>(project.musics));
+			this.list.DisplayMember = "Key";
+			this.list.DataSource = musicList;
 		}
 	}
 }

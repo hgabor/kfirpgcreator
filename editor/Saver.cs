@@ -6,6 +6,7 @@ namespace KFIRPG.editor {
 	interface Saver {
 		void Save(string path, System.Drawing.Bitmap bitmap);
 		void Save(string path, string text);
+		void Save(string path, byte[] raw);
 
 		PropertyWriter CreatePropertyFile(string path);
 
