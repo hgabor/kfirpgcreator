@@ -128,6 +128,7 @@ namespace KFIRPG.editor {
 
 		private void EnableControls() {
 			saveProjectToolStripMenuItem.Enabled = true;
+			saveProjectAsToolStripMenuItem.Enabled = true;
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
@@ -280,10 +281,11 @@ namespace KFIRPG.editor {
 		}
 
 		private void Save() {
-			if (this.savePath == null) throw new Exception("Save path is not set!");
+			if (this.savePath == null && !SetSaveLocation()) {
+				return;
+			}
 			Saver saver = new FileSaver(this.savePath);
-
-			currentProject.Save(saver);
+			this.currentProject.Save(saver);
 		}
 
 		private bool SetSaveLocation() {
@@ -369,6 +371,12 @@ namespace KFIRPG.editor {
 
 		private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) {
 			Save();
+		}
+
+		private void saveProjectAsToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (SetSaveLocation()) {
+				Save();
+			}
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
