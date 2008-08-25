@@ -37,6 +37,10 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		public void Remove(Graphics gfx) {
+			graphics.RemoveAll(sgfx => sgfx.graphics == gfx);
+		}
+
 		bool hide = false;
 		internal void Hide() {
 			hide = true;

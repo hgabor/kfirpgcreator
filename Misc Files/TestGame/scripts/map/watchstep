@@ -1,14 +1,23 @@
 if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Please, spare me!") == 1 then
   local enemy = Character()
-  enemy.Name = "Sticky"
-  enemy.MaxHp = 30
-  enemy.Hp = 30
-  enemy.Attack = 10
+  enemy.Name = "Sticky1"
+  enemy.MaxHp = 10
+  enemy.Hp = 10
+  enemy.Attack = 6
   enemy.AttackDelta = 2
   enemy.Defense = 5
   enemy.gfx = AnimatedGraphics("stickman")
+
+  local enemy2 = Character()
+  enemy2.Name = "Sticky2"
+  enemy2.MaxHp = 10
+  enemy2.Hp = 10
+  enemy2.Attack = 6
+  enemy2.AttackDelta = 2
+  enemy2.Defense = 5
+  enemy2.gfx = AnimatedGraphics("stickman")
   
-  local party = { enemy }
+  local party = { enemy, enemy2 }
   if Battle(party) then
     Message("Don't think you defeated me, it was just a warm up!")
   else

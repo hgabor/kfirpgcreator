@@ -31,6 +31,10 @@ namespace KFIRPG.corelib {
 		public void CustomScreen_Place(CustomScreen screen, int x, int y, Graphics gfx) {
 			screen.Place(gfx, new System.Drawing.Point(x, y));
 		}
+		[Script]
+		public void CustomScreen_Remove(CustomScreen screen, Graphics gfx) {
+			screen.Remove(gfx);
+		}
 		[BlockingScript]
 		public void CustomScreen_Show(CustomScreen screen) {
 			FadeAnimation anim = new FadeAnimation(game);

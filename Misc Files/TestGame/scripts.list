@@ -8,3 +8,9 @@ map/door
 map/innkeepernorooms
 startup
 map/watchstep
+battle
+Character
+class
+message
+screen
+sprite

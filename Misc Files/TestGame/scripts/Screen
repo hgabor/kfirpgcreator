@@ -27,6 +27,10 @@ function Screen:Place(x, y, gfx)
   CustomScreen_Place(self.handle, x, y, gfx.handle)
 end
 
+function Screen:Remove(gfx)
+  CustomScreen_Remove(self.handle, gfx.handle)
+end
+
 function Screen:Show()
   CustomScreen_Show(self.handle)
 end
