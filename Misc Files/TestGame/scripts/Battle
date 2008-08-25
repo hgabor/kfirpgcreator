@@ -126,7 +126,7 @@ function Battle(enemyParty)
           local action, target = ComputerAction()
           Attack(char, PlayerParty[target])
           WriteLine(PlayerParty[target].Name .. ": " .. PlayerParty[target].Hp .. " HP")
-          hpBars[target]:Value(char.Hp)
+          hpBars[target]:Value(PlayerParty[target].Hp)
           if (PlayerParty[target].Hp == 0) then
             --enemy is killed
             WriteLine(PlayerParty[target].Name .. " is killed!")
