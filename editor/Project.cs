@@ -29,6 +29,11 @@ namespace KFIRPG.editor {
 		public int startY;
 		public int startLayer;
 
+		byte[] fontFile;
+		string fontFileName;
+		byte[] windowBorderFile;
+		string dialogFile;
+
 		public Project() { }
 
 		private Project(KFIRPG.corelib.Loader loader) {
@@ -93,6 +98,12 @@ namespace KFIRPG.editor {
 				string mapName = loc.GetString("map");
 				maps[mapName].layers[l].tiles[x, y].locationName = locName;
 			}
+
+			//All the stuff we don't deal with yet
+			windowBorderFile = loader.LoadRaw("dialog/windowborder.png");
+			dialogFile = loader.LoadText("dialog/dialog.xml");
+			fontFileName = loader.GetPropertyReader().Select("dialog/dialog.xml").GetString("font");
+			fontFile = loader.LoadRaw("dialog/" + fontFileName);
 		}
 
 		public static Project FromFiles(string path) {
@@ -268,6 +279,11 @@ namespace KFIRPG.editor {
 				saver.Save("music/" + musicKvp.Key, musicKvp.Value);
 			}
 			saver.Save("music.list", string.Join("\n", musicList.ToArray()));
+
+			//All the stuff we don't deal with yet
+			saver.Save("dialog/windowborder.png", windowBorderFile);
+			saver.Save("dialog/dialog.xml", dialogFile);
+			saver.Save("dialog/" + fontFileName, fontFile);
 
 			saver.SavePropertyFiles();
 		}
