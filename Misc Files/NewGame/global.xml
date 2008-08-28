@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<global>
+  <scriptvm>taolua</scriptvm>
+  <startscript>startup</startscript>
+  <defaultmap>map1</defaultmap>
+  <tilesize>32</tilesize>
+  <startx>0</startx>
+  <starty>0</starty>
+  <startl>1</startl>
+  <screenwidth>640</screenwidth>
+  <screenheight>480</screenheight>
+  <party>
+    <character>bigsticky</character>
+  </party>
+  <locations />
+</global>

@@ -185,7 +185,6 @@ namespace KFIRPG.editor {
 		private new bool Load() {
 			try {
 				currentProject = Project.FromFiles(savePath);
-
 			}
 			catch (Project.LoadException) {
 				MessageBox.Show(this, "The selected folder is not a project, or it is corrupted.", "Invalid folder");
@@ -273,8 +272,6 @@ namespace KFIRPG.editor {
 				ChangeCurrentMap((string)mapComboBox.SelectedItem);
 			};
 
-			mru.Add(savePath);
-			RecreateMRUList();
 			EnableControls();
 			mainPanel.Invalidate();
 			return true;
@@ -376,6 +373,8 @@ namespace KFIRPG.editor {
 		private void saveProjectAsToolStripMenuItem_Click(object sender, EventArgs e) {
 			if (SetSaveLocation()) {
 				Save();
+				mru.Add(savePath);
+				RecreateMRUList();
 			}
 		}
 
@@ -404,9 +403,17 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		private void newProjectToolStripMenuItem_Click(object sender, EventArgs e) {
+			savePath = "NewGame";
+			Load();
+			savePath = null;
+		}
+
 		private void loadProjectToolStripMenuItem_Click(object sender, EventArgs e) {
 			if (SetSaveLocation()) {
 				Load();
+				mru.Add(savePath);
+				RecreateMRUList();
 			}
 		}
 

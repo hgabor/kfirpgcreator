@@ -1,0 +1,98 @@
+include("class")
+include("luabit/bit.lua")
+
+-- Mimics the UserInput.Buttons enum
+btnNone = 0
+btnDown = 1
+btnUp = 2
+btnLeft = 4
+btnRight = 8
+btnAction = 16
+btnBack = 32
+
+ButtonState = class(function(self, state)
+  self.state = state
+end)
+
+function ButtonState:IsPressed(btn, state)
+  return (bit.band(btn, self.state) == btn)
+end
+
+
+Screen = class(function(self)
+  self.handle = CustomScreen_New()
+end)
+
+function Screen:Place(x, y, gfx)
+  CustomScreen_Place(self.handle, x, y, gfx.handle)
+end
+
+function Screen:Remove(gfx)
+  CustomScreen_Remove(self.handle, gfx.handle)
+end
+
+function Screen:Show()
+  CustomScreen_Show(self.handle)
+end
+
+function Screen:Hide()
+  CustomScreen_Hide(self.handle)
+end
+
+function Screen:OnKeyPress(func)
+  CustomScreen_OnKey_Add(self.handle, function(state) func(ButtonState(state)) end)
+end
+
+
+TextGraphics = class(function(self, msg, align)
+  self.handle = TextGraphics_New(msg, align or "center")
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
+end)
+
+WindowGraphics = class(function(self, width, height)
+  self.handle = WindowGraphics_New(width, height)
+  self.width = width
+  self.height = height
+end)
+
+MenuItemBackground = class(function(self, width, height)
+  self.handle = MenuItemBackground_New(width, height)
+  self.width = width
+  self.height = height
+end)
+
+AnimatedGraphics = class(function(self, name)
+  self.handle = AnimatedGraphics_New(name)
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
+end)
+
+function AnimatedGraphics:State(newState)
+  AnimatedGraphics_SetState(self.handle, newState)
+end
+
+function AnimatedGraphics:Direction(newDir)
+  AnimatedGraphics_SetDir(self.handle, newDir)
+end
+
+ImageGraphics = class(function(self, name)
+  self.handle = ImageGraphics_New(name)
+  self.width = Graphics_GetWidth(self.handle)
+  self.height = Graphics_GetHeight(self.handle)
+end)
+
+CounterBarGraphics = class(function(self, color, border, width, height)
+  self.handle = CounterBarGraphics_New(color, border, width, height)
+  self.width = width
+  self.height = height
+end)
+
+function CounterBarGraphics:Value(value)
+  CounterBarGraphics_SetValue(self.handle, value)
+end
+
+function CounterBarGraphics:MaxValue(value)
+  CounterBarGraphics_SetMaxValue(self.handle, value)
+end
+

@@ -1,0 +1,16 @@
+local rand = math.random(1000)
+
+if rand < 5 then
+  rand = math.random(1000)
+  if (rand < 250) then
+    return "up"
+  elseif (rand < 500) then
+    return "down"
+  elseif (rand < 750) then
+    return "left"
+  else
+    return "right"
+  end
+else
+  return
+end
