@@ -60,6 +60,9 @@ namespace KFIRPG.corelib {
 
 			PushScreen(new MapScreen(this));
 
+			vm["screenWidth"] = width;
+			vm["screenHeight"] = height;
+
 			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("startscript")));
 			startupScript.Run();
 		}

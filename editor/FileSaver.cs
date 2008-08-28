@@ -37,6 +37,11 @@ namespace KFIRPG.editor {
 			File.WriteAllText(Path.Combine(this.path, path), text);
 		}
 
+		public void Save(string path, byte[] raw) {
+			CreateDir(path);
+			File.WriteAllBytes(Path.Combine(this.path, path), raw);
+		}
+
 		private Dictionary<string, XmlDocument> docs = new Dictionary<string, XmlDocument>();
 		public PropertyWriter CreatePropertyFile(string path) {
 			XmlDocument doc = new XmlDocument();

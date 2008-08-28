@@ -14,6 +14,7 @@ namespace KFIRPG.editor {
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 		public Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
+		public Dictionary<string, byte[]> musics = new Dictionary<string, byte[]>();
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;
@@ -27,6 +28,11 @@ namespace KFIRPG.editor {
 		public int startX;
 		public int startY;
 		public int startLayer;
+
+		byte[] fontFile;
+		string fontFileName;
+		byte[] windowBorderFile;
+		string dialogFile;
 
 		public Project() { }
 
@@ -72,6 +78,12 @@ namespace KFIRPG.editor {
 				scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
 			}
 
+			foreach (string strMusic in loader.LoadText("music.list").Split('\n')) {
+				string music = strMusic.Trim();
+				if (music == "") continue;
+				musics.Add(music, loader.LoadRaw("music/" + music));
+			}
+
 			startX = global.GetInt("startx");
 			startY = global.GetInt("starty");
 			startLayer = global.GetInt("startl");
@@ -86,6 +98,12 @@ namespace KFIRPG.editor {
 				string mapName = loc.GetString("map");
 				maps[mapName].layers[l].tiles[x, y].locationName = locName;
 			}
+
+			//All the stuff we don't deal with yet
+			windowBorderFile = loader.LoadRaw("dialog/windowborder.png");
+			dialogFile = loader.LoadText("dialog/dialog.xml");
+			fontFileName = loader.GetPropertyReader().Select("dialog/dialog.xml").GetString("font");
+			fontFile = loader.LoadRaw("dialog/" + fontFileName);
 		}
 
 		public static Project FromFiles(string path) {
@@ -254,6 +272,18 @@ namespace KFIRPG.editor {
 			}
 			saver.Save("animations.list", string.Join("\n", animationList.ToArray()));
 
+			//Musics
+			List<string> musicList = new List<string>();
+			foreach (var musicKvp in musics) {
+				musicList.Add(musicKvp.Key);
+				saver.Save("music/" + musicKvp.Key, musicKvp.Value);
+			}
+			saver.Save("music.list", string.Join("\n", musicList.ToArray()));
+
+			//All the stuff we don't deal with yet
+			saver.Save("dialog/windowborder.png", windowBorderFile);
+			saver.Save("dialog/dialog.xml", dialogFile);
+			saver.Save("dialog/" + fontFileName, fontFile);
 
 			saver.SavePropertyFiles();
 		}

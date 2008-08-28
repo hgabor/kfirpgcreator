@@ -23,68 +23,111 @@ namespace KFIRPG.corelib {
 		Game game;
 		Random random = new Random();
 
-		/// <summary>
-		/// Shows a message.
-		/// </summary>
-		/// <param name="message"></param>
+		[Script]
+		public CustomScreen CustomScreen_New() {
+			return new CustomScreen(game);
+		}
+		[Script]
+		public void CustomScreen_Place(CustomScreen screen, int x, int y, Graphics gfx) {
+			screen.Place(gfx, new System.Drawing.Point(x, y));
+		}
+		[Script]
+		public void CustomScreen_Remove(CustomScreen screen, Graphics gfx) {
+			screen.Remove(gfx);
+		}
 		[BlockingScript]
-		public void Message(string message) {
-			//dialogs.Message(message);
+		public void CustomScreen_Show(CustomScreen screen) {
 			FadeAnimation anim = new FadeAnimation(game);
 			anim.FromImage = game.TakeScreenshot();
-			Form form = new Form(dialogs, game);
-			Form.Menu menu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics text = new TextGraphics(message, TextGraphics.Align.Center, dialogs, game);
-			text.Location = new System.Drawing.Point(10, 10);
-			menu.Add(text);
-			form.AddPanel("message", menu);
-			game.PushScreen(form);
+			game.PushScreen(screen);
 			game.PushScreen(anim);
 		}
-
-		/// <summary>
-		/// Shows a message, and lets the user select one of the two answers.
-		/// </summary>
-		/// <param name="question"></param>
-		/// <param name="param1"></param>
-		/// <param name="param2"></param>
-		[BlockingScript]
-		public void Ask(string question, string param1, string param2) {
-			Ask(question, new string[] { param1, param2 });
+		[Script]
+		public void CustomScreen_Hide(CustomScreen screen) {
+			screen.Hide();
+		}
+		[Script]
+		public void CustomScreen_OnKey_Add(CustomScreen screen, ScriptFunction script) {
+			screen.KeyPressed += (sender, args) => script.Run((int)args.Button);
+		}
+		[Script]
+		public void CustomScreen_Delete() {
+			//No-op for now...
 		}
 
-		/// <summary>
-		/// Shows a message, and lets the user select one of the possible answers.
-		/// </summary>
-		/// <param name="question"></param>
-		/// <param name="answers"></param>
-		public void Ask(string question, params string[] answers) {
-			FadeAnimation anim = new FadeAnimation(game);
-			anim.FromImage = game.TakeScreenshot();
-			Form form = new Form(dialogs, game);
-			Form.Menu qmenu = new Form.Menu(10, 10, 500, 300, form);
-			TextGraphics qtext = new TextGraphics(question, TextGraphics.Align.Center, dialogs, game);
-			qtext.Location = new System.Drawing.Point(10, 10);
-			qmenu.Add(qtext);
-			form.AddPanel("message", qmenu);
+		[Script]
+		public TextGraphics TextGraphics_New(string text, string align) {
+			return new TextGraphics(
+				text,
+				(TextGraphics.Align)Enum.Parse(typeof(TextGraphics.Align), align, true),
+				dialogs,
+				game);
+		}
 
-			int i = 0;
-			int position = 220;
-			foreach (string answer in answers) {
-				TextGraphics stext = new TextGraphics(answer, TextGraphics.Align.Left, dialogs, game);
-				stext.Location = new System.Drawing.Point(0, 0);
-				Form.Item aitem = new Form.Item(10 + dialogs.Border, position, 500 - 2 * dialogs.Border, stext.Height + 2 * dialogs.Border, form);
-				aitem.Add(stext);
-				++i;
-				int j = i;
-				aitem.Selected += (sender, args) => {
-					form.ReturnValue = j;
-				};
-				qmenu.AddMenuItem(aitem);
-				position += stext.Height + 2 * dialogs.Border;
-			}
-			game.PushScreen(form);
-			game.PushScreen(anim);
+		[Script]
+		public int Graphics_GetWidth(Graphics graphics) {
+			return graphics.Width;
+		}
+
+		[Script]
+		public int Graphics_GetHeight(Graphics graphics) {
+			return graphics.Height;
+		}
+
+		[Script]
+		public WindowGraphics WindowGraphics_New(int width, int height) {
+			return new WindowGraphics(width, height, dialogs);
+		}
+
+		[Script]
+		public PanelGraphics MenuItemBackground_New(int width, int height) {
+			return new PanelGraphics(width, height, dialogs.selectedBg, dialogs.selectedBorder);
+		}
+
+		[Script]
+		public AnimatedGraphics AnimatedGraphics_New(string name) {
+			return new AnimatedGraphics(name, game);
+		}
+
+		[Script]
+		public void AnimatedGraphics_SetState(AnimatedGraphics gfx, string state) {
+			gfx.SetState(state);
+		}
+
+		[Script]
+		public void AnimatedGraphics_SetDir(AnimatedGraphics gfx, string dir) {
+			gfx.SetDirection((Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), dir, true));
+		}
+
+		[Script]
+		public ImageGraphics ImageGraphics_New(string name) {
+			return new ImageGraphics(name, game);
+		}
+
+		[Script]
+		public int RGB(int r, int g, int b) {
+			return System.Drawing.Color.FromArgb(r, g, b).ToArgb();
+		}
+		[Script]
+		public int ARGB(int a, int r, int g, int b) {
+			return System.Drawing.Color.FromArgb(a, r, g, b).ToArgb();
+		}
+
+		[Script]
+		public CounterBarGraphics CounterBarGraphics_New(int bg, int border, int height, int width) {
+			return new CounterBarGraphics(
+				System.Drawing.Color.FromArgb(bg),
+				System.Drawing.Color.FromArgb(border),
+				height, width);
+		}
+
+		[Script]
+		public void CounterBarGraphics_SetValue(CounterBarGraphics cbg, int val) {
+			cbg.Value = val;
+		}
+		[Script]
+		public void CounterBarGraphics_SetMaxValue(CounterBarGraphics cbg, int maxval) {
+			cbg.MaxValue = maxval;
 		}
 
 		/// <summary>

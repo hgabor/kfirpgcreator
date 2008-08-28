@@ -54,9 +54,10 @@
 			this.locationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.onstepMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.onActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.onCollideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-			this.onCollideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveProjectAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -81,6 +82,7 @@
             this.newProjectToolStripMenuItem,
             this.loadProjectToolStripMenuItem,
             this.saveProjectToolStripMenuItem,
+            this.saveProjectAsToolStripMenuItem,
             this.mruToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
@@ -92,15 +94,15 @@
 			// 
 			this.newProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white;
 			this.newProjectToolStripMenuItem.Name = "newProjectToolStripMenuItem";
-			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-			this.newProjectToolStripMenuItem.Text = "New project...";
+			this.newProjectToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.newProjectToolStripMenuItem.Text = "New Project...";
 			// 
 			// loadProjectToolStripMenuItem
 			// 
 			this.loadProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.folder;
 			this.loadProjectToolStripMenuItem.Name = "loadProjectToolStripMenuItem";
-			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-			this.loadProjectToolStripMenuItem.Text = "Load project...";
+			this.loadProjectToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.loadProjectToolStripMenuItem.Text = "Load Project...";
 			this.loadProjectToolStripMenuItem.Click += new System.EventHandler(this.loadProjectToolStripMenuItem_Click);
 			// 
 			// saveProjectToolStripMenuItem
@@ -108,26 +110,26 @@
 			this.saveProjectToolStripMenuItem.Enabled = false;
 			this.saveProjectToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.disk;
 			this.saveProjectToolStripMenuItem.Name = "saveProjectToolStripMenuItem";
-			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-			this.saveProjectToolStripMenuItem.Text = "Save project";
+			this.saveProjectToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.saveProjectToolStripMenuItem.Text = "Save Project";
 			this.saveProjectToolStripMenuItem.Click += new System.EventHandler(this.saveProjectToolStripMenuItem_Click);
 			// 
 			// mruToolStripMenuItem
 			// 
 			this.mruToolStripMenuItem.Name = "mruToolStripMenuItem";
-			this.mruToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-			this.mruToolStripMenuItem.Text = "Recent projects";
+			this.mruToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.mruToolStripMenuItem.Text = "Recent Projects";
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(146, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.door;
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -280,6 +282,10 @@
 			this.statusStrip.TabIndex = 3;
 			this.statusStrip.Text = "statusStrip1";
 			// 
+			// folderDialog
+			// 
+			this.folderDialog.Description = "Select the location of the game";
+			// 
 			// contextMenu
 			// 
 			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -289,7 +295,7 @@
             this.onCollideToolStripMenuItem,
             this.movementScriptToolStripMenuItem});
 			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(162, 136);
+			this.contextMenu.Size = new System.Drawing.Size(162, 114);
 			this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
 			// 
 			// locationMenuItem
@@ -315,6 +321,14 @@
 			this.onActionToolStripMenuItem.Text = "OnAction...";
 			this.onActionToolStripMenuItem.Click += new System.EventHandler(this.onActionToolStripMenuItem_Click);
 			// 
+			// onCollideToolStripMenuItem
+			// 
+			this.onCollideToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
+			this.onCollideToolStripMenuItem.Name = "onCollideToolStripMenuItem";
+			this.onCollideToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.onCollideToolStripMenuItem.Text = "OnCollide...";
+			this.onCollideToolStripMenuItem.Click += new System.EventHandler(this.onCollideToolStripMenuItem_Click);
+			// 
 			// movementScriptToolStripMenuItem
 			// 
 			this.movementScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
@@ -333,13 +347,14 @@
 			this.dockPanel.Size = new System.Drawing.Size(499, 349);
 			this.dockPanel.TabIndex = 5;
 			// 
-			// onCollideToolStripMenuItem
+			// saveProjectAsToolStripMenuItem
 			// 
-			this.onCollideToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.lightning;
-			this.onCollideToolStripMenuItem.Name = "onCollideToolStripMenuItem";
-			this.onCollideToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-			this.onCollideToolStripMenuItem.Text = "OnCollide...";
-			this.onCollideToolStripMenuItem.Click += new System.EventHandler(this.onCollideToolStripMenuItem_Click);
+			this.saveProjectAsToolStripMenuItem.Enabled = false;
+			this.saveProjectAsToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.disk;
+			this.saveProjectAsToolStripMenuItem.Name = "saveProjectAsToolStripMenuItem";
+			this.saveProjectAsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.saveProjectAsToolStripMenuItem.Text = "Save Project As...";
+			this.saveProjectAsToolStripMenuItem.Click += new System.EventHandler(this.saveProjectAsToolStripMenuItem_Click);
 			// 
 			// EditorForm
 			// 
@@ -400,5 +415,6 @@
 		private System.Windows.Forms.ToolStripMenuItem animationLibraryToolStripMenuItem;
 		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
 		private System.Windows.Forms.ToolStripMenuItem onCollideToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem saveProjectAsToolStripMenuItem;
 	}
 }

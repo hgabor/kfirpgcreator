@@ -6,7 +6,7 @@ using SdlDotNet.Graphics;
 
 namespace KFIRPG.corelib {
 	class Dialogs {
-		Surface surface;
+		public Surface surface;
 		public readonly Color bgColor;
 		public readonly Color selectedBorder;
 		public readonly Color selectedBg;

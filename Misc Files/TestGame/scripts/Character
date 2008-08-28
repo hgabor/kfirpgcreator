@@ -1,0 +1,30 @@
+
+--[[
+Required members:
+Name
+MaxHp
+Hp
+//MaxMana
+//Mana
+Attack
+AttackDelta
+Defense
+
+Optional members:
+//CurrentHp
+//CurrentMana
+
+--]]
+
+Character = class(function(self)
+end)
+
+function Attack(self, other)
+  local damage = math.random(self.Attack - self.AttackDelta, self.Attack + self.AttackDelta + 1) - other.Defense
+  if damage <= 0 then
+    return
+  else
+    other.Hp = other.Hp - damage
+    if (other.Hp <= 0) then other.Hp = 0 end
+  end
+end

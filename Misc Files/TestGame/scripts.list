@@ -8,3 +8,9 @@ map/door
 map/innkeepernorooms
 startup
 map/watchstep
+Battle
+Character
+class
+Message
+screen
+luabit/bit.lua

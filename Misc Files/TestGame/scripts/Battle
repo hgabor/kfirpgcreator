@@ -1,0 +1,172 @@
+
+local actAttack = 1;
+local actRunaway = 2;
+
+local function ComputerAction()
+  return actAttack, 1;
+end
+
+function Battle(enemyParty)
+  local screen = Screen()
+  
+  local bg = ImageGraphics("Bg1")
+  screen:Place(0, 0, bg)
+  
+  local hpBars = {}
+  
+  for i, char in ipairs(PlayerParty) do
+    char.gfx:State("still")
+    char.gfx:Direction("left")
+    screen:Place(screenWidth - char.gfx.width - 100, screenHeight / 2 + (i-1) * 70, char.gfx)
+    hpBars[i] = CounterBarGraphics(RGB(255,0,0), RGB(255,255,255), 100, 10)
+    hpBars[i]:MaxValue(char.MaxHp)
+    hpBars[i]:Value(char.Hp)
+    screen:Place(20 + (i-1)*120, 20, hpBars[i])
+  end
+  
+  for i, char in ipairs(enemyParty) do
+    char.gfx:State("still")
+    char.gfx:Direction("right")
+    screen:Place(100, screenHeight / 2 + (i-1) * 70, char.gfx)
+  end
+  
+  local retVal = false
+  local selected
+  local maxSelected = #enemyParty
+  local maxPlayers = #PlayerParty
+  local selectGfx = AnimatedGraphics("arrow")
+  
+  
+  local SetSelected = function(idx)
+    for i = idx, maxSelected do
+      if enemyParty[i] ~= nil then
+        selected = i
+        screen:Place(100, screenHeight / 2 + (i-1) * 70 - 20, selectGfx)
+        return
+      end
+    end
+    for i = 1, idx-1 do
+      if enemyParty[i] ~= nil then
+        selected = i
+        screen:Place(100, screenHeight / 2 + (i-1) * 70 - 20, selectGfx)
+        return
+      end
+    end
+    error("Cannot select enemy! Enemy party is already dead!")
+  end
+  
+  local SetSelectedDown = function(idx)
+    for i = idx, 1, -1 do
+      if enemyParty[i] ~= nil then
+        selected = i
+        screen:Place(100, screenHeight / 2 + (i-1) * 70 - 20, selectGfx)
+        return
+      end
+    end
+    for i = maxSelected, idx+1, -1 do
+      if enemyParty[i] ~= nil then
+        selected = i
+        screen:Place(100, screenHeight / 2 + (i-1) * 70 - 20, selectGfx)
+        return
+      end
+    end
+    error("Cannot select enemy! Enemy party is already dead!")
+  end
+
+  
+  local NewRound = function()
+    SetSelected(1)
+  end
+  
+  local EndRound = function()
+    screen:Remove(selectGfx)
+  end
+  
+  screen:OnKeyPress(function(key)
+    if key:IsPressed(btnAction) then
+      EndRound()
+      
+      --Player attacks
+      for i = 1, maxPlayers do
+        if PlayerParty[i] ~= nil then
+          local char = PlayerParty[i]
+          WriteLine(char.Name .. " attacks")
+          local action, target = actAttack, selected
+          Attack(char, enemyParty[target])
+          WriteLine(enemyParty[target].Name .. ": " .. enemyParty[target].Hp .. " HP")
+          if (enemyParty[target].Hp == 0) then
+            --enemy is killed
+            WriteLine(enemyParty[target].Name .. " is killed!")
+            screen:Remove(enemyParty[target].gfx)
+            enemyParty[target] = nil
+            
+            local alive = false
+            for ei, echar in pairs(enemyParty) do
+              WriteLine(" -- " .. echar.Name)
+              alive = true
+              break
+            end
+            
+            if not alive then
+              WriteLine(char.Name .. " wins")
+              --victory
+              retVal = true
+              screen:Hide()
+              return
+            end
+          end
+        end
+      end
+      
+      --Computer Attacks
+      for i = 1, maxSelected do
+        if enemyParty[i] ~= nil then
+          local char = enemyParty[i]
+          WriteLine(char.Name .. " attacks")
+          local action, target = ComputerAction()
+          Attack(char, PlayerParty[target])
+          WriteLine(PlayerParty[target].Name .. ": " .. PlayerParty[target].Hp .. " HP")
+          hpBars[target]:Value(PlayerParty[target].Hp)
+          if (PlayerParty[target].Hp == 0) then
+            --enemy is killed
+            WriteLine(PlayerParty[target].Name .. " is killed!")
+            screen:Remove(PlayerParty[target].gfx)
+            PlayerParty[target] = nil
+            
+            local alive = false
+            for ei, echar in pairs(PlayerParty) do
+              alive = true
+              break
+            end
+            
+            if not alive then
+              WriteLine(char.Name .. " loses")
+              --defeat
+              retVal = false
+              screen:Hide()
+              return
+            end
+          end
+        end
+      end
+      
+      NewRound()
+      
+    elseif key:IsPressed(btnUp) then
+      SetSelectedDown(selected-1)
+    
+    elseif key:IsPressed(btnDown) then
+      SetSelected(selected+1)
+    
+    elseif key:IsPressed(btnBack) then
+      --RunAway
+      retVal = false
+      screen:Hide()
+    end
+  end)
+  
+  NewRound()
+  screen:Show()
+  
+  return retVal
+end

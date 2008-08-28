@@ -1,11 +1,28 @@
+include("Message")
+include("Character")
+include("Battle")
+
+local char = Character()
+char.Name = "Bigsticky"
+char.MaxHp = 30
+char.Hp = char.MaxHp
+char.Attack = 10
+char.AttackDelta = 2
+char.Defense = 5
+char.gfx = AnimatedGraphics("bigstickman")
+
+PlayerParty = { char }
+
 StartMusic("Canon in D Major.ogg")
+--[[
 Message("Welcome to the wonderful world of KFI!\nPress the action key to close this window. This is a really long string that should be broken into little pieces, one by one.")
 Message("You can start moving around using the arrow keys!")
 
-if Ask("Do you like tea?", "Yes", "No") == 1 then
+if Ask("Do you like tea?", "Yes", "No", "Cancel") == 1 then
   Message("Me too!")
 else
   Message("Neither do I!")
 end
 
 Message("So long, farewell!")
+--]]

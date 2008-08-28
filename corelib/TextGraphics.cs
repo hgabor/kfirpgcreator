@@ -24,11 +24,11 @@ namespace KFIRPG.corelib {
 		/// <summary>
 		/// Gets the width of the text.
 		/// </summary>
-		public int Width { get { return width; } }
+		public override int Width { get { return width; } }
 		/// <summary>
 		/// Gets the height of the text.
 		/// </summary>
-		public int Height {
+		public override int Height {
 			get {
 				return textSurfaces.Count * dialogs.TextHeight;
 			}
