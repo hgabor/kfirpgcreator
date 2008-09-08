@@ -20,6 +20,17 @@ namespace KFIRPG.corelib {
 				this.graphics = graphics;
 				this.coords = coords;
 			}
+			public virtual void Advance() { }
+		}
+		class AnimatedScreenGraphics: ScreenGraphics {
+			public AnimatedGraphics animatedGraphics;
+			public AnimatedScreenGraphics(AnimatedGraphics graphics, Point coords)
+				: base(graphics, coords) {
+				this.animatedGraphics = graphics;
+			}
+			public override void Advance() {
+				animatedGraphics.Advance();
+			}
 		}
 		List<ScreenGraphics> graphics = new List<ScreenGraphics>();
 
@@ -30,7 +41,12 @@ namespace KFIRPG.corelib {
 		public void Place(Graphics gfx, Point coords) {
 			ScreenGraphics sg = graphics.Find(s => s.graphics == gfx);
 			if (sg == null) {
-				graphics.Add(new ScreenGraphics(gfx, coords));
+				if (gfx is AnimatedGraphics) {
+					graphics.Add(new AnimatedScreenGraphics((AnimatedGraphics)gfx, coords));
+				}
+				else {
+					graphics.Add(new ScreenGraphics(gfx, coords));
+				}
 			}
 			else {
 				sg.coords = coords;
@@ -68,6 +84,9 @@ namespace KFIRPG.corelib {
 					if (KeyPressed != null) KeyPressed(this, new UserInput.ButtonEventArgs(keyState));
 				}
 				game.Input.WaitForKeyUp();
+			}
+			foreach (var gfx in graphics) {
+				gfx.Advance();
 			}
 		}
 	}
