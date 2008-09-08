@@ -20,9 +20,6 @@ namespace KFIRPG.corelib {
 
 			string scriptvm = globalSettings.GetString("scriptvm");
 			switch (scriptvm) {
-				case "lua":
-					vm = new LuaVM(this);
-					break;
 				case "taolua":
 					vm = new TaoLuaVM(this);
 					break;

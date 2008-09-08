@@ -49,10 +49,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="LuaInterface, Version=1.5.3.0, Culture=neutral, PublicKeyToken=1e1fb15b02227b8a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\LuaInterface.dll</HintPath>
-    </Reference>
     <Reference Include="SdlDotNet, Version=6.0.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Common\SdlDotNet.dll</HintPath>
@@ -85,12 +81,6 @@
     <Compile Include="Graphics.cs" />
     <Compile Include="ImageGraphics.cs" />
     <Compile Include="Location.cs" />
-    <Compile Include="LuaScript.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LuaVM.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MovementAI.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FileLoader.cs" />
