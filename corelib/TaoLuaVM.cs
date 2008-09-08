@@ -156,7 +156,11 @@ namespace KFIRPG.corelib {
 		public static Lua.lua_CFunction ToLuaFunction(MethodInfo method, object self) {
 			Lua.lua_CFunction func = state => {
 				List<object> paramList = new List<object>();
-				ParameterInfo[] paramInfos = method.GetParameters();
+
+				//The Clone() method is needed because Mono returns a reference instead of a new array,
+				//and Array.Reverse() would actually reverse the array in the MethodInfo object,
+				//wreaking havoc at the method call.
+				ParameterInfo[] paramInfos = (ParameterInfo[])method.GetParameters().Clone();
 				int paramCount = Lua.lua_gettop(state);
 				if (paramInfos.Length != paramCount) throw new Error("Parameter count does not match!");
 				Array.Reverse(paramInfos);
