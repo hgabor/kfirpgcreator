@@ -7,7 +7,7 @@ namespace KFIRPG.corelib {
 	/// Transparent graphics.
 	/// </summary>
 	class NoGraphics: Graphics {
-		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) { }
+		public override void Render(int x, int y, SdlDotNet.Graphics.Surface dest) { }
 
 		public override int Width {
 			get { return 0; }

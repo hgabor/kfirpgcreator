@@ -91,7 +91,7 @@ namespace KFIRPG.corelib {
 		}
 
 		//TODO: Candidate for optimization: two much Point creation
-		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) {
+		public override void Render(int x, int y, SdlDotNet.Graphics.Surface dest) {
 			int yLocal = 0;
 			if (align == Align.Left) {
 				foreach (Surface surf in textSurfaces) {

@@ -14,7 +14,7 @@ namespace KFIRPG.corelib {
 			this.dialogs = dialogs;
 		}
 
-		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) {
+		public override void Render(int x, int y, SdlDotNet.Graphics.Surface dest) {
 			//Code copied from Dialogs.DrawWindow
 			int Border = dialogs.Border;
 			Color bgColor = dialogs.bgColor;

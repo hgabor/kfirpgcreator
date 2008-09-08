@@ -11,10 +11,10 @@ namespace KFIRPG.corelib {
 		/// Draws the contents of a screen to the spcified surface.
 		/// </summary>
 		/// <param name="surface">The surface.</param>
-		public abstract void Draw(SdlDotNet.Graphics.Surface surface);
+		public abstract void Render(SdlDotNet.Graphics.Surface surface);
 		/// <summary>
 		/// Executes one step of logic of the screen.
 		/// </summary>
-		public abstract void Think();
+		public abstract void Advance();
 	}
 }

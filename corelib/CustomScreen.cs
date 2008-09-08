@@ -64,13 +64,13 @@ namespace KFIRPG.corelib {
 
 		public event EventHandler<UserInput.ButtonEventArgs> KeyPressed;
 
-		public override void Draw(SdlDotNet.Graphics.Surface surface) {
+		public override void Render(SdlDotNet.Graphics.Surface surface) {
 			foreach (ScreenGraphics gfx in graphics) {
-				gfx.graphics.Blit(gfx.coords.X, gfx.coords.Y, surface);
+				gfx.graphics.Render(gfx.coords.X, gfx.coords.Y, surface);
 			}
 		}
 
-		public override void Think() {
+		public override void Advance() {
 			if (hide) {
 				FadeAnimation animation = new FadeAnimation(game);
 				animation.FromImage = game.TakeScreenshot();

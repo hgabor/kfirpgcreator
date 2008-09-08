@@ -15,7 +15,7 @@ namespace KFIRPG.corelib {
 			this.border = border;
 		}
 
-		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) {
+		public override void Render(int x, int y, SdlDotNet.Graphics.Surface dest) {
 			Box box = new SdlDotNet.Graphics.Primitives.Box(new Point(x, y), size);
 			dest.Draw(box, background, false, true);
 			dest.Draw(box, border);

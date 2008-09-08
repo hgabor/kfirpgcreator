@@ -14,9 +14,9 @@ namespace KFIRPG.corelib {
 			remaining = frames;
 		}
 
-		public override void Draw(SdlDotNet.Graphics.Surface surface) { }
+		public override void Render(SdlDotNet.Graphics.Surface surface) { }
 
-		public override void Think() {
+		public override void Advance() {
 			if (--remaining == 0) {
 				game.PopScreen();
 				game.vm.ContinueWithValue(null);

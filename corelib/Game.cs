@@ -182,7 +182,7 @@ namespace KFIRPG.corelib {
 			if (currentScreenAdvancing < 0) return;
 			Input.Disable();
 			--currentScreenAdvancing;
-			screens[currentScreenAdvancing].Think();
+			screens[currentScreenAdvancing].Advance();
 			++currentScreenAdvancing;
 			if (currentScreenAdvancing == screens.Count - 1) Input.Enable();
 		}
@@ -192,7 +192,7 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		public void Advance() {
 			currentScreenAdvancing = screens.Count - 1;
-			screens[currentScreenAdvancing].Think();
+			screens[currentScreenAdvancing].Advance();
 		}
 
 		/// <summary>
@@ -201,7 +201,7 @@ namespace KFIRPG.corelib {
 		/// <param name="surface">The surface to render the game to.</param>
 		public void Render(SdlDotNet.Graphics.Surface surface) {
 			foreach (Screen screen in screens) {
-				screen.Draw(surface);
+				screen.Render(surface);
 			}
 		}
 

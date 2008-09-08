@@ -11,7 +11,7 @@ namespace KFIRPG.corelib {
 			this.surface = game.loader.LoadSurface("img/" + imgName + ".png");
 		}
 
-		public override void Blit(int x, int y, Surface dest) {
+		public override void Render(int x, int y, Surface dest) {
 			dest.Blit(surface, new System.Drawing.Point(x, y));
 		}
 

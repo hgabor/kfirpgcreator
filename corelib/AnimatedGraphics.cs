@@ -160,7 +160,7 @@ namespace KFIRPG.corelib {
 			col = id % columnsInRow;
 		}
 
-		public override void Blit(int x, int y, Surface dest) {
+		public override void Render(int x, int y, Surface dest) {
 			dest.Blit(sheet, new Point(x - this.x, y - this.y), new Rectangle(col * width, row * height, width, height));
 		}
 	}

@@ -13,7 +13,7 @@ namespace KFIRPG.corelib {
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="dest"></param>
-		public abstract void Blit(int x, int y, SdlDotNet.Graphics.Surface dest);
+		public abstract void Render(int x, int y, SdlDotNet.Graphics.Surface dest);
 
 		public abstract int Width { get; }
 		public abstract int Height { get; }

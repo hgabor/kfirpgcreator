@@ -24,8 +24,8 @@ namespace KFIRPG.corelib {
 			this.members.Add(member);
 		}
 
-		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
-			leader.Draw(x, y, surface);
+		public void Render(int x, int y, SdlDotNet.Graphics.Surface surface) {
+			leader.Render(x, y, surface);
 		}
 	}
 }

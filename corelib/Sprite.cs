@@ -41,8 +41,8 @@ namespace KFIRPG.corelib {
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="surface"></param>
-		public void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
-			graphic.Blit(x + corrX, y + corrY, surface);
+		public void Render(int x, int y, SdlDotNet.Graphics.Surface surface) {
+			graphic.Render(x + corrX, y + corrY, surface);
 		}
 
 		int size;
@@ -229,7 +229,7 @@ namespace KFIRPG.corelib {
 		/// Decides what to do next (move or interact) and tries to execute it.
 		/// </summary>
 		/// <param name="map"></param>
-		public void Think(Map map) {
+		public void Advance(Map map) {
 			movementAI.TryDoingSomething(this, map);
 			Dir oldMoving = moving;
 

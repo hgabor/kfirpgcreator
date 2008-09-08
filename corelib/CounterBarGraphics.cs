@@ -27,7 +27,7 @@ namespace KFIRPG.corelib {
 			}
 		}
 
-		public override void Blit(int x, int y, SdlDotNet.Graphics.Surface dest) {
+		public override void Render(int x, int y, SdlDotNet.Graphics.Surface dest) {
 			double ratio = (double)value / MaxValue;
 			Rectangle fullRect = new Rectangle(new Point(x, y), size);
 			Rectangle rect = new Rectangle(new Point(x, y), new Size(Convert.ToInt32(size.Width * ratio), Height));

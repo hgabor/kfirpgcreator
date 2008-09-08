@@ -17,18 +17,18 @@ namespace KFIRPG.corelib {
 			//map.Place(player, startX, startY);
 		}
 
-		public override void Draw(SdlDotNet.Graphics.Surface surface) {
+		public override void Render(SdlDotNet.Graphics.Surface surface) {
 			//Draw map
 			Sprite leader = game.Party.Leader;
 			surface.Fill(System.Drawing.Color.Black);
 			int offsetX = -(game.Width - leader.Width) / 2 + leader.X * game.TileSize + leader.CorrX;
 			int offsetY = -(game.Height - leader.Height) / 2 + leader.Y * game.TileSize + leader.CorrY;
-			game.currentMap.Draw(offsetX, offsetY, surface);
+			game.currentMap.Render(offsetX, offsetY, surface);
 			//Draw stats/info
 		}
 
-		public override void Think() {
-			game.currentMap.ThinkAll();
+		public override void Advance() {
+			game.currentMap.Advance();
 		}
 	}
 }

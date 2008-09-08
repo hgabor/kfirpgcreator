@@ -123,7 +123,7 @@ namespace KFIRPG.corelib {
 		}
 
 		/// <summary>
-		/// Places a new sprite on the map. The sprite's Think() method is not executed
+		/// Places a new sprite on the map. The sprite's Advance() method is not executed
 		/// until next frame.
 		/// </summary>
 		/// <param name="sprite"></param>
@@ -137,7 +137,7 @@ namespace KFIRPG.corelib {
 		}
 		//TODO: Might be the cause of yet unknown bugs.
 		/// <summary>
-		/// Removes a sprite from the map with specified coordinates. The sprite's Think() method
+		/// Removes a sprite from the map with specified coordinates. The sprite's Advance() method
 		/// is still executed this frame.
 		/// </summary>
 		/// <param name="sprite"></param>
@@ -251,28 +251,28 @@ namespace KFIRPG.corelib {
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="surface"></param>
-		internal void Draw(int x, int y, SdlDotNet.Graphics.Surface surface) {
+		internal void Render(int x, int y, SdlDotNet.Graphics.Surface surface) {
 			for (int layer = 0; layer < layers.Length; ++layer) {
 				for (int j = 0; j < rows; ++j) {
 					for (int i = 0; i < cols; ++i) {
-						layers[layer].tiles[i, j].Blit(i * tileSize - x, j * tileSize - y, surface);
+						layers[layer].tiles[i, j].Render(i * tileSize - x, j * tileSize - y, surface);
 					}
 				}
 				for (int j = 0; j < rows; ++j) {
 					for (int i = 0; i < cols; ++i) {
-						layers[layer].objects[i, j].ForEach((a) => a.Draw(i * tileSize - x, j * tileSize - y, surface));
+						layers[layer].objects[i, j].ForEach((a) => a.Render(i * tileSize - x, j * tileSize - y, surface));
 					}
 				}
 			}
 		}
 
 		/// <summary>
-		/// Executes the Think() method for all sprites on the map.
+		/// Executes the Advance() method for all sprites on the map.
 		/// Should be called once per frame.
 		/// </summary>
-		internal void ThinkAll() {
+		internal void Advance() {
 			foreach (Sprite sp in objects) {
-				sp.Think(this);
+				sp.Advance(this);
 			}
 			if (removeList.Count != 0) {
 				foreach (Sprite sp in removeList) objects.Remove(sp);
