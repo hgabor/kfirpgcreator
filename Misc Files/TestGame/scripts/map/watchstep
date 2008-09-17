@@ -22,6 +22,7 @@ if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Pl
     Message("Don't think you defeated me, it was just a warm up!")
   else
     Message("You're a wimp!")
+    GameOver()
   end
 else
   Message("I'm not surprised you're such a sissy!")
