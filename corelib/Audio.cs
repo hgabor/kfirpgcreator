@@ -28,5 +28,10 @@ namespace KFIRPG.corelib {
 			nowPlaying = new Music(game.loader.LoadRaw("music/" + filename));
 			nowPlaying.Play(true);
 		}
+
+		internal void StopMusic() {
+			if (nowPlaying != null) nowPlaying.Dispose();
+			nowPlaying = null;
+		}
 	}
 }

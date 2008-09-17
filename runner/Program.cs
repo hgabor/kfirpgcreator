@@ -12,7 +12,8 @@ namespace KFIRPG.runner {
 			//I'd like to get exception data from the IDE, not from logging.
 			//Should be turned on for production code.
 			//try {
-			Game game = Game.LoadFromFile("game.xml");
+			bool quit = false;
+			Game game = Game.LoadFromFile("game.xml", () => quit = true);
 
 			XmlDocument settings = new XmlDocument();
 			try {
@@ -39,7 +40,6 @@ namespace KFIRPG.runner {
 				}
 			}
 
-			bool quit = false;
 			Events.Quit += (sender, args) => { quit = true; };
 
 			int counter = 0;
@@ -52,6 +52,7 @@ namespace KFIRPG.runner {
 			bool AltPressed = false;
 			bool F4Pressed = false;
 			bool ReturnPressed = false;
+
 			while (!quit) {
 				Events.Poll();
 				UserInput.Buttons buttons = UserInput.Buttons.None;

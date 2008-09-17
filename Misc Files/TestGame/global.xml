@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <settings>
   <scriptvm>taolua</scriptvm>
-  <startscript>startup</startscript>
+  <startscript>MainMenu</startscript>
+  <quitscript>quit</quitscript>
   <defaultmap>lake</defaultmap>
   <tilesize>32</tilesize>
   <startx>1</startx>

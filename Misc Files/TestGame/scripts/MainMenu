@@ -1,0 +1,14 @@
+include("Message")
+
+StopMusic()
+
+local answer = FullScreen_Ask("MainMenu", "New Game", "Load Game", "Change settings", "Quit")
+
+if answer == 1 then
+  run("startup")
+elseif answer == 4 then
+  QuitGame()
+else
+  Message("Not supported yet")
+  QuitGame()
+end

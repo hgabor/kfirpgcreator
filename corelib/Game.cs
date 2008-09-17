@@ -33,6 +33,22 @@ namespace KFIRPG.corelib {
 			height = globalSettings.GetInt("screenheight");
 			tileSize = globalSettings.GetInt("tilesize");
 
+			foreach(PropertyReader loc in globalSettings.SelectAll("locations/location")) {
+				locations.Add(loc.GetString("name").Trim(),
+					new Location(loc.GetInt("x"),
+						loc.GetInt("y"),
+						loc.GetInt("layer"),
+						loc.GetString("map").Trim()));
+			}
+
+			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("startscript")));
+			startupScript.Run();
+			quitScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("quitscript")));
+		}
+
+		internal void NewGame() {
+			PropertyReader globalSettings = loader.GetPropertyReader().Select("global.xml");
+
 			Map defaultMap = new Map(globalSettings.GetString("defaultmap"), this);
 			int startX = globalSettings.GetInt("startx");
 			int startY = globalSettings.GetInt("starty");
@@ -45,29 +61,17 @@ namespace KFIRPG.corelib {
 			}
 			party.Leader.MovementAI = new PlayerMovementController(this);
 
-			foreach(PropertyReader loc in globalSettings.SelectAll("locations/location")) {
-				locations.Add(loc.GetString("name").Trim(),
-					new Location(loc.GetInt("x"),
-						loc.GetInt("y"),
-						loc.GetInt("layer"),
-						loc.GetString("map").Trim()));
-			}
-
 			currentMap.Place(party.Leader, startX, startY, startL);
-
+			screens.Clear();
 			PushScreen(new MapScreen(this));
-
-			vm["screenWidth"] = width;
-			vm["screenHeight"] = height;
-
-			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("startscript")));
-			startupScript.Run();
 		}
 
 		/// <summary>
 		/// The scripting engine.
 		/// </summary>
 		internal ScriptVM vm;
+
+		internal Script quitScript;
 
 		/// <summary>
 		/// The loader used to load all game data.
@@ -152,7 +156,7 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		/// <param name="fileName">The name of the file or directory to load from.</param>
 		/// <returns>A new game</returns>
-		public static Game LoadFromFile(string fileName) {
+		public static Game LoadFromFile(string fileName, QuitFunc quitFunc) {
 			Loader loader;
 			XmlDocument gameInfo = new XmlDocument();
 			gameInfo.Load(fileName);
@@ -170,6 +174,7 @@ namespace KFIRPG.corelib {
 			}
 
 			Game game = new Game(new CachedLoader(loader));
+			game.quitFunc = quitFunc;
 
 			return game;
 		}
@@ -185,6 +190,12 @@ namespace KFIRPG.corelib {
 			screens[currentScreenAdvancing].Advance();
 			++currentScreenAdvancing;
 			if (currentScreenAdvancing == screens.Count - 1) Input.Enable();
+		}
+
+		public delegate void QuitFunc();
+		QuitFunc quitFunc;
+		internal void AskToQuit() {
+			quitFunc();
 		}
 
 		/// <summary>

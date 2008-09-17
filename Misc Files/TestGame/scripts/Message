@@ -14,6 +14,67 @@ end
 
 local referenceHeight = TextGraphics("test").height
 
+function FullScreen_Ask(bgname , ...)
+  if arg.n == 0 then
+    Message(msg)
+    --Handle Later
+    return
+  end
+
+  local screen = Screen()
+  local bg = ImageGraphics(bgname)
+  local answers = {}
+  
+  local sumHeight = 0
+  local maxWidth = 0
+  for i, value in ipairs(arg) do
+    answers[i] = TextGraphics(value, "left")
+    sumHeight = sumHeight + answers[i].height
+    if maxWidth < answers[i].width then
+      maxWidth = answers[i].width
+    end
+  end
+  local selectedFrame = MenuItemBackground(answers[1].width+10, answers[1].height+10)
+  
+  local window = WindowGraphics(maxWidth-1, sumHeight + (arg.n-1)*referenceHeight)
+  
+  local x = (screenWidth - maxWidth) / 2
+  local y = (screenHeight - sumHeight) / 2
+  
+  screen:Place(0, 0, bg)
+  screen:Place(x, y, window)
+  screen:Place(x-5, y-5, selectedFrame)
+
+  for i, value in ipairs(answers) do
+    screen:Place(x, y, value)
+    value.y = y
+    y = y + value.height + referenceHeight
+  end
+  
+  local selectedId = 1
+  local maxId = arg.n
+  
+  screen:OnKeyPress(function(key)
+    if key:IsPressed(btnUp) then
+      selectedId = selectedId - 1
+      if selectedId == 0 then selectedId = maxId end
+      screen:Place(x-5, answers[selectedId].y-5, selectedFrame)
+      
+    elseif key:IsPressed(btnDown) then
+      selectedId = selectedId + 1
+      if selectedId == maxId+1 then selectedId = 1 end
+      screen:Place(x-5, answers[selectedId].y-5, selectedFrame)
+      
+    elseif key:IsPressed(btnAction) then
+      screen:Hide()
+    end
+  end)
+  
+  screen:Show()
+  
+  return selectedId
+end
+
 function Ask(msg, ...)
   if arg.n == 0 then
     Message(msg)

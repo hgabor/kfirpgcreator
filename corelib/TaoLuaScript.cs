@@ -89,17 +89,15 @@ namespace KFIRPG.corelib {
 			if (status != 0) {
 				throw new TaoLuaVM.Error(Lua.lua_tostring(luaState, -1));
 			}
+			List<object> ret = new List<object>();
+			while (Lua.lua_gettop(luaState) != stackTop) {
+				ret.Add(TaoLuaVM.Pop(luaState));
+			}
+			if (ret.Count == 0) return null;
+			else if (ret.Count == 1) return ret[0];
 			else {
-				List<object> ret = new List<object>();
-				while (Lua.lua_gettop(luaState) != stackTop) {
-					ret.Add(TaoLuaVM.Pop(luaState));
-				}
-				if (ret.Count == 0) return null;
-				else if (ret.Count == 1) return ret[0];
-				else {
-					ret.Reverse();
-					return ret.ToArray();
-				}
+				ret.Reverse();
+				return ret.ToArray();
 			}
 		}
 	}

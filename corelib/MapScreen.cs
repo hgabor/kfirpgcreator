@@ -28,7 +28,12 @@ namespace KFIRPG.corelib {
 		}
 
 		public override void Advance() {
-			game.currentMap.Advance();
+			if (game.Input.IsPressed(UserInput.Buttons.Back)) {
+				game.quitScript.Run();
+			}
+			else {
+				game.currentMap.Advance();
+			}
 		}
 	}
 }

@@ -139,6 +139,11 @@ namespace KFIRPG.corelib {
 			game.audio.StartMusic(fileName);
 		}
 
+		[Script]
+		public void StopMusic() {
+			game.audio.StopMusic();
+		}
+
 		/// <summary>
 		/// Makes a sprite turn in the direction of another sprite.
 		/// </summary>
@@ -212,6 +217,26 @@ namespace KFIRPG.corelib {
 			}
 		}
 
+		[Script]
+		public int GetScreenWidth() {
+			return game.Width;
+		}
+
+		[Script]
+		public int GetScreenHeight() {
+			return game.Height;
+		}
+
+		[Script]
+		public void QuitGame() {
+			game.AskToQuit();
+		}
+
+		[Script]
+		public void NewGame() {
+			game.NewGame();
+		}
+
 		List<string> includedScripts = new List<string>();
 		/// <summary>
 		/// Includes another script. The script must be in the "scripts" folder.
@@ -224,6 +249,11 @@ namespace KFIRPG.corelib {
 				includedScripts.Add(scriptName);
 				game.vm.LoadNonResumableScript(game.loader.LoadText("scripts/" + scriptName)).Run();
 			}
+		}
+
+		[Script]
+		public void run(string scriptName) {
+			game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + scriptName)).Run();
 		}
 
 		/// <summary>

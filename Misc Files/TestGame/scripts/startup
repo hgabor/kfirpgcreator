@@ -2,6 +2,13 @@ include("Message")
 include("Character")
 include("Battle")
 
+NewGame()
+
+-- State table
+-- All scripts should use it for states specific to a game
+-- The state table is saved when saving the game
+s = {}
+
 local char = Character()
 char.Name = "Bigsticky"
 char.MaxHp = 30
@@ -11,7 +18,7 @@ char.AttackDelta = 2
 char.Defense = 5
 char.gfx = AnimatedGraphics("bigstickman")
 
-PlayerParty = { char }
+s.PlayerParty = { char }
 
 StartMusic("Canon in D Major.ogg")
 --[[

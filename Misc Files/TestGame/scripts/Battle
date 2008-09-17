@@ -14,7 +14,7 @@ function Battle(enemyParty)
   
   local hpBars = {}
   
-  for i, char in ipairs(PlayerParty) do
+  for i, char in ipairs(s.PlayerParty) do
     char.gfx:State("still")
     char.gfx:Direction("left")
     screen:Place(screenWidth - char.gfx.width - 100, screenHeight / 2 + (i-1) * 70, char.gfx)
@@ -33,7 +33,7 @@ function Battle(enemyParty)
   local retVal = false
   local selected
   local maxSelected = #enemyParty
-  local maxPlayers = #PlayerParty
+  local maxPlayers = #s.PlayerParty
   local selectGfx = AnimatedGraphics("arrow")
   
   
@@ -88,8 +88,8 @@ function Battle(enemyParty)
       
       --Player attacks
       for i = 1, maxPlayers do
-        if PlayerParty[i] ~= nil then
-          local char = PlayerParty[i]
+        if s.PlayerParty[i] ~= nil then
+          local char = s.PlayerParty[i]
           WriteLine(char.Name .. " attacks")
           local action, target = actAttack, selected
           Attack(char, enemyParty[target])
@@ -124,17 +124,17 @@ function Battle(enemyParty)
           local char = enemyParty[i]
           WriteLine(char.Name .. " attacks")
           local action, target = ComputerAction()
-          Attack(char, PlayerParty[target])
-          WriteLine(PlayerParty[target].Name .. ": " .. PlayerParty[target].Hp .. " HP")
-          hpBars[target]:Value(PlayerParty[target].Hp)
-          if (PlayerParty[target].Hp == 0) then
+          Attack(char, s.PlayerParty[target])
+          WriteLine(s.PlayerParty[target].Name .. ": " .. s.PlayerParty[target].Hp .. " HP")
+          hpBars[target]:Value(s.PlayerParty[target].Hp)
+          if (s.PlayerParty[target].Hp == 0) then
             --enemy is killed
-            WriteLine(PlayerParty[target].Name .. " is killed!")
-            screen:Remove(PlayerParty[target].gfx)
-            PlayerParty[target] = nil
+            WriteLine(s.PlayerParty[target].Name .. " is killed!")
+            screen:Remove(s.PlayerParty[target].gfx)
+            s.PlayerParty[target] = nil
             
             local alive = false
-            for ei, echar in pairs(PlayerParty) do
+            for ei, echar in pairs(s.PlayerParty) do
               alive = true
               break
             end

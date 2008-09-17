@@ -10,6 +10,9 @@ btnRight = 8
 btnAction = 16
 btnBack = 32
 
+screenWidth = GetScreenWidth();
+screenHeight = GetScreenHeight();
+
 ButtonState = class(function(self, state)
   self.state = state
 end)
@@ -96,3 +99,15 @@ function CounterBarGraphics:MaxValue(value)
   CounterBarGraphics_SetMaxValue(self.handle, value)
 end
 
+
+function GameOver()
+  screen = Screen()
+  screen:Place(0, 0, ImageGraphics("GameOver"))
+  screen:OnKeyPress(function(key)
+    if key:IsPressed(btnAction) then
+      screen:Hide()
+    end
+  end)
+  screen:Show()
+  run("MainMenu")
+end
