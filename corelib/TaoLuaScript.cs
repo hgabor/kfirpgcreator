@@ -42,7 +42,6 @@ namespace KFIRPG.corelib {
 			this.vm = vm;
 		}
 
-		Entity owner = null;
 		/// <summary>
 		/// Gets or sets the owner of the script. When the script is run, it will be available under
 		/// the global "self" variable.
@@ -51,14 +50,7 @@ namespace KFIRPG.corelib {
 		/// TaoLuaVM.Push() and Pop() methods, and the same restrictions apply.</remarks>
 		/// <see cref="TaoLuaVM.Push"/>
 		/// <see cref="TaoLuaVM.Pop"/>
-		public Entity Owner {
-			get {
-				return owner;
-			}
-			set {
-				owner = value;
-			}
-		}
+		public Sprite Owner { get; set; }
 
 		/// <summary>
 		/// Runs the script.
@@ -76,8 +68,8 @@ namespace KFIRPG.corelib {
 			int stackTop = Lua.lua_gettop(luaState);
 			int status = 0;
 
-			if (owner != null) {
-				TaoLuaVM.Push(owner, luaState);
+			if (Owner != null) {
+				TaoLuaVM.Push(Owner, luaState);
 				Lua.lua_setglobal(luaState, "self");
 			}
 

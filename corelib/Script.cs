@@ -10,7 +10,7 @@ namespace KFIRPG.corelib {
 		/// <summary>
 		/// Sets the owner of the script.
 		/// </summary>
-		Entity Owner { get; set; }
+		Sprite Owner { get; set; }
 		/// <summary>
 		/// Runs the script and returns its result value.
 		/// </summary>

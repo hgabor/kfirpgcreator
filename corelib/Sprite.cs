@@ -6,7 +6,7 @@ namespace KFIRPG.corelib {
 	/// <summary>
 	/// An object that has a representation on the map.
 	/// </summary>
-	class Sprite: Entity {
+	class Sprite {
 		AnimatedGraphics graphic;
 
 		/// <summary>
@@ -345,6 +345,10 @@ namespace KFIRPG.corelib {
 			}
 			nextMove = Dir.None;
 			graphic.Advance();
+		}
+
+		public void SetProperty(string key, string value) {
+			//Noop, until it's refactored away into nothing...
 		}
 	}
 }
