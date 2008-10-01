@@ -20,6 +20,7 @@ namespace KFIRPG.editor {
 		public KFIRPG.corelib.Loader loader;
 		public string startupMapName;
 		public string startupScriptName;
+		public string quitScriptName;
 		public List<Sprite> party = new List<Sprite>();
 
 		public string scriptvm;
@@ -43,6 +44,7 @@ namespace KFIRPG.editor {
 			tileSize = global.GetInt("tilesize");
 			startupMapName = global.GetString("defaultmap");
 			startupScriptName = global.GetString("startscript");
+			quitScriptName = global.GetString("quitscript");
 			scriptvm = global.GetString("scriptvm");
 			screenWidth = global.GetInt("screenwidth");
 			screenHeight = global.GetInt("screenheight");
@@ -124,6 +126,7 @@ namespace KFIRPG.editor {
 
 			pGlobal.Set("scriptvm", scriptvm);
 			pGlobal.Set("startscript", startupScriptName);
+			pGlobal.Set("quitscript", quitScriptName);
 			pGlobal.Set("defaultmap", startupMapName);
 			pGlobal.Set("tilesize", tileSize);
 			pGlobal.Set("startx", startX);
