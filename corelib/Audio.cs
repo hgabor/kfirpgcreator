@@ -11,6 +11,7 @@ namespace KFIRPG.corelib {
 		MusicCollection mc = new MusicCollection();
 		Music nowPlaying;
 		Game game;
+		bool ok = true;
 
 		public Audio(Game game) {
 			this.game = game;
@@ -22,11 +23,19 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		/// <param name="filename">The name of the music (with extension).</param>
 		public void StartMusic(string filename) {
+			if (!ok) return;
 			if (nowPlaying != null) {
 				nowPlaying.Dispose();
 			}
 			nowPlaying = new Music(game.loader.LoadRaw("music/" + filename));
-			nowPlaying.Play(true);
+			// When trying to play music/sound without a sound card, a DivideByZeroException
+			// is thrown. I couldn't find an easier way to test for the sound card.
+			try {
+				nowPlaying.Play(true);
+			}
+			catch (DivideByZeroException) {
+				ok = false;
+			}
 		}
 
 		internal void StopMusic() {
