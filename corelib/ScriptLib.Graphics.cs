@@ -18,10 +18,7 @@ namespace KFIRPG.corelib {
 		}
 		[BlockingScript]
 		public void CustomScreen_Show(CustomScreen screen) {
-			FadeAnimation anim = new FadeAnimation(game);
-			anim.FromImage = game.TakeScreenshot();
-			game.PushScreen(screen);
-			game.PushScreen(anim);
+			 Fade(game.TakeScreenshot(), screen);
 		}
 		[Script]
 		public void CustomScreen_Hide(CustomScreen screen) {
@@ -30,6 +27,10 @@ namespace KFIRPG.corelib {
 		[Script]
 		public void CustomScreen_OnKey_Add(CustomScreen screen, ScriptFunction script) {
 			screen.KeyPressed += (sender, args) => script.Run((int)args.Button);
+		}
+		[Script]
+		public void CustomScreen_SetTimer(CustomScreen screen, int ms, ScriptFunction script) {
+			screen.SetTimer(ms, (sender, args) => script.Run());
 		}
 		[Script]
 		public void CustomScreen_Delete() {
@@ -118,6 +119,18 @@ namespace KFIRPG.corelib {
 		[Script]
 		public int GetScreenHeight() {
 			return game.Height;
+		}
+
+		[Script]
+		public SdlDotNet.Graphics.Surface TakeScreenshot() {
+			return game.TakeScreenshot();
+		}
+		[BlockingScript]
+		public void Fade(SdlDotNet.Graphics.Surface fromImage, CustomScreen screen) {
+			FadeAnimation anim = new FadeAnimation(game);
+			anim.FromImage = fromImage;
+			game.PushScreen(screen);
+			game.PushScreen(anim);
 		}
 	}
 }

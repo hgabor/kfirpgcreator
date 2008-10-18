@@ -6,11 +6,13 @@ movement/random
 movement/random_nostop
 map/door
 map/innkeepernorooms
-startup
 map/watchstep
 Battle
 Character
 class
+MainMenu
 Message
-screen
+quit
+Screen
+startup
 luabit/bit.lua

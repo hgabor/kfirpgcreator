@@ -1,14 +1,17 @@
 include("Message")
 
-StopMusic()
+function MainMenu(screenshot)
+  StopMusic()
 
-local answer = FullScreen_Ask("MainMenu", "New Game", "Load Game", "Change settings", "Quit")
+  local question = FullScreen_Ask_Prepare("MainMenu", "New Game", "Load Game", "Change settings", "Quit")
+  local answer = question:Ask(screenshot)
 
-if answer == 1 then
-  run("startup")
-elseif answer == 4 then
-  QuitGame()
-else
-  Message("Not supported yet")
-  QuitGame()
+  if answer == 1 then
+    run("startup")
+  elseif answer == 4 then
+    QuitGame()
+  else
+    Message("Not supported yet")
+    QuitGame()
+  end
 end

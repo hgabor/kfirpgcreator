@@ -14,7 +14,7 @@ end
 
 local referenceHeight = TextGraphics("test").height
 
-function FullScreen_Ask(bgname , ...)
+function FullScreen_Ask_Prepare(bgname, ...)
   if arg.n == 0 then
     Message(msg)
     --Handle Later
@@ -44,7 +44,7 @@ function FullScreen_Ask(bgname , ...)
   screen:Place(0, 0, bg)
   screen:Place(x, y, window)
   screen:Place(x-5, y-5, selectedFrame)
-
+  
   for i, value in ipairs(answers) do
     screen:Place(x, y, value)
     value.y = y
@@ -70,9 +70,21 @@ function FullScreen_Ask(bgname , ...)
     end
   end)
   
-  screen:Show()
+  screen.Ask = function(self, fromscreenshot)
+    if (fromscreenshot ~= nil) then
+      -- Add Fade method to Screen class
+      Fade(fromscreenshot, screen.handle)
+    else
+      screen:Show()
+    end
+    return selectedId
+  end;
   
-  return selectedId
+  return screen
+end
+
+function FullScreen_Ask(bgname, ...)
+  return FullScreen_Ask_Prepare(bgname, unpack(arg)):Ask()
 end
 
 function Ask(msg, ...)

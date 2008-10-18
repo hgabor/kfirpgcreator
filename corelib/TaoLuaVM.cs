@@ -260,7 +260,8 @@ namespace KFIRPG.corelib {
 			Lua.lua_setglobal(luaState, "internal_async_return_value");
 			string coroutineName = runningCoroutines.Pop();
 			string resume = string.Format(continueBase, coroutineName);
-			return LoadResumableScript(resume).Run();
+			//The script is already a coroutine, there's no need for another wrapper
+			return LoadNonResumableScript(resume).Run();
 		}
 
 		/// <summary>

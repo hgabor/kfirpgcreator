@@ -64,6 +64,17 @@ namespace KFIRPG.corelib {
 
 		public event EventHandler<UserInput.ButtonEventArgs> KeyPressed;
 
+
+		class Timer {
+			public int framesLeft;
+			public EventHandler callback;
+		}
+		List<Timer> timers = new List<Timer>();
+
+		public void SetTimer(int milliseconds, EventHandler callback) {
+			timers.Add(new Timer { framesLeft = (milliseconds / 20), callback = callback });
+		}
+
 		public override void Render(SdlDotNet.Graphics.Surface surface) {
 			foreach (ScreenGraphics gfx in graphics) {
 				gfx.graphics.Render(gfx.coords.X, gfx.coords.Y, surface);
@@ -88,6 +99,13 @@ namespace KFIRPG.corelib {
 			foreach (var gfx in graphics) {
 				gfx.Advance();
 			}
+			foreach (Timer timer in timers) {
+				--timer.framesLeft;
+				if (timer.framesLeft == 0) {
+					timer.callback(this, new EventArgs());
+				}
+			}
+			timers.RemoveAll(t => t.framesLeft == 0);
 		}
 	}
 }

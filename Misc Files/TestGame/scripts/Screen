@@ -46,6 +46,10 @@ function Screen:OnKeyPress(func)
   CustomScreen_OnKey_Add(self.handle, function(state) func(ButtonState(state)) end)
 end
 
+function Screen:SetTimer(milliseconds, func)
+  CustomScreen_SetTimer(self.handle, milliseconds, func)
+end
+
 
 TextGraphics = class(function(self, msg, align)
   self.handle = TextGraphics_New(msg, align or "center")
@@ -101,13 +105,14 @@ end
 
 
 function GameOver()
-  screen = Screen()
+  local screen = Screen()
+  local screenshot
   screen:Place(0, 0, ImageGraphics("GameOver"))
-  screen:OnKeyPress(function(key)
-    if key:IsPressed(btnAction) then
-      screen:Hide()
-    end
+  screen:SetTimer(3000, function()
+    screenshot = TakeScreenshot()
+    screen:Hide()
   end)
+  
   screen:Show()
-  run("MainMenu")
+  MainMenu(screenshot)
 end
