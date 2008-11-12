@@ -50,6 +50,10 @@ namespace KFIRPG.corelib {
 			get { return height; }
 		}
 
+		public int FrameCount {
+			get { return currentAnimation.frames.Length; }
+		}
+
 		private void LoadSpriteSheet(string sheetName, Game game) {
 			sheet = game.loader.LoadSurface("img/" + sheetName + ".png");
 			PropertyReader props = game.loader.GetPropertyReader().Select("img/" + sheetName + ".xml");
@@ -149,6 +153,15 @@ namespace KFIRPG.corelib {
 					++frame;
 				}
 			}
+			CalculateRows();
+		}
+
+		/// <summary>
+		/// Resets the animation to its default frame.
+		/// </summary>
+		public void Reset() {
+			frame = 0;
+			time = 0;
 			CalculateRows();
 		}
 

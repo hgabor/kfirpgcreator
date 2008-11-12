@@ -12,20 +12,48 @@ namespace KFIRPG.corelib {
 		class Function: ScriptFunction {
 			IntPtr luaState;
 			string funcName;
+			string crName;
 			public Function(IntPtr state, string funcName) {
 				this.luaState = state;
 				this.funcName = funcName;
+				crName = string.Format("internal_coroutine_{0}", funcName);
 			}
 
 			public void Run(params object[] args) {
 				int stackTop = Lua.lua_gettop(luaState);
 				int status = 0;
+				//Some scripts yield from a callback function.
+				//We have to prepare the callback to handle this situation.
+
+				//internal_coroutine_funcName = coroutine.create(function)
+				Lua.lua_getglobal(luaState, "coroutine");
+				Lua.lua_getfield(luaState, stackTop + 1, "create");
+				Lua.lua_remove(luaState, stackTop + 1);
 				Lua.lua_getglobal(luaState, funcName);
-				foreach (object arg in args) Push(arg, luaState);
-				status = Lua.lua_pcall(luaState, args.Length, 0, 0);
-				if (status != 0) {
-					throw new Error(Lua.lua_tostring(luaState, -1));
-				}
+				Lua.lua_pcall(luaState, 1, Lua.LUA_MULTRET, 0);
+				if (status != 0) throw new Error(Lua.lua_tostring(luaState, -1));
+				Lua.lua_setglobal(luaState, crName);
+
+				//local ok = coroutine.resume({0})
+				Lua.lua_getglobal(luaState, crName);
+				IntPtr newThread = Lua.lua_tothread(luaState, -1);
+				//Console.WriteLine(newThread);
+				Lua.lua_pop(luaState, 1);
+				//Lua.lua_getglobal(newThread, crName);
+				foreach (object arg in args) Push(arg, newThread);
+				status = Lua.lua_resume(newThread, args.Length);
+				if (status != 0 && status != Lua.LUA_YIELDSTATUS) throw new Error(Lua.lua_tostring(newThread, -1));
+
+				string finishScript = string.Format(
+					"if coroutine.status({0}) ~= \"dead\" then\n" +
+					"  internal_addcoroutine(\"{0}\")\n" +
+					"end",
+					crName);
+				Lua.luaL_loadstring(luaState, finishScript);
+				status = Lua.lua_pcall(luaState, 0, Lua.LUA_MULTRET, 0);
+				if (status != 0) throw new Error(Lua.lua_tostring(luaState, -1));
+
+				if (Lua.lua_gettop(luaState) != stackTop) throw new Error("Stack is not OK");
 			}
 		}
 
@@ -186,6 +214,12 @@ namespace KFIRPG.corelib {
 			return func;
 		}
 
+		private void Panic() {
+			Lua.lua_getglobal(luaState, "ERROR");
+			string s = (string)Pop(luaState);
+			throw new Error(s);
+		}
+
 		public TaoLuaVM(Game game) {
 			luaState = Lua.lua_open();
 			Lua.lua_atpanic(luaState, state => {
@@ -202,6 +236,7 @@ namespace KFIRPG.corelib {
 					Lua.lua_register(luaState, method.Name, ToLuaFunction(method, scriptLib));
 				}
 			}
+			Lua.lua_atpanic(luaState, ToLuaFunction(this.GetType().GetMethod("Panic"), this));
 			Lua.lua_register(luaState, "internal_addcoroutine", ToLuaFunction(runningCoroutines.GetType().GetMethod("Push"), runningCoroutines));
 		}
 
@@ -224,12 +259,12 @@ namespace KFIRPG.corelib {
 		/// <returns>The script object.</returns>
 		/// <remarks>Resumable scripts return after they are called, but they do not finish
 		/// executing most of the time. They can be resumed using the ContinueWithValue() method.
-		/// The cause for stopping are blocking functions. The return value for
+		/// The cause for stopping is blocking functions. The return value for
 		/// these functions can also be set with ContinueWithValue().
 		/// They include map events and battle scripts.
 		/// Only use this instead of <see cref="LoadNonResumableScript"/> if there is a possibility
-		/// for the script waiting for more than one frame (e.g. waiting for user input,
-		/// using the <see cref="ScriptLib.Wait"/> function, opening other screens).</remarks>
+		/// that the script will wait for more than one frame (e.g. wait for user input,
+		/// use the <see cref="ScriptLib.Wait"/> function, open other screens).</remarks>
 		/// <seealso cref="ContinueWithValue"/>
 		public Script LoadResumableScript(string script) {
 			return new TaoLuaScript(script, this, luaState, true);

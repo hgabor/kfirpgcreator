@@ -15,6 +15,10 @@ namespace KFIRPG.corelib {
 		[Script]
 		public void CustomScreen_Remove(CustomScreen screen, Graphics gfx) {
 			screen.Remove(gfx);
+			AnimatedGraphics g = gfx as AnimatedGraphics;
+			if (g != null) {
+				g.Reset();
+			}
 		}
 		[BlockingScript]
 		public void CustomScreen_Show(CustomScreen screen) {
@@ -79,6 +83,11 @@ namespace KFIRPG.corelib {
 		[Script]
 		public void AnimatedGraphics_SetDir(AnimatedGraphics gfx, string dir) {
 			gfx.SetDirection((Sprite.Dir)Enum.Parse(typeof(Sprite.Dir), dir, true));
+		}
+
+		[Script]
+		public int AnimatedGraphics_GetFrameCount(AnimatedGraphics gfx) {
+			return gfx.FrameCount;
 		}
 
 		[Script]

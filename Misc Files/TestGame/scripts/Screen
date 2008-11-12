@@ -73,6 +73,7 @@ AnimatedGraphics = class(function(self, name)
   self.handle = AnimatedGraphics_New(name)
   self.width = Graphics_GetWidth(self.handle)
   self.height = Graphics_GetHeight(self.handle)
+  self.frameCount = AnimatedGraphics_GetFrameCount(self.handle)
 end)
 
 function AnimatedGraphics:State(newState)

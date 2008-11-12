@@ -35,6 +35,7 @@ function Battle(enemyParty)
   local maxSelected = #enemyParty
   local maxPlayers = #s.PlayerParty
   local selectGfx = AnimatedGraphics("arrow")
+  local attackGfx = AnimatedGraphics("attack_hit")
   
   
   local SetSelected = function(idx)
@@ -92,7 +93,12 @@ function Battle(enemyParty)
           local char = s.PlayerParty[i]
           WriteLine(char.Name .. " attacks")
           local action, target = actAttack, selected
+          
+          screen:Place(100, screenHeight / 2 + (target-1) * 70, attackGfx)
+          Wait(attackGfx.frameCount * 20)
           Attack(char, enemyParty[target])
+          screen:Remove(attackGfx)
+          
           WriteLine(enemyParty[target].Name .. ": " .. enemyParty[target].Hp .. " HP")
           if (enemyParty[target].Hp == 0) then
             --enemy is killed
@@ -115,6 +121,7 @@ function Battle(enemyParty)
               return
             end
           end
+          Wait(1000)
         end
       end
       
@@ -124,7 +131,12 @@ function Battle(enemyParty)
           local char = enemyParty[i]
           WriteLine(char.Name .. " attacks")
           local action, target = ComputerAction()
+          
+          screen:Place(screenWidth - s.PlayerParty[target].gfx.width - 100, screenHeight / 2 + (target-1) * 70, attackGfx)
+          Wait(attackGfx.frameCount * 20)
           Attack(char, s.PlayerParty[target])
+          screen:Remove(attackGfx)
+          
           WriteLine(s.PlayerParty[target].Name .. ": " .. s.PlayerParty[target].Hp .. " HP")
           hpBars[target]:Value(s.PlayerParty[target].Hp)
           if (s.PlayerParty[target].Hp == 0) then
@@ -147,6 +159,7 @@ function Battle(enemyParty)
               return
             end
           end
+          Wait(1000)
         end
       end
       
