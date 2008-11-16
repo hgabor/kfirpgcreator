@@ -7,6 +7,7 @@ if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Pl
   enemy.AttackDelta = 2
   enemy.Defense = 5
   enemy.gfx = AnimatedGraphics("stickman")
+  enemy.isDead = false
 
   local enemy2 = Character()
   enemy2.Name = "Sticky2"
@@ -16,6 +17,7 @@ if Ask("Hey! Watch your step! Yo' wanna' fight me, punk?", "I'm no coward!", "Pl
   enemy2.AttackDelta = 2
   enemy2.Defense = 5
   enemy2.gfx = AnimatedGraphics("stickman")
+  enemy.isDead = false
   
   local party = { enemy, enemy2 }
   if Battle(party) then

@@ -11,14 +11,25 @@ s = {}
 
 local char = Character()
 char.Name = "Bigsticky"
-char.MaxHp = 30
+char.MaxHp = 10
 char.Hp = char.MaxHp
 char.Attack = 10
 char.AttackDelta = 2
 char.Defense = 5
 char.gfx = AnimatedGraphics("bigstickman")
+char.isDead = false
 
-s.PlayerParty = { char }
+local c2 = Character()
+c2.Name = "Smallsticky"
+c2.MaxHp = 25
+c2.Hp = c2.MaxHp
+c2.Attack = 8
+c2.AttackDelta = 3
+c2.Defense = 3
+c2.gfx = AnimatedGraphics("stickman")
+c2.isDead = false
+
+s.PlayerParty = { char, c2 }
 
 StartMusic("Canon in D Major.ogg")
 --[[
