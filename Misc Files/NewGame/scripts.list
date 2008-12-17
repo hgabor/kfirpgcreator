@@ -5,6 +5,7 @@ Character
 class
 MainMenu
 Message
+firststart
 quit
 Screen
 startup
