@@ -7,9 +7,11 @@ using System.Xml;
 namespace KFIRPG.editor {
 	class FileSaver: Saver {
 		string path;
+		string originalPath;
 
 		public FileSaver(string path) {
 			this.path = path;
+			this.originalPath = Directory.GetCurrentDirectory();
 			Directory.SetCurrentDirectory(path);
 		}
 
@@ -58,6 +60,10 @@ namespace KFIRPG.editor {
 				CreateDir(kvp.Key);
 				kvp.Value.Save(kvp.Key);
 			}
+		}
+
+		public void RestoreCurrentDirectory() {
+			Directory.SetCurrentDirectory(this.originalPath);
 		}
 
 		#endregion

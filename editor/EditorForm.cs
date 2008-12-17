@@ -129,6 +129,7 @@ namespace KFIRPG.editor {
 		private void EnableControls() {
 			saveProjectToolStripMenuItem.Enabled = true;
 			saveProjectAsToolStripMenuItem.Enabled = true;
+			exportToolStripMenuItem.Enabled = true;
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
@@ -283,6 +284,7 @@ namespace KFIRPG.editor {
 			}
 			Saver saver = new FileSaver(this.savePath);
 			this.currentProject.Save(saver);
+			saver.RestoreCurrentDirectory();
 		}
 
 		private bool SetSaveLocation() {
@@ -376,6 +378,28 @@ namespace KFIRPG.editor {
 				mru.Add(savePath);
 				RecreateMRUList();
 			}
+		}
+
+		private void exportToolStripMenuItem_Click(object sender, EventArgs e) {
+			string oldSavePath = this.savePath;
+			if (SetSaveLocation()) {
+				string saveBase = this.savePath;
+				this.savePath = Path.Combine(this.savePath, "data");
+				if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
+				Save();
+				File.WriteAllLines(Path.Combine(this.savePath, "game.xml"),
+					new string[] {
+						"<?xml version=\"1.0\"?>",
+						"<settings>",
+						"  <loader>file</loader>",
+						"  <loadpath>data</loadpath>",
+						"</settings>",
+					});
+				Array.ForEach(new string[] {
+					"corelib.dll", "SdlDotNet.dll", "Tao.Lua.dll", "Tao.Sdl.dll", "runner.exe"
+				}, s => File.Copy(s, Path.Combine(saveBase, s), true));
+			}
+			this.savePath = oldSavePath;
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {

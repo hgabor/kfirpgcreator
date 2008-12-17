@@ -11,5 +11,7 @@ namespace KFIRPG.editor {
 		PropertyWriter CreatePropertyFile(string path);
 
 		void SavePropertyFiles();
+
+		void RestoreCurrentDirectory();
 	}
 }
