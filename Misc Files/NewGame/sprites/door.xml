@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<door>
+<sprite>
   <animation>door</animation>
   <speed>0</speed>
   <noclip>0</noclip>
@@ -9,4 +9,4 @@
       <value>Door</value>
     </ext>
   </exts>
-</door>
+</sprite>

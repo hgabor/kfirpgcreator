@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <global>
   <scriptvm>taolua</scriptvm>
-  <startscript>startup</startscript>
+  <startscript>firststart</startscript>
+  <quitscript>quit</quitscript>
   <defaultmap>map1</defaultmap>
   <tilesize>32</tilesize>
   <startx>0</startx>

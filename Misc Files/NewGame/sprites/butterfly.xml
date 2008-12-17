@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<butterfly>
+<sprite>
   <animation>butterfly</animation>
   <speed>1</speed>
   <noclip>1</noclip>
@@ -13,4 +13,4 @@
       <value>A pretty butterfly</value>
     </ext>
   </exts>
-</butterfly>
+</sprite>

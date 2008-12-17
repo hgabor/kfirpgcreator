@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<bigstickman>
+<animation>
   <sheet>bigstickman</sheet>
   <group>
     <name>still.down</name>
@@ -89,4 +89,4 @@
       <time>10</time>
     </frame>
   </group>
-</bigstickman>
+</animation>

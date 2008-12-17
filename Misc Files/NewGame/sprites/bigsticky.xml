@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<bigsticky>
+<sprite>
   <animation>bigstickman</animation>
   <speed>2</speed>
   <noclip>0</noclip>
@@ -13,4 +13,4 @@
       <value>BigSticky is the main character.</value>
     </ext>
   </exts>
-</bigsticky>
+</sprite>
