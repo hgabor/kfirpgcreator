@@ -129,6 +129,7 @@ namespace KFIRPG.editor {
 		private void EnableControls() {
 			saveProjectToolStripMenuItem.Enabled = true;
 			saveProjectAsToolStripMenuItem.Enabled = true;
+			exportToolStripMenuItem.Enabled = true;
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}

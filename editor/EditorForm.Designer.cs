@@ -30,6 +30,7 @@
 			this.loadProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveProjectAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mruToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +59,6 @@
 			this.onCollideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-			this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -125,6 +125,14 @@
 			this.saveProjectAsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
 			this.saveProjectAsToolStripMenuItem.Text = "Save Project As...";
 			this.saveProjectAsToolStripMenuItem.Click += new System.EventHandler(this.saveProjectAsToolStripMenuItem_Click);
+			// 
+			// exportToolStripMenuItem
+			// 
+			this.exportToolStripMenuItem.Enabled = false;
+			this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+			this.exportToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+			this.exportToolStripMenuItem.Text = "Export Project...";
+			this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
 			// 
 			// mruToolStripMenuItem
 			// 
@@ -358,13 +366,6 @@
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.Size = new System.Drawing.Size(499, 349);
 			this.dockPanel.TabIndex = 5;
-			// 
-			// exportToolStripMenuItem
-			// 
-			this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-			this.exportToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-			this.exportToolStripMenuItem.Text = "Export Project...";
-			this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
 			// 
 			// EditorForm
 			// 
