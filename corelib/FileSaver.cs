@@ -4,14 +4,17 @@ using System.Text;
 using System.IO;
 using System.Xml;
 
-namespace KFIRPG.editor {
-	class FileSaver: Saver {
+namespace KFIRPG.corelib {
+	public class FileSaver: Saver {
 		string path;
 		string originalPath;
 
 		public FileSaver(string path) {
-			this.path = path;
+			this.path = Path.GetFullPath(path);
 			this.originalPath = Directory.GetCurrentDirectory();
+			if (path != "") {
+				Directory.CreateDirectory(path);
+			}
 			Directory.SetCurrentDirectory(path);
 		}
 

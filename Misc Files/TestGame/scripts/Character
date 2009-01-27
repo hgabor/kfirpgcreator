@@ -9,10 +9,9 @@ Hp
 Attack
 AttackDelta
 Defense
-
-Optional members:
-//CurrentHp
-//CurrentMana
+gfx
+gfxName
+isDead
 
 --]]
 
@@ -28,3 +27,19 @@ function Attack(self, other)
     if (other.Hp <= 0) then other.Hp = 0 end
   end
 end
+
+table.insert(saveFunctions, function(t)
+	t.chars = {}
+	for i, char in ipairs(s.PlayerParty) do
+		t.chars[i] = table.clone(char)
+		t.chars[i].gfx = nil
+	end
+end)
+
+table.insert(loadFunctions, function(t)
+	s.PlayerParty = {}
+	for i, char in ipairs(t.chars) do
+		s.PlayerParty[i] = char
+		s.PlayerParty[i].gfx = AnimatedGraphics(s.PlayerParty[i].gfxName)
+	end
+end)

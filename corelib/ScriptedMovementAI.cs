@@ -8,13 +8,14 @@ namespace KFIRPG.corelib {
 	/// </summary>
 	class ScriptedMovementAI: MovementAI {
 		Script script;
+		public Script Script { get { return script; } }
 		/// <summary>
 		/// Creates a new instance. The code for the script must be inside the "scripts" folder.
 		/// </summary>
 		/// <param name="scriptName">The name of the script.</param>
 		/// <param name="game"></param>
-		public ScriptedMovementAI(string scriptName, Game game) {
-			script = game.vm.LoadNonResumableScript(game.loader.LoadText("scripts/" + scriptName));
+		public ScriptedMovementAI(string script, Game game) {
+			this.script = game.vm.LoadNonResumableScript(script);
 		}
 
 		public override void TryDoingSomething(Sprite me, Map map) {

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor {
-	abstract class PropertyWriter {
+namespace KFIRPG.corelib {
+	public abstract class PropertyWriter {
 		protected abstract void SetStringRaw(string val, string path);
 		public abstract PropertyWriter Create(string path);
 

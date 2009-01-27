@@ -25,5 +25,13 @@ namespace KFIRPG.corelib {
 				return lastResult;
 			}
 		}
+
+		new public static PlayerSprite LoadFromSaveFile(PropertyReader r, Game game) {
+			PlayerSprite sprite = new PlayerSprite(r.GetString("sprite"), game);
+
+			sprite.Load_FillInDetails(r, game);
+			sprite.MovementAI = new PlayerMovementController(game);
+			return sprite;
+		}
 	}
 }

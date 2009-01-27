@@ -78,6 +78,7 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="FadeAnimation.cs" />
     <Compile Include="FilePropertyReader.cs" />
+    <Compile Include="FileSaver.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="ImageGraphics.cs" />
     <Compile Include="Location.cs" />
@@ -94,6 +95,8 @@
     <Compile Include="PlayerMovementController.cs" />
     <Compile Include="PlayerSprite.cs" />
     <Compile Include="PropertyReader.cs" />
+    <Compile Include="PropertyWriter.cs" />
+    <Compile Include="Saver.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenAnimation.cs" />
     <Compile Include="Script.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="WaitingScreen.cs" />
     <Compile Include="WindowGraphics.cs" />
     <Compile Include="XmlPropertyReader.cs" />
+    <Compile Include="XmlPropertyWriter.cs" />
     <Compile Include="ZipLoader.cs" />
   </ItemGroup>
 </Project>

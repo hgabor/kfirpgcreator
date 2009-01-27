@@ -56,12 +56,7 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		public string Name { get { return mapName; } }
 
-		/// <summary>
-		/// Loads a new map. All map data must be in the "maps/mapName" folder.
-		/// </summary>
-		/// <param name="mapName">Name of the map.</param>
-		/// <param name="game"></param>
-		public Map(string mapName, Game game) {
+		private Map(string mapName, Game game, PropertyReader objectList) {
 			this.mapName = mapName;
 			PropertyReader baseReader = game.loader.GetPropertyReader();
 			PropertyReader info = baseReader.Select("maps/" + mapName + "/info.xml");
@@ -74,32 +69,48 @@ namespace KFIRPG.corelib {
 			for (int i = 0; i < numLayers; ++i) {
 				layers[i] = new Layer(cols, rows, "maps/" + mapName + "/layers/{0}." + i.ToString(), game);
 			}
-			PropertyReader objects = baseReader.Select("maps/" + mapName + "/objects.xml");
-			foreach (PropertyReader obj in objects.SelectAll("object")) {
-				string name = obj.GetString("sprite");
-				int x = obj.GetInt("x");
-				int y = obj.GetInt("y");
-				int l = obj.GetInt("layer");
-				string action = obj.GetString("action");
-				string movement = obj.GetString("movement");
-				string collide = obj.GetString("collide");
-				Sprite sp = new Sprite(name, game);
-				this.Place(sp, x, y, l);
-				if (action != "") {
-					Script script = game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + action));
-					script.Owner = sp;
-					sp.Action = script;
-				}
-				if (movement != "") {
-					MovementAI ai = new ScriptedMovementAI(movement, game);
-					sp.MovementAI = ai;
-				}
-				if (collide != "") {
-					Script script = game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + collide));
-					script.Owner = sp;
-					sp.Collide = script;
+
+			PropertyReader objects;
+			if (objectList == null) {
+				objects = baseReader.Select("maps/" + mapName + "/objects.xml");
+				foreach (PropertyReader obj in objects.SelectAll("object")) {
+					string name = obj.GetString("sprite");
+					int x = obj.GetInt("x");
+					int y = obj.GetInt("y");
+					int l = obj.GetInt("layer");
+					string action = obj.GetString("action");
+					string movement = obj.GetString("movement");
+					string collide = obj.GetString("collide");
+					Sprite sp = new Sprite(name, game);
+					this.Place(sp, x, y, l);
+					if (action != "") {
+						Script script = game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + action));
+						script.Owner = sp;
+						sp.Action = script;
+					}
+					if (movement != "") {
+						MovementAI ai = new ScriptedMovementAI(game.loader.LoadText("scripts/" + movement), game);
+						sp.MovementAI = ai;
+					}
+					if (collide != "") {
+						Script script = game.vm.LoadResumableScript(game.loader.LoadText("scripts/" + collide));
+						script.Owner = sp;
+						sp.Collide = script;
+					}
 				}
 			}
+			else {
+				objects = objectList;
+				foreach (PropertyReader obj in objects.SelectAll("object")) {
+					if (obj.GetBool("player")) continue;
+					int x = obj.GetInt("x");
+					int y = obj.GetInt("y");
+					int l = obj.GetInt("layer");
+					Sprite sp = Sprite.LoadFromSaveFile(obj, game);
+					this.Place(sp, x, y, l);
+				}
+			}
+
 
 			PropertyReader onstep = baseReader.Select("maps/" + mapName + "/onstep.xml");
 			foreach (PropertyReader stepEvent in onstep.SelectAll("event")) {
@@ -119,6 +130,27 @@ namespace KFIRPG.corelib {
 				int topLayer = ladder.GetInt("top");
 				layers[baseLayer].ladderMove[x, y - 1] = layers[topLayer];
 				layers[topLayer].ladderMove[x, y] = layers[baseLayer];
+			}
+		}
+
+		/// <summary>
+		/// Loads a new map. All map data must be in the "maps/mapName" folder.
+		/// </summary>
+		/// <param name="mapName">Name of the map.</param>
+		/// <param name="game"></param>
+		public Map(string mapName, Game game)
+			: this(mapName, game, null) { }
+
+		public static Map LoadFromSaveFile(PropertyReader p, Game game) {
+			return new Map(p.GetString("mapname"), game, p);
+		}
+
+		public void SaveToSaveFile(PropertyWriter p) {
+			p.Set("mapname", this.Name);
+			foreach (var o in this.objects) {
+				PropertyWriter op = p.Create("object");
+				op.Set("player", o is PlayerSprite);
+				o.SaveToSaveFile(op);
 			}
 		}
 

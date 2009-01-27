@@ -66,6 +66,31 @@ namespace KFIRPG.corelib {
 			PushScreen(new MapScreen(this));
 		}
 
+		internal void LoadGame(int saveSlot, Loader loader) {
+			PropertyReader mapr = loader.GetPropertyReader().Select(string.Format("savemap{0}.xml", saveSlot));
+			Map map = Map.LoadFromSaveFile(mapr, this);
+
+			PlayerSprite sp = null;
+			foreach (PropertyReader obj in mapr.SelectAll("object")) {
+				if (obj.GetBool("player")) {
+					int x = obj.GetInt("x");
+					int y = obj.GetInt("y");
+					int l = obj.GetInt("layer");
+					sp = PlayerSprite.LoadFromSaveFile(obj, this);
+					map.Place(sp, x, y, l);
+					break;
+				}
+			}
+
+			currentMap = map;
+
+			party = new Party(this);
+			party.Add(sp);
+
+			screens.Clear();
+			PushScreen(new MapScreen(this));
+		}
+
 		/// <summary>
 		/// The scripting engine.
 		/// </summary>

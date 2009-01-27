@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor {
-	interface Saver {
+namespace KFIRPG.corelib {
+	public interface Saver {
 		void Save(string path, System.Drawing.Bitmap bitmap);
 		void Save(string path, string text);
 		void Save(string path, byte[] raw);

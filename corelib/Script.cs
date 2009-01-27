@@ -16,5 +16,7 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		/// <returns></returns>
 		object Run();
+
+		string Raw { get; }
 	}
 }

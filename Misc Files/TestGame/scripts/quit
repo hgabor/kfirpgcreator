@@ -1,5 +1,9 @@
 include("Message")
 
-if Ask("Do you really want to quit?", "No way!", "Yes, goodbye!") == 2 then
-  MainMenu(TakeScreenshot())
+local answer = Ask("Choose:", "Back to game", "Save game", "Quit")
+
+if answer == 2 then
+	Save(1)
+elseif answer == 3 then
+	MainMenu(TakeScreenshot())
 end

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.corelib {
 	class XmlPropertyWriter: PropertyWriter {
 		XmlNode baseNode;
 		public XmlPropertyWriter(XmlNode baseNode) {

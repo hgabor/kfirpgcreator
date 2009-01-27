@@ -120,6 +120,33 @@ namespace KFIRPG.corelib {
 			game.NewGame();
 		}
 
+		/// <summary>
+		/// Saves game data to the specified save slot.
+		/// </summary>
+		/// <param name="saveData">The string to be saved</param>
+		/// <param name="saveSlot">Number of the save slot</param>
+		[Script]
+		public void SaveGame(string saveData, int saveSlot) {
+			FileSaver saver = new FileSaver("save");
+			saver.Save(string.Format("save{0}", saveSlot), saveData);
+			PropertyWriter map = saver.CreatePropertyFile(string.Format("savemap{0}.xml", saveSlot));
+			this.game.currentMap.SaveToSaveFile(map);
+			saver.SavePropertyFiles();
+			saver.RestoreCurrentDirectory();
+		}
+
+		/// <summary>
+		/// Loads game data from the specified save slot.
+		/// </summary>
+		/// <param name="saveSlot">Number of the save slot</param>
+		/// <returns>The loaded string</returns>
+		[Script]
+		public void LoadGame(int saveSlot) {
+			FileLoader loader = new FileLoader("save");
+
+			game.LoadGame(saveSlot, loader);
+		}
+
 		List<string> includedScripts = new List<string>();
 		/// <summary>
 		/// Includes another script. The script must be in the "scripts" folder.

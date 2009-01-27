@@ -6,6 +6,7 @@ using Tao.Lua;
 namespace KFIRPG.corelib {
 	class TaoLuaScript: Script {
 		string script;
+		public string Raw { get; private set; }
 		IntPtr luaState;
 		TaoLuaVM vm;
 
@@ -32,6 +33,7 @@ namespace KFIRPG.corelib {
 		/// <param name="createCoroutine">Create a resumable script.</param>
 		public TaoLuaScript(string script, TaoLuaVM vm, IntPtr luaState, bool createCoroutine) {
 			this.coroutine = createCoroutine;
+			this.Raw = script;
 			if (coroutine) {
 				this.script = string.Format(scriptBase, crNameBase, script.Replace("{", "{{").Replace("}", "}}"));
 			}

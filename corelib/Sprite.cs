@@ -7,6 +7,8 @@ namespace KFIRPG.corelib {
 	/// An object that has a representation on the map.
 	/// </summary>
 	class Sprite {
+		private string name;
+
 		AnimatedGraphics graphic;
 
 		/// <summary>
@@ -23,6 +25,7 @@ namespace KFIRPG.corelib {
 		/// <param name="spriteId">The name of the sprite.</param>
 		/// <param name="game"></param>
 		public Sprite(string spriteId, Game game) {
+			this.name = spriteId;
 			PropertyReader sprite = game.loader.GetPropertyReader().Select("sprites/" + spriteId + ".xml");
 			graphic = new AnimatedGraphics(sprite.GetString("animation"), game);
 			speed = sprite.GetInt("speed");
@@ -33,6 +36,52 @@ namespace KFIRPG.corelib {
 			}
 
 			this.size = game.TileSize;
+		}
+
+		public void SaveToSaveFile(PropertyWriter p) {
+			p.Set("x", x);
+			p.Set("y", y);
+			p.Set("layer", layer);
+			p.Set("corrX", corrX);
+			p.Set("corrY", corrY);
+			p.Set("sprite", name);
+			p.Set("action", action == null ? "" : action.Raw);
+			p.Set("movement",
+				movementAI is ScriptedMovementAI ?
+				((ScriptedMovementAI)MovementAI).Script.Raw : "");
+			p.Set("collide", Collide == null ? "" : Collide.Raw);
+			p.Set("facing", this.facing.ToString());
+			p.Set("moving", this.moving.ToString());
+		}
+
+		protected void Load_FillInDetails(PropertyReader r, Game game) {
+			this.x = r.GetInt("x");
+			this.y = r.GetInt("y");
+			this.layer = r.GetInt("layer");
+			this.corrX = r.GetInt("corrX");
+			this.corrY = r.GetInt("corrY");
+			string scriptText = r.GetString("action");
+			if (scriptText != "") {
+				this.action = game.vm.LoadResumableScript(scriptText);
+				this.action.Owner = this;
+			}
+			scriptText = r.GetString("movement");
+			if (scriptText != "") {
+				this.movementAI = new ScriptedMovementAI(scriptText, game);
+			}
+			scriptText = r.GetString("collide");
+			if (scriptText != "") {
+				this.Collide = game.vm.LoadResumableScript(scriptText);
+				this.Collide.Owner = this;
+			}
+			Turn((Dir)Enum.Parse(typeof(Dir), r.GetString("facing")));
+			this.moving = (Dir)Enum.Parse(typeof(Dir), r.GetString("moving"));
+		}
+
+		public static Sprite LoadFromSaveFile(PropertyReader r, Game game) {
+			Sprite sp = new Sprite(r.GetString("sprite"), game);
+			sp.Load_FillInDetails(r, game);
+			return sp;
 		}
 
 		/// <summary>
@@ -93,7 +142,7 @@ namespace KFIRPG.corelib {
 		/// <summary>
 		/// Sets the script run when the player uses the action command on the sprite.
 		/// </summary>
-		public Script Action { set { action = value; } }
+		public Script Action { get { return action; } set { action = value; } }
 		/// <summary>
 		/// Runs the action script.
 		/// </summary>
@@ -103,7 +152,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public Script Collide {
-			private get;
+			get;
 			set;
 		}
 		public void OnCollide() {
@@ -117,6 +166,7 @@ namespace KFIRPG.corelib {
 		/// </summary>
 		/// <see cref="NotMovingAI"/>
 		public MovementAI MovementAI {
+			get { return movementAI; }
 			set { movementAI = value; }
 		}
 

@@ -17,6 +17,7 @@ char.Attack = 10
 char.AttackDelta = 2
 char.Defense = 5
 char.gfx = AnimatedGraphics("bigstickman")
+char.gfxName = "bigstickman"
 char.isDead = false
 
 local c2 = Character()
@@ -27,6 +28,7 @@ c2.Attack = 8
 c2.AttackDelta = 3
 c2.Defense = 3
 c2.gfx = AnimatedGraphics("stickman")
+c2.gfxName = "stickman"
 c2.isDead = false
 
 s.PlayerParty = { char, c2 }
