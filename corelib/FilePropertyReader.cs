@@ -20,7 +20,12 @@ namespace KFIRPG.corelib {
 			Match matchFull = Regex.Match(fullPath, FullXmlRegex);
 			if (matchFull.Success) {
 				XmlDocument doc = new XmlDocument();
-				doc.Load(fullPath);
+				try {
+					doc.Load(fullPath);
+				}
+				catch (System.IO.FileNotFoundException ex) {
+					throw new ResourceNotFoundException(path, ex);
+				}
 				//This relies on all XML documents having a declaration,
 				//like <?xml version="1.0"?>
 				return new XmlPropertyReader(doc.ChildNodes[1]);
