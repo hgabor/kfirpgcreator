@@ -3,17 +3,25 @@ include("Message")
 function MainMenu(screenshot)
 	StopMusic()
 
-	local question = FullScreen_Ask_Prepare("MainMenu", "New Game", "Load Game", "Change settings", "Quit")
-	local answer = question:Ask(screenshot)
+	repeat
+		local question = FullScreen_Ask_Prepare("MainMenu", "New Game", "Load Game", "Change settings", "Quit")
+		local answer = question:Ask(screenshot)
 
-	if answer == 1 then
-		run("startup")
-	elseif answer == 2 then
-		Load(1)
-	elseif answer == 4 then
-		QuitGame()
-	else
-		Message("Not supported yet")
-		QuitGame()
-	end
+		local restart = false
+		if answer == 1 then
+			run("startup")
+		elseif answer == 2 then
+			local slot = SelectLoadSlot()
+			if slot == 0 then
+				restart = true
+			else
+				Load(slot)
+			end
+		elseif answer == 4 then
+			QuitGame()
+		else
+			Message("Not supported yet")
+			QuitGame()
+		end
+	until not restart
 end

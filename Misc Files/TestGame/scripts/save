@@ -35,10 +35,7 @@ function Save(saveSlot)
 	for i, func in ipairs(saveFunctions) do
 		func(saveTable)
 	end
-	--WriteLine(serialize(saveTable))
-	--WriteLine("before")
 	SaveGame("return " .. serialize(saveTable), saveSlot)
-	--WriteLine("after")
 end
 
 function Load(saveSlot)
@@ -46,5 +43,23 @@ function Load(saveSlot)
 	local loadTable = dofile("save/save" .. saveSlot)
 	for i, func in ipairs(loadFunctions) do
 		func(loadTable)
+	end
+end
+
+
+function SelectSaveSlot()
+	local slots = GetSaveSlots()
+	local question = FullScreen_Ask_Prepare("MainMenu", "Back", unpack(slots))
+	return question:Ask(screenshot) - 1
+end
+
+function SelectLoadSlot()
+	local slots = GetSaveSlots()
+	local question = FullScreen_Ask_Prepare("MainMenu", "Back", unpack(slots))
+	local answer = question:Ask(screenshot) - 1
+	if answer == 0 or slots[answer] == "" then
+		return 0
+	else
+		return answer
 	end
 end

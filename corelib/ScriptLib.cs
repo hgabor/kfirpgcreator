@@ -147,6 +147,23 @@ namespace KFIRPG.corelib {
 			game.LoadGame(saveSlot, loader);
 		}
 
+		[Script]
+		public string[] GetSaveSlots() {
+			FileLoader loader = new FileLoader("save");
+			string[] s = new string[20];
+			for (int i = 1; i < 20; ++i) {
+				string fileName = string.Format("savemap{0}.xml", i);
+				if (!loader.Exists(fileName)) {
+					s[i - 1] = "";
+				}
+				else {
+					PropertyReader r = loader.GetPropertyReader().Select(fileName);
+					s[i - 1] = r.GetString("mapname");
+				}
+			}
+			return s;
+		}
+
 		List<string> includedScripts = new List<string>();
 		/// <summary>
 		/// Includes another script. The script must be in the "scripts" folder.
