@@ -118,6 +118,18 @@ namespace KFIRPG.corelib {
 			else if (obj is string) {
 				Lua.lua_pushstring(luaState, (string)obj);
 			}
+			else if (obj is Array && ((Array)obj).Rank == 1) {
+				Array obja = (Array)obj;
+				int tableIndex = Lua.lua_gettop(luaState) + 1;
+				Lua.lua_createtable(luaState, obja.Length, 0);
+				int i = 1;
+				foreach (var element in obja) {
+					Push(i, luaState);
+					Push(element, luaState);
+					Lua.lua_settable(luaState, tableIndex);
+					++i;
+				}
+			}
 			else {
 				IntPtr ptr = new IntPtr(lightUserData.Count);
 				lightUserData.Add(ptr, obj);
