@@ -56,7 +56,7 @@ namespace KFIRPG.corelib {
 		}
 
 		public bool Exists(string path) {
-			return File.Exists(path);
+			return File.Exists(Path.Combine(basePath, path));
 		}
 
 		#endregion
