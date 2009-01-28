@@ -50,6 +50,10 @@ namespace KFIRPG.corelib {
 			return new PropertyCacheAccessor(source.GetPropertyReader(), propertyCache);
 		}
 
+		public bool Exists(string path) {
+			return source.Exists(path);
+		}
+
 		#endregion
 
 		Dictionary<string, string> propertyCache = new Dictionary<string, string>();

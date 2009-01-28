@@ -36,6 +36,8 @@ namespace KFIRPG.corelib {
 		/// <returns>Array of bytes with the contents of the file.</returns>
 		byte[] LoadRaw(string path);
 
+		bool Exists(string path);
+
 		PropertyReader GetPropertyReader();
 	}
 	/// <summary>

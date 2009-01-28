@@ -28,6 +28,10 @@ namespace KFIRPG.corelib {
 			throw new NotImplementedException();
 		}
 
+		public bool Exists(string path) {
+			throw new NotImplementedException();
+		}
+
 		#endregion
 	}
 }

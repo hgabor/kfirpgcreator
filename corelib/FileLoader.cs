@@ -55,6 +55,10 @@ namespace KFIRPG.corelib {
 			return new FilePropertyReader(basePath);
 		}
 
+		public bool Exists(string path) {
+			return File.Exists(path);
+		}
+
 		#endregion
 	}
 }
