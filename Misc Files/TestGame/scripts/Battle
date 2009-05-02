@@ -94,16 +94,23 @@ function Battle(enemyParty)
   local eCount = #enemyParty
   local pAttackList = {}
   local eAttackList = {}
+  
   local currentChar = 1
+  
+  local NextAliveChar = function()
+    while currentChar <= pCount and s.PlayerParty[currentChar].isDead do
+      currentChar = currentChar + 1
+    end
+  end
+  
+  NextAliveChar()
   
   screen:OnKeyPress(function(key)
     if key:IsPressed(btnAction) then
       --Set the player attack list
       pAttackList[currentChar] = { actAttack, selected }
       currentChar = currentChar + 1
-      while currentChar <= pCount and s.PlayerParty[currentChar].isDead do
-        currentChar = currentChar + 1
-      end
+      NextAliveChar()
       
       if currentChar <= pCount then return end
       --If there are no more players, continus with the enemies
@@ -204,9 +211,7 @@ function Battle(enemyParty)
       pAttackList = {}
       eAttackList = {}
       currentChar = 1
-      while currentChar <= pCount and s.PlayerParty[currentChar] == nil do
-        currentChar = currentChar + 1
-      end
+      NextAliveChar()
       
     elseif key:IsPressed(btnUp) then
       SetSelectedDown(selected-1)
