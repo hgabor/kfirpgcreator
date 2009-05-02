@@ -87,8 +87,10 @@ namespace KFIRPG.corelib {
 		/// <remarks>Reports Buttons.None until the Set() method is called with Buttons.None.
 		/// After that it returns to normal operation.</remarks>
 		internal void WaitForKeyUp() {
-			waitingForKeyUp = true;
-			state = Buttons.None;
+			if (state != Buttons.None) {
+				waitingForKeyUp = true;
+				state = Buttons.None;
+			}
 		}
 
 		bool enabled = true;
