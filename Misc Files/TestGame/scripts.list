@@ -9,11 +9,13 @@ map/innkeepernorooms
 map/watchstep
 Battle
 Character
+Common
 class
 MainMenu
 Message
 firststart
 quit
+save
 Screen
 startup
 luabit/bit.lua
