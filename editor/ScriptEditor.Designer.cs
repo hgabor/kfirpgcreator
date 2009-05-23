@@ -24,7 +24,6 @@
 		/// </summary>
 		private void InitializeComponent() {
 			this.scriptNamesListBox = new System.Windows.Forms.ComboBox();
-			this.scriptTextBox = new System.Windows.Forms.RichTextBox();
 			this.nameTextBox = new System.Windows.Forms.TextBox();
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.scriptLabel = new System.Windows.Forms.Label();
@@ -44,18 +43,6 @@
 			this.scriptNamesListBox.Size = new System.Drawing.Size(160, 21);
 			this.scriptNamesListBox.TabIndex = 0;
 			this.scriptNamesListBox.SelectedIndexChanged += new System.EventHandler(this.scriptNamesListBox_SelectedIndexChanged);
-			// 
-			// scriptTextBox
-			// 
-			this.scriptTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.scriptTextBox.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-			this.scriptTextBox.Location = new System.Drawing.Point(12, 91);
-			this.scriptTextBox.Name = "scriptTextBox";
-			this.scriptTextBox.Size = new System.Drawing.Size(241, 147);
-			this.scriptTextBox.TabIndex = 1;
-			this.scriptTextBox.Text = "";
 			// 
 			// nameTextBox
 			// 
@@ -128,7 +115,6 @@
 			this.Controls.Add(this.scriptLabel);
 			this.Controls.Add(this.nameLabel);
 			this.Controls.Add(this.nameTextBox);
-			this.Controls.Add(this.scriptTextBox);
 			this.Controls.Add(this.scriptNamesListBox);
 			this.Name = "ScriptEditor";
 			this.Text = "ScriptEditor";
@@ -141,7 +127,6 @@
 		#endregion
 
 		private System.Windows.Forms.ComboBox scriptNamesListBox;
-		private System.Windows.Forms.RichTextBox scriptTextBox;
 		private System.Windows.Forms.TextBox nameTextBox;
 		private System.Windows.Forms.Label nameLabel;
 		private System.Windows.Forms.Label scriptLabel;
