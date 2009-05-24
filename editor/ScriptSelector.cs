@@ -27,7 +27,7 @@ namespace KFIRPG.editor {
 			comboBox.Items.Clear();
 			comboBox.Items.Add("");
 			foreach (Script script in scripts) {
-				comboBox.Items.Add(script.name);
+				comboBox.Items.Add(script.Name);
 			}
 			if (current != null && comboBox.Items.Contains(current)) {
 				comboBox.SelectedItem = current;
@@ -45,7 +45,7 @@ namespace KFIRPG.editor {
 				}
 			}
 			else {
-				using (ScriptEditor editor = new ScriptEditor(scripts.Find(sc => sc.name == (string)comboBox.SelectedItem), project)) {
+				using (ScriptEditor editor = new ScriptEditor(scripts.Find(sc => sc.Name == (string)comboBox.SelectedItem), project)) {
 					editor.ShowDialog(this);
 					Populate();
 				}

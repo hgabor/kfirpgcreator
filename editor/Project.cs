@@ -251,8 +251,8 @@ namespace KFIRPG.editor {
 			//Scripts
 			List<string> scriptList = new List<string>();
 			foreach (Script script in scripts) {
-				scriptList.Add(script.name);
-				saver.Save("scripts/" + script.name, script.text);
+				scriptList.Add(script.Name);
+				saver.Save("scripts/" + script.Name, script.Text);
 			}
 			saver.Save("scripts.list", string.Join("\n", scriptList.ToArray()));
 

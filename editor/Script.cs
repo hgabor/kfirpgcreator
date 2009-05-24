@@ -4,12 +4,29 @@ using System.Text;
 
 namespace KFIRPG.editor {
 	class Script {
-		public string name;
-		public string text;
+		private string name;
+		public string Name {
+			get {
+				return name;
+			}
+			set {
+				name = value;
+				string[] nameParts = name.Split('/');
+				ShortName = nameParts[nameParts.Length - 1];
+			}
+		}
+		public string ShortName {
+			get; private set;
+		}
+		public string Text {
+			get;
+			set;
+		}
+		
 
 		public Script(string name, string text) {
-			this.name = name;
-			this.text = text;
+			this.Name = name;
+			this.Text = text;
 		}
 	}
 }

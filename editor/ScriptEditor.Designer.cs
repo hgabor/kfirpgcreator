@@ -23,102 +23,76 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.scriptNamesListBox = new System.Windows.Forms.ComboBox();
-			this.nameTextBox = new System.Windows.Forms.TextBox();
-			this.nameLabel = new System.Windows.Forms.Label();
-			this.scriptLabel = new System.Windows.Forms.Label();
-			this.saveButton = new System.Windows.Forms.Button();
-			this.removeButton = new System.Windows.Forms.Button();
-			this.newButton = new System.Windows.Forms.Button();
+			System.Windows.Forms.SplitContainer splitContainer1;
+			this.filesTreeView = new System.Windows.Forms.TreeView();
+			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			splitContainer1 = new System.Windows.Forms.SplitContainer();
+			splitContainer1.Panel1.SuspendLayout();
+			splitContainer1.Panel2.SuspendLayout();
+			splitContainer1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// scriptNamesListBox
+			// splitContainer1
 			// 
-			this.scriptNamesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.scriptNamesListBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.scriptNamesListBox.FormattingEnabled = true;
-			this.scriptNamesListBox.Location = new System.Drawing.Point(12, 12);
-			this.scriptNamesListBox.Name = "scriptNamesListBox";
-			this.scriptNamesListBox.Size = new System.Drawing.Size(160, 21);
-			this.scriptNamesListBox.TabIndex = 0;
-			this.scriptNamesListBox.SelectedIndexChanged += new System.EventHandler(this.scriptNamesListBox_SelectedIndexChanged);
+			splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			splitContainer1.Location = new System.Drawing.Point(0, 25);
+			splitContainer1.Name = "splitContainer1";
 			// 
-			// nameTextBox
+			// splitContainer1.Panel1
 			// 
-			this.nameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.nameTextBox.Location = new System.Drawing.Point(12, 52);
-			this.nameTextBox.Name = "nameTextBox";
-			this.nameTextBox.Size = new System.Drawing.Size(241, 20);
-			this.nameTextBox.TabIndex = 2;
+			splitContainer1.Panel1.Controls.Add(this.filesTreeView);
 			// 
-			// nameLabel
+			// splitContainer1.Panel2
 			// 
-			this.nameLabel.AutoSize = true;
-			this.nameLabel.Location = new System.Drawing.Point(9, 36);
-			this.nameLabel.Name = "nameLabel";
-			this.nameLabel.Size = new System.Drawing.Size(147, 13);
-			this.nameLabel.TabIndex = 3;
-			this.nameLabel.Text = "Script name (must be unique):";
+			splitContainer1.Panel2.Controls.Add(this.dockPanel);
+			splitContainer1.Size = new System.Drawing.Size(535, 372);
+			splitContainer1.SplitterDistance = 178;
+			splitContainer1.TabIndex = 11;
 			// 
-			// scriptLabel
+			// filesTreeView
 			// 
-			this.scriptLabel.AutoSize = true;
-			this.scriptLabel.Location = new System.Drawing.Point(9, 75);
-			this.scriptLabel.Name = "scriptLabel";
-			this.scriptLabel.Size = new System.Drawing.Size(37, 13);
-			this.scriptLabel.TabIndex = 4;
-			this.scriptLabel.Text = "Script:";
+			this.filesTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.filesTreeView.HideSelection = false;
+			this.filesTreeView.Location = new System.Drawing.Point(0, 0);
+			this.filesTreeView.Name = "filesTreeView";
+			this.filesTreeView.PathSeparator = "/";
+			this.filesTreeView.Size = new System.Drawing.Size(178, 372);
+			this.filesTreeView.TabIndex = 9;
+			this.filesTreeView.DoubleClick += new System.EventHandler(this.filesTreeView_DoubleClick);
 			// 
-			// saveButton
+			// dockPanel
 			// 
-			this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.saveButton.Location = new System.Drawing.Point(178, 244);
-			this.saveButton.Name = "saveButton";
-			this.saveButton.Size = new System.Drawing.Size(75, 23);
-			this.saveButton.TabIndex = 5;
-			this.saveButton.Text = "Save";
-			this.saveButton.UseVisualStyleBackColor = true;
-			this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+			this.dockPanel.ActiveAutoHideContent = null;
+			this.dockPanel.AllowEndUserDocking = false;
+			this.dockPanel.AllowEndUserNestedDocking = false;
+			this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
+			this.dockPanel.Location = new System.Drawing.Point(0, 0);
+			this.dockPanel.Name = "dockPanel";
+			this.dockPanel.Size = new System.Drawing.Size(353, 372);
+			this.dockPanel.TabIndex = 8;
 			// 
-			// removeButton
+			// toolStrip1
 			// 
-			this.removeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.removeButton.Location = new System.Drawing.Point(97, 244);
-			this.removeButton.Name = "removeButton";
-			this.removeButton.Size = new System.Drawing.Size(75, 23);
-			this.removeButton.TabIndex = 6;
-			this.removeButton.Text = "Remove";
-			this.removeButton.UseVisualStyleBackColor = true;
-			this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
-			// 
-			// newButton
-			// 
-			this.newButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.newButton.Location = new System.Drawing.Point(178, 12);
-			this.newButton.Name = "newButton";
-			this.newButton.Size = new System.Drawing.Size(75, 23);
-			this.newButton.TabIndex = 7;
-			this.newButton.Text = "New";
-			this.newButton.UseVisualStyleBackColor = true;
-			this.newButton.Click += new System.EventHandler(this.newButton_Click);
+			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.Size = new System.Drawing.Size(535, 25);
+			this.toolStrip1.TabIndex = 10;
+			this.toolStrip1.Text = "toolStrip1";
 			// 
 			// ScriptEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(265, 279);
-			this.Controls.Add(this.newButton);
-			this.Controls.Add(this.removeButton);
-			this.Controls.Add(this.saveButton);
-			this.Controls.Add(this.scriptLabel);
-			this.Controls.Add(this.nameLabel);
-			this.Controls.Add(this.nameTextBox);
-			this.Controls.Add(this.scriptNamesListBox);
+			this.ClientSize = new System.Drawing.Size(535, 397);
+			this.Controls.Add(splitContainer1);
+			this.Controls.Add(this.toolStrip1);
 			this.Name = "ScriptEditor";
 			this.Text = "ScriptEditor";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ScriptEditor_FormClosing);
+			splitContainer1.Panel1.ResumeLayout(false);
+			splitContainer1.Panel2.ResumeLayout(false);
+			splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -126,12 +100,8 @@
 
 		#endregion
 
-		private System.Windows.Forms.ComboBox scriptNamesListBox;
-		private System.Windows.Forms.TextBox nameTextBox;
-		private System.Windows.Forms.Label nameLabel;
-		private System.Windows.Forms.Label scriptLabel;
-		private System.Windows.Forms.Button saveButton;
-		private System.Windows.Forms.Button removeButton;
-		private System.Windows.Forms.Button newButton;
+		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
+		private System.Windows.Forms.TreeView filesTreeView;
+		private System.Windows.Forms.ToolStrip toolStrip1;
 	}
 }
