@@ -26,6 +26,8 @@ namespace KFIRPG.editor {
 		public Script Script { get; private set; }
 
 		public DocumentTabForm(Script script) {
+			if (script == null) throw new ArgumentNullException("script");
+
 			Script = script;
 			InitializeComponent();
 
@@ -51,8 +53,10 @@ namespace KFIRPG.editor {
 			textEditor.Text = Script.Text;
 		}
 
+		public event EventHandler Saved;
 		public void Save() {
 			Script.Text = textEditor.Text;
+			if (Saved != null) Saved(this, new EventArgs());
 		}
 
 		public TextEditorControl TextEditor {

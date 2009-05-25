@@ -325,4 +325,10 @@
   <ItemGroup>
     <None Include="Resources\layers.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_red.png" />
+  </ItemGroup>
 </Project>

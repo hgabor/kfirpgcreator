@@ -19,6 +19,10 @@ namespace KFIRPG.editor {
 
 		ICSharpCode.TextEditor.TextEditorControl textEditor;
 
+		const string PageKey = "page";
+		const string EditedPageKey = "editedpage";
+		const string FolderKey = "folder";
+
 		public ScriptEditor(Project project)
 			: this(null, project) {
 		}
@@ -36,22 +40,46 @@ namespace KFIRPG.editor {
 				}
 			};
 
+			ImageList images = new ImageList();
+			images.ColorDepth = ColorDepth.Depth32Bit;
+			images.Images.Add(PageKey, KFIRPG.editor.Properties.Resources.page);
+			images.Images.Add(EditedPageKey, KFIRPG.editor.Properties.Resources.page_red);
+			images.Images.Add(FolderKey, KFIRPG.editor.Properties.Resources.folder);
+			filesTreeView.ImageList = images;
+
+			PopulateList();
+
 			if (currentScript != null) {
 				LoadScript(currentScript);
 			}
-			PopulateList();
 		}
 
 		private class ScriptTreeNode: TreeNode {
 			public ScriptTreeNode(Script script, string displayName)
 				: base(displayName) {
 				this.Script = script;
+				this.ImageKey = PageKey;
+				this.SelectedImageKey = PageKey;
 			}
 
 			public Script Script {
 				get;
 				private set;
 			}
+		}
+
+		private TreeNode FindNode(Script script) {
+			TreeNodeCollection nodes = filesTreeView.Nodes;
+			string[] nameParts = script.Name.Split('/');
+			for (int i = 0; i < nameParts.Length - 1; ++i) {
+				nodes = nodes[nameParts[i]].Nodes;
+			}
+			for (int i = 0; i < nodes.Count; ++i) {
+				if (nodes[i].Text == nameParts[nameParts.Length - 1]) {
+					return nodes[i];
+				}
+			}
+			return null;
 		}
 
 		private void PopulateList() {
@@ -65,6 +93,8 @@ namespace KFIRPG.editor {
 					TreeNode currentNode = null;
 					if (currentNodes.Length == 0) {
 						currentNode = nodes.Add(nameParts[i], nameParts[i]);
+						currentNode.ImageKey = FolderKey;
+						currentNode.SelectedImageKey = FolderKey;
 					}
 					else {
 						currentNode = currentNodes[i];
@@ -72,22 +102,6 @@ namespace KFIRPG.editor {
 					nodes = currentNode.Nodes;
 				}
 				nodes.Add(new ScriptTreeNode(s, nameParts[nameParts.Length - 1]));
-			}
-			if (scripts.Contains(currentScript)) {
-				TreeNodeCollection nodes = filesTreeView.Nodes;
-				string[] nameParts = currentScript.Name.Split('/');
-				for (int i = 0; i < nameParts.Length - 1; ++i) {
-					nodes = nodes[nameParts[i]].Nodes;
-				}
-				TreeNode n = null;
-				for (int i = 0; i < nodes.Count; ++i) {
-					if (nodes[i].Text == nameParts[nameParts.Length - 1]) {
-						n = nodes[i];
-						break;
-					}
-				}
-				n.EnsureVisible();
-				filesTreeView.SelectedNode = n;
 			}
 		}
 
@@ -100,14 +114,83 @@ namespace KFIRPG.editor {
 					return;
 				}
 			}
+
 			//If it wasn't, open it
-			new DocumentTabForm(currentScript).DockHandler.Show(this.dockPanel, DockState.Document);
+			var newTabForm = new DocumentTabForm(script);
+			newTabForm.DockHandler.Show(this.dockPanel, DockState.Document);
+
+			TreeNode n = FindNode(script);
+
+			newTabForm.TextEditor.TextChanged += (sender, args) => {
+				n.ImageKey = EditedPageKey;
+				n.SelectedImageKey = EditedPageKey;
+			};
+			newTabForm.Saved += (sender, args) => {
+				n.ImageKey = PageKey;
+				n.SelectedImageKey = PageKey;
+			};
+			newTabForm.FormClosed += (sender, args) => {
+				n.ImageKey = PageKey;
+				n.SelectedImageKey = PageKey;
+			};
+
+			n.EnsureVisible();
+			filesTreeView.SelectedNode = n;
 		}
 
 		private void filesTreeView_DoubleClick(object sender, EventArgs e) {
+			if (!(filesTreeView.SelectedNode is ScriptTreeNode)) return;
 			string name = filesTreeView.SelectedNode.FullPath;
 			currentScript = scripts.Find(sc => sc.Name == name);
 			LoadScript(currentScript);
+		}
+
+		private void newToolStripButton_Click(object sender, EventArgs e) {
+			TreeNode selectedNode = filesTreeView.SelectedNode;
+			TreeNodeCollection insertHere;
+			string scriptPath;
+			if (selectedNode == null) {
+				insertHere = filesTreeView.Nodes;
+				scriptPath = "";
+			}
+			else {
+				if (selectedNode is ScriptTreeNode) {
+					if (selectedNode.Parent == null) {
+						insertHere = filesTreeView.Nodes;
+						scriptPath = "";
+					}
+					else {
+						insertHere = selectedNode.Parent.Nodes;
+						scriptPath = selectedNode.Parent.FullPath + "/";
+					}
+				}
+				else {
+					insertHere = selectedNode.Nodes;
+					scriptPath = selectedNode.FullPath + "/";
+				}
+			}
+			string scriptName;
+			using (ComposedForm f = new ComposedForm("New Script", ComposedForm.Parts.Name)) {
+				f.AddNameChecker(s => {
+					return !scripts.Exists(script => script.Name == scriptPath + s);
+				});
+				f.AddNameChecker(s => {
+					foreach (char c in Path.GetInvalidFileNameChars()) {
+						if (s.IndexOf(c) != -1) return false;
+					}
+					return true;
+				});
+				if (f.ShowDialog() == DialogResult.OK) {
+					scriptName = f.GetName();
+				}
+				else {
+					return;
+				}
+			}
+			Script newScript = new Script(scriptPath + scriptName, "");
+			insertHere.Add(new ScriptTreeNode(newScript, newScript.ShortName));
+			scripts.Add(newScript);
+			LoadScript(newScript);
 		}
 	}
 }
