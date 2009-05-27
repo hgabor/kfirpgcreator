@@ -132,10 +132,16 @@ namespace KFIRPG.editor {
 			newTabForm.FormClosed += (sender, args) => {
 				n.ImageKey = PageKey;
 				n.SelectedImageKey = PageKey;
+
+				//If this was the last document closed
+				if (dockPanel.DocumentsCount == 1) {
+					saveToolStripButton.Enabled = false;
+				}
 			};
 
 			n.EnsureVisible();
 			filesTreeView.SelectedNode = n;
+			saveToolStripButton.Enabled = true;
 		}
 
 		private void filesTreeView_DoubleClick(object sender, EventArgs e) {
@@ -191,6 +197,13 @@ namespace KFIRPG.editor {
 			insertHere.Add(new ScriptTreeNode(newScript, newScript.ShortName));
 			scripts.Add(newScript);
 			LoadScript(newScript);
+		}
+
+		private void saveToolStripButton_Click(object sender, EventArgs e) {
+			if (dockPanel.ActiveDocument == null) {
+				throw new InvalidOperationException("There is no document open to save.");
+			}
+			((DocumentTabForm)dockPanel.ActiveDocument).Save();
 		}
 	}
 }

@@ -100,11 +100,13 @@
 			// saveToolStripButton
 			// 
 			this.saveToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.saveToolStripButton.Enabled = false;
 			this.saveToolStripButton.Image = global::KFIRPG.editor.Properties.Resources.disk;
 			this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.saveToolStripButton.Name = "saveToolStripButton";
 			this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
 			this.saveToolStripButton.Text = "saveToolStripButton";
+			this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
 			// 
 			// ScriptEditor
 			// 
