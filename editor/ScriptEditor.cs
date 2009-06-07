@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Xml;
 using System.IO;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using Aga.Controls.Tree;
 
 
 namespace KFIRPG.editor {
@@ -15,13 +17,41 @@ namespace KFIRPG.editor {
 	partial class ScriptEditor: Form {
 
 		List<Script> scripts;
-		Script currentScript;
+
+		TreeModel scriptsModel = new TreeModel();
 
 		ICSharpCode.TextEditor.TextEditorControl textEditor;
 
 		const string PageKey = "page";
 		const string EditedPageKey = "editedpage";
 		const string FolderKey = "folder";
+
+		class ScriptNode: Node {
+			public Script Script { get; private set; }
+
+
+			public ScriptNode(Script script) {
+				this.Script = script;
+				this.Image = KFIRPG.editor.Properties.Resources.page;
+			}
+
+			public override string Text {
+				get {
+					return Script.ShortName;
+				}
+				set {
+					throw new NotImplementedException();
+				}
+			}
+		}
+
+		class FolderNode: Node {
+			public FolderNode(string name)
+				: base(name) {
+				this.Image = KFIRPG.editor.Properties.Resources.folder;
+			}
+		}
+
 
 		public ScriptEditor(Project project)
 			: this(null, project) {
@@ -40,12 +70,7 @@ namespace KFIRPG.editor {
 				}
 			};
 
-			ImageList images = new ImageList();
-			images.ColorDepth = ColorDepth.Depth32Bit;
-			images.Images.Add(PageKey, KFIRPG.editor.Properties.Resources.page);
-			images.Images.Add(EditedPageKey, KFIRPG.editor.Properties.Resources.page_red);
-			images.Images.Add(FolderKey, KFIRPG.editor.Properties.Resources.folder);
-			filesTreeView.ImageList = images;
+			scriptsTreeView.Model = scriptsModel;
 
 			PopulateList();
 
@@ -68,41 +93,52 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		private TreeNode FindNode(Script script) {
-			TreeNodeCollection nodes = filesTreeView.Nodes;
+		private ScriptNode FindScriptNode(Script script) {
+			Collection<Node> nodes = scriptsModel.Nodes;
 			string[] nameParts = script.Name.Split('/');
 			for (int i = 0; i < nameParts.Length - 1; ++i) {
-				nodes = nodes[nameParts[i]].Nodes;
+				nodes = FindNodeByName(nameParts[i], nodes).Nodes;
 			}
-			for (int i = 0; i < nodes.Count; ++i) {
-				if (nodes[i].Text == nameParts[nameParts.Length - 1]) {
-					return nodes[i];
+			foreach (Node n in nodes) {
+				if (n.Text == script.ShortName) {
+					if (!(n is ScriptNode)) {
+						throw new InvalidOperationException("The node is not a script!");
+					}
+					return (ScriptNode)n;
 				}
 			}
 			return null;
 		}
 
+		private Node FindNodeByName(string name, Collection<Node> root) {
+			foreach (Node node in root) {
+				if (node.Text == name) return node;
+			}
+			return null;
+		}
+
 		private void PopulateList() {
+			scriptsTreeView.BeginUpdate();
+
 			foreach (Script s in scripts) {
 				string[] nameParts = s.Name.Split('/');
 
+				Collection<Node> sNodes = scriptsModel.Nodes;
 
-				TreeNodeCollection nodes = filesTreeView.Nodes;
 				for (int i = 0; i < nameParts.Length - 1; ++i) {
-					TreeNode[] currentNodes = nodes.Find(nameParts[i], false);
-					TreeNode currentNode = null;
-					if (currentNodes.Length == 0) {
-						currentNode = nodes.Add(nameParts[i], nameParts[i]);
-						currentNode.ImageKey = FolderKey;
-						currentNode.SelectedImageKey = FolderKey;
+					//Check if folder already exists
+					Node folderNode = FindNodeByName(nameParts[i], sNodes);
+					
+					if (folderNode == null) {
+						folderNode = new FolderNode(nameParts[i]);
+						sNodes.Add(folderNode);
 					}
-					else {
-						currentNode = currentNodes[i];
-					}
-					nodes = currentNode.Nodes;
+					sNodes = folderNode.Nodes;
 				}
-				nodes.Add(new ScriptTreeNode(s, nameParts[nameParts.Length - 1]));
+				sNodes.Add(new ScriptNode(s));
 			}
+
+			scriptsTreeView.EndUpdate();
 		}
 
 		private void LoadScript(Script script) {
@@ -119,19 +155,16 @@ namespace KFIRPG.editor {
 			var newTabForm = new DocumentTabForm(script);
 			newTabForm.DockHandler.Show(this.dockPanel, DockState.Document);
 
-			TreeNode n = FindNode(script);
+			ScriptNode sn = FindScriptNode(script);
 
 			newTabForm.TextEditor.TextChanged += (sender, args) => {
-				n.ImageKey = EditedPageKey;
-				n.SelectedImageKey = EditedPageKey;
+				sn.Image = KFIRPG.editor.Properties.Resources.page_red;
 			};
 			newTabForm.Saved += (sender, args) => {
-				n.ImageKey = PageKey;
-				n.SelectedImageKey = PageKey;
+				sn.Image = KFIRPG.editor.Properties.Resources.page;
 			};
 			newTabForm.FormClosed += (sender, args) => {
-				n.ImageKey = PageKey;
-				n.SelectedImageKey = PageKey;
+				sn.Image = KFIRPG.editor.Properties.Resources.page;
 
 				//If this was the last document closed
 				if (dockPanel.DocumentsCount == 1) {
@@ -139,42 +172,35 @@ namespace KFIRPG.editor {
 				}
 			};
 
-			n.EnsureVisible();
-			filesTreeView.SelectedNode = n;
+			TreeNodeAdv tn = scriptsTreeView.FindNodeByTag(sn);
+			scriptsTreeView.EnsureVisible(tn);
+			scriptsTreeView.SelectedNode = tn;
+
 			saveToolStripButton.Enabled = true;
 		}
 
-		private void filesTreeView_DoubleClick(object sender, EventArgs e) {
-			if (!(filesTreeView.SelectedNode is ScriptTreeNode)) return;
-			string name = filesTreeView.SelectedNode.FullPath;
-			currentScript = scripts.Find(sc => sc.Name == name);
-			LoadScript(currentScript);
-		}
-
 		private void newToolStripButton_Click(object sender, EventArgs e) {
-			TreeNode selectedNode = filesTreeView.SelectedNode;
-			TreeNodeCollection insertHere;
-			string scriptPath;
-			if (selectedNode == null) {
-				insertHere = filesTreeView.Nodes;
-				scriptPath = "";
+			Node n = (Node)scriptsTreeView.SelectedNode.Tag;
+			Collection<Node> nInsertHere;
+			if (n is ScriptNode) {
+				nInsertHere = n.Parent.Nodes;
+				n = n.Parent;
+			}
+			else if (n is FolderNode) {
+				nInsertHere = n.Nodes;
 			}
 			else {
-				if (selectedNode is ScriptTreeNode) {
-					if (selectedNode.Parent == null) {
-						insertHere = filesTreeView.Nodes;
-						scriptPath = "";
-					}
-					else {
-						insertHere = selectedNode.Parent.Nodes;
-						scriptPath = selectedNode.Parent.FullPath + "/";
-					}
-				}
-				else {
-					insertHere = selectedNode.Nodes;
-					scriptPath = selectedNode.FullPath + "/";
-				}
+				throw new InvalidOperationException("Tree should only contain folders and scripts");
 			}
+
+			string scriptPath = string.Join("/",
+				Array.ConvertAll<object, string>(
+					scriptsModel.GetPath(n).FullPath,
+					o => ((Node)o).Text));
+			if (scriptPath != "") {
+				scriptPath += "/";
+			}
+
 			string scriptName;
 			using (ComposedForm f = new ComposedForm("New Script", ComposedForm.Parts.Name)) {
 				f.AddNameChecker(s => {
@@ -194,7 +220,7 @@ namespace KFIRPG.editor {
 				}
 			}
 			Script newScript = new Script(scriptPath + scriptName, "");
-			insertHere.Add(new ScriptTreeNode(newScript, newScript.ShortName));
+			nInsertHere.Add(new ScriptNode(newScript));
 			scripts.Add(newScript);
 			LoadScript(newScript);
 		}
@@ -204,6 +230,36 @@ namespace KFIRPG.editor {
 				throw new InvalidOperationException("There is no document open to save.");
 			}
 			((DocumentTabForm)dockPanel.ActiveDocument).Save();
+		}
+
+
+		private void filesTreeView_ItemDrag(object sender, ItemDragEventArgs e) {
+			if (e.Item is ScriptTreeNode) {
+				ScriptTreeNode node = (ScriptTreeNode)e.Item;
+				DoDragDrop(node.Script, DragDropEffects.Copy | DragDropEffects.Move);
+			}
+		}
+
+		private void filesTreeView_DragOver(object sender, DragEventArgs e) {
+			//Only allow drop if we are dragging a script
+			if (e.Data.GetDataPresent(typeof(Script))) {
+				e.Effect = DragDropEffects.Move;
+			}
+		}
+
+		private void FindTreeNode(int x, int y) {
+			
+		}
+
+		private void filesTreeView_DragDrop(object sender, DragEventArgs e) {
+			//TreeNode node = filesTreeView.PointToClient
+			Console.WriteLine();
+		}
+
+		private void scriptsTreeView_DoubleClick(object sender, EventArgs e) {
+			if (scriptsTreeView.SelectedNode.Tag is ScriptNode) {
+				LoadScript(((ScriptNode)scriptsTreeView.SelectedNode.Tag).Script);
+			}
 		}
 	}
 }

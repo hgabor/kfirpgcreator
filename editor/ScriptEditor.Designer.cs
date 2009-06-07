@@ -24,7 +24,9 @@
 		/// </summary>
 		private void InitializeComponent() {
 			System.Windows.Forms.SplitContainer splitContainer;
-			this.filesTreeView = new System.Windows.Forms.TreeView();
+			this.scriptsTreeView = new Aga.Controls.Tree.TreeViewAdv();
+			this.nodeIcon1 = new Aga.Controls.Tree.NodeControls.NodeIcon();
+			this.nodeTextBox1 = new Aga.Controls.Tree.NodeControls.NodeTextBox();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +46,7 @@
 			// 
 			// splitContainer.Panel1
 			// 
-			splitContainer.Panel1.Controls.Add(this.filesTreeView);
+			splitContainer.Panel1.Controls.Add(this.scriptsTreeView);
 			// 
 			// splitContainer.Panel2
 			// 
@@ -53,16 +55,39 @@
 			splitContainer.SplitterDistance = 178;
 			splitContainer.TabIndex = 11;
 			// 
-			// filesTreeView
+			// scriptsTreeView
 			// 
-			this.filesTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.filesTreeView.HideSelection = false;
-			this.filesTreeView.Location = new System.Drawing.Point(0, 0);
-			this.filesTreeView.Name = "filesTreeView";
-			this.filesTreeView.PathSeparator = "/";
-			this.filesTreeView.Size = new System.Drawing.Size(178, 372);
-			this.filesTreeView.TabIndex = 9;
-			this.filesTreeView.DoubleClick += new System.EventHandler(this.filesTreeView_DoubleClick);
+			this.scriptsTreeView.AllowDrop = true;
+			this.scriptsTreeView.BackColor = System.Drawing.SystemColors.Window;
+			this.scriptsTreeView.DefaultToolTipProvider = null;
+			this.scriptsTreeView.DisplayDraggingNodes = true;
+			this.scriptsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.scriptsTreeView.DragDropMarkColor = System.Drawing.Color.Black;
+			this.scriptsTreeView.LineColor = System.Drawing.SystemColors.ControlDark;
+			this.scriptsTreeView.Location = new System.Drawing.Point(0, 0);
+			this.scriptsTreeView.Model = null;
+			this.scriptsTreeView.Name = "scriptsTreeView";
+			this.scriptsTreeView.NodeControls.Add(this.nodeIcon1);
+			this.scriptsTreeView.NodeControls.Add(this.nodeTextBox1);
+			this.scriptsTreeView.SelectedNode = null;
+			this.scriptsTreeView.Size = new System.Drawing.Size(178, 372);
+			this.scriptsTreeView.TabIndex = 10;
+			this.scriptsTreeView.Text = "treeViewAdv1";
+			this.scriptsTreeView.DoubleClick += new System.EventHandler(this.scriptsTreeView_DoubleClick);
+			// 
+			// nodeIcon1
+			// 
+			this.nodeIcon1.DataPropertyName = "Image";
+			this.nodeIcon1.LeftMargin = 1;
+			this.nodeIcon1.ParentColumn = null;
+			// 
+			// nodeTextBox1
+			// 
+			this.nodeTextBox1.DataPropertyName = "Text";
+			this.nodeTextBox1.EditEnabled = false;
+			this.nodeTextBox1.IncrementalSearchEnabled = true;
+			this.nodeTextBox1.LeftMargin = 3;
+			this.nodeTextBox1.ParentColumn = null;
 			// 
 			// dockPanel
 			// 
@@ -130,9 +155,11 @@
 		#endregion
 
 		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
-		private System.Windows.Forms.TreeView filesTreeView;
 		private System.Windows.Forms.ToolStrip toolStrip;
 		private System.Windows.Forms.ToolStripButton newToolStripButton;
 		private System.Windows.Forms.ToolStripButton saveToolStripButton;
+		private Aga.Controls.Tree.TreeViewAdv scriptsTreeView;
+		private Aga.Controls.Tree.NodeControls.NodeIcon nodeIcon1;
+		private Aga.Controls.Tree.NodeControls.NodeTextBox nodeTextBox1;
 	}
 }
