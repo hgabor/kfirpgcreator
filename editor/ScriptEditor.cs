@@ -180,13 +180,20 @@ namespace KFIRPG.editor {
 		}
 
 		private void newToolStripButton_Click(object sender, EventArgs e) {
-			Node n = (Node)scriptsTreeView.SelectedNode.Tag;
+			Node n;
+			if (scriptsTreeView.SelectedNode != null) {
+				n = (Node)scriptsTreeView.SelectedNode.Tag;
+			}
+			else {
+				n = scriptsModel.Root;
+			}
+
 			Collection<Node> nInsertHere;
 			if (n is ScriptNode) {
 				nInsertHere = n.Parent.Nodes;
 				n = n.Parent;
 			}
-			else if (n is FolderNode) {
+			else if (n is FolderNode || n == scriptsModel.Root) {
 				nInsertHere = n.Nodes;
 			}
 			else {
