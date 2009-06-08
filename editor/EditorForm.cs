@@ -140,43 +140,68 @@ namespace KFIRPG.editor {
 			//palette.Show();
 		}
 
+		private bool CheckForUnsavedChanges() {
+			//If there is no open project, there is nothing to save...
+			if (currentProject == null) {
+				return true;
+			}
+
+			DialogResult res = MessageBox.Show(this, "Your project might have unsaved changes. Do you wish to save them now?",
+				"Exit", MessageBoxButtons.YesNoCancel);
+
+			switch (res) {
+				//If user clicked cancel, we should not continue
+				case DialogResult.Cancel:
+					return false;
+
+				//If user clicked no, we can go on without saving 
+				case DialogResult.No:
+					return true;
+
+				//If user clicked yes, we should try to save
+				case DialogResult.Yes:
+					if (this.savePath == null) {
+
+						//If user cancelled the save dialog, we should not continue without saving
+						if (!this.SetSaveLocation()) {
+							return false;
+						}
+					}
+					Save();
+
+					return true;
+				default:
+					throw new InvalidOperationException("Don't know what happened... user clicked a button that is not Yes, No or Cancel");
+					
+			}
+		}
+
 		private void RecreateMRUList() {
 			mruToolStripMenuItem.DropDownItems.Clear();
 			foreach (string item in mru) {
 				ToolStripMenuItem menuItem = new ToolStripMenuItem();
 				menuItem.Text = item;
 				menuItem.Click += (sender, args) => {
-					switch (MessageBox.Show(this, "Your project might have unsaved changes. Click yes to save the changes, no to continue without saving, or cancel if you do not want to load the project.",
-	"Exit", MessageBoxButtons.YesNoCancel)) {
-						case DialogResult.Yes:
-							if (this.savePath == null) {
-								if (this.SetSaveLocation()) Save();
+					if (CheckForUnsavedChanges()) {
+						string path = menuItem.Text;
+						if (!Directory.Exists(path)) {
+							if (MessageBox.Show(this, "The specified directory does not exist!\nDo you want to remove it from the list?",
+								"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+								mru.Remove(path);
+								RecreateMRUList();
 							}
-							else {
-								Save();
-							}
-							goto case DialogResult.No;
-						case DialogResult.No:
-							string path = menuItem.Text;
-							if (!Directory.Exists(path)) {
-								if (MessageBox.Show(this, "The specified directory does not exist!\nDo you want to remove it from the list?",
+						}
+						else {
+							savePath = path;
+							if (!Load()) {
+								if (MessageBox.Show(this, "Do you want to remove it from the list?",
 									"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
 									mru.Remove(path);
 									RecreateMRUList();
+									savePath = null;
 								}
 							}
-							else {
-								savePath = path;
-								if (!Load()) {
-									if (MessageBox.Show(this, "Do you want to remove it from the list?",
-										"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-										mru.Remove(path);
-										RecreateMRUList();
-										savePath = null;
-									}
-								}
-							}
-							break;
+						}
 					}
 				};
 				mruToolStripMenuItem.DropDownItems.Add(menuItem);
@@ -406,31 +431,18 @@ namespace KFIRPG.editor {
 			this.Close();
 		}
 
-		//TODO: Refactor duplicate MessageBox code
 		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e) {
-			switch (MessageBox.Show(this, "Your project might have unsaved changes. Click yes to save the changes, no to exit without saving, or cancel if you do not want to exit.",
-				"Exit", MessageBoxButtons.YesNoCancel)) {
-				case DialogResult.Yes:
-					if (this.savePath == null) {
-						if (this.SetSaveLocation()) Save();
-						else e.Cancel = true;
-					}
-					else {
-						Save();
-					}
-					break;
-				case DialogResult.Cancel:
-					e.Cancel = true;
-					break;
-				case DialogResult.No:
-					break;
+			if (!CheckForUnsavedChanges()) {
+				e.Cancel = true;
 			}
 		}
 
 		private void newProjectToolStripMenuItem_Click(object sender, EventArgs e) {
-			savePath = "NewGame";
-			Load();
-			savePath = null;
+			if (CheckForUnsavedChanges()) {
+				savePath = "NewGame";
+				Load();
+				savePath = null;
+			}
 		}
 
 		private void loadProjectToolStripMenuItem_Click(object sender, EventArgs e) {
