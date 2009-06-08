@@ -79,6 +79,7 @@ namespace KFIRPG.editor {
 			Button okButton = new Button();
 			int maxWidth = 2 * okButton.Width + 3 * spacing;
 
+			//Add Name textbox
 			if ((parts & Parts.Name) == Parts.Name) {
 				Label label = new Label();
 				label.Text = "Name:";
@@ -90,7 +91,12 @@ namespace KFIRPG.editor {
 				nameTextBox = new TextBox();
 				nameTextBox.Top = startHere + spacing;
 				nameTextBox.Left = label.Right + spacing;
-				nameTextBox.TextChanged += (sender, args) => {
+
+				if ((required & Parts.Name) == Parts.Name) {
+					AddNameChecker(s => !string.IsNullOrEmpty(s));
+				}
+
+				EventHandler nameCheckerHandler = (sender, args) => {
 					if (nameChecker == null) return;
 					foreach (Predicate<string> pred in nameChecker.GetInvocationList()) {
 						if (!pred(nameTextBox.Text)) {
@@ -100,13 +106,17 @@ namespace KFIRPG.editor {
 						okButton.Enabled = true;
 					}
 				};
-				if ((required & Parts.Name) == Parts.Name) {
-					AddNameChecker(s => !string.IsNullOrEmpty(s));
-				}
+
+				nameTextBox.TextChanged += nameCheckerHandler;
+
+				nameCheckerHandler(this, new EventArgs());
+
 				Controls.Add(nameTextBox);
 				if ((nameTextBox.Right + spacing) > maxWidth) maxWidth = nameTextBox.Right + spacing;
 				startHere = nameTextBox.Bottom + spacing;
 			}
+
+			//Add width and height controls
 			if ((parts & Parts.Size) == Parts.Size) {
 				Label label = new Label();
 				label.Text = "Width:";
@@ -141,6 +151,8 @@ namespace KFIRPG.editor {
 				if ((heightNum.Right + spacing) > maxWidth) maxWidth = heightNum.Right + spacing;
 				startHere = heightNum.Bottom + spacing;
 			}
+
+			//Add a direction selector (up, down, left, right)
 			if ((parts & Parts.Direction) == Parts.Direction) {
 				Label label = new Label();
 				label.Text = "Direction:";
