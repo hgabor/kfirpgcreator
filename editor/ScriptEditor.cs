@@ -268,6 +268,26 @@ namespace KFIRPG.editor {
 				LoadScript(((ScriptNode)scriptsTreeView.SelectedNode.Tag).Script);
 			}
 		}
+
+		private void scriptsTreeView_MouseClick(object sender, MouseEventArgs e) {
+			//Check for right clicks to open context menu
+			if (e.Button == MouseButtons.Right &&
+				scriptsTreeView.SelectedNode != null &&
+				scriptsTreeView.SelectedNode.Tag is ScriptNode) {
+				scriptContextMenu.Show(scriptsTreeView, e.Location);
+			}
+		}
+
+		private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
+			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
+			if (MessageBox.Show(
+				string.Format("Are you sure you want tot delete \"{0}\"?", n.Script.ShortName),
+				"Delete script",
+				MessageBoxButtons.YesNo) == DialogResult.Yes) {
+				n.Parent.Nodes.Remove(n);
+				scripts.Remove(n.Script);
+			}
+		}
 	}
 }
 

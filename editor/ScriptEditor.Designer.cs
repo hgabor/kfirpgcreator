@@ -23,18 +23,22 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.SplitContainer splitContainer;
 			this.scriptsTreeView = new Aga.Controls.Tree.TreeViewAdv();
 			this.nodeIcon1 = new Aga.Controls.Tree.NodeControls.NodeIcon();
 			this.nodeTextBox1 = new Aga.Controls.Tree.NodeControls.NodeTextBox();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+			this.scriptContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			splitContainer = new System.Windows.Forms.SplitContainer();
 			splitContainer.Panel1.SuspendLayout();
 			splitContainer.Panel2.SuspendLayout();
 			splitContainer.SuspendLayout();
+			this.scriptContextMenu.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -72,7 +76,8 @@
 			this.scriptsTreeView.SelectedNode = null;
 			this.scriptsTreeView.Size = new System.Drawing.Size(178, 372);
 			this.scriptsTreeView.TabIndex = 10;
-			this.scriptsTreeView.Text = "treeViewAdv1";
+			this.scriptsTreeView.Text = "Scripts";
+			this.scriptsTreeView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.scriptsTreeView_MouseClick);
 			this.scriptsTreeView.DoubleClick += new System.EventHandler(this.scriptsTreeView_DoubleClick);
 			// 
 			// nodeIcon1
@@ -100,6 +105,13 @@
 			this.dockPanel.Name = "dockPanel";
 			this.dockPanel.Size = new System.Drawing.Size(353, 372);
 			this.dockPanel.TabIndex = 8;
+			// 
+			// scriptContextMenu
+			// 
+			this.scriptContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem});
+			this.scriptContextMenu.Name = "scriptContextMenu";
+			this.scriptContextMenu.Size = new System.Drawing.Size(153, 48);
 			// 
 			// toolStrip
 			// 
@@ -133,6 +145,14 @@
 			this.saveToolStripButton.Text = "saveToolStripButton";
 			this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
 			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteToolStripMenuItem.Text = "Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			// 
 			// ScriptEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,6 +165,7 @@
 			splitContainer.Panel1.ResumeLayout(false);
 			splitContainer.Panel2.ResumeLayout(false);
 			splitContainer.ResumeLayout(false);
+			this.scriptContextMenu.ResumeLayout(false);
 			this.toolStrip.ResumeLayout(false);
 			this.toolStrip.PerformLayout();
 			this.ResumeLayout(false);
@@ -161,5 +182,7 @@
 		private Aga.Controls.Tree.TreeViewAdv scriptsTreeView;
 		private Aga.Controls.Tree.NodeControls.NodeIcon nodeIcon1;
 		private Aga.Controls.Tree.NodeControls.NodeTextBox nodeTextBox1;
+		private System.Windows.Forms.ContextMenuStrip scriptContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 	}
 }
