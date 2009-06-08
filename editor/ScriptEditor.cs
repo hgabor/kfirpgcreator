@@ -276,17 +276,46 @@ namespace KFIRPG.editor {
 				scriptsTreeView.SelectedNode.Tag is ScriptNode) {
 				scriptContextMenu.Show(scriptsTreeView, e.Location);
 			}
+			else if (e.Button == MouseButtons.Right &&
+				scriptsTreeView.SelectedNode != null &&
+				scriptsTreeView.SelectedNode.Tag is FolderNode) {
+				folderContextMenu.Show(scriptsTreeView, e.Location);
+			}
 		}
 
-		private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
+		private void DeleteNodeRecursive(Node node) {
+			if (node is ScriptNode) {
+				scripts.Remove(((ScriptNode)node).Script);
+			}
+			else {
+				while (node.Nodes.Count != 0) {
+					DeleteNodeRecursive(node.Nodes[0]);
+				}
+			}
+			node.Parent.Nodes.Remove(node);
+		}
+
+
+
+		private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
 			if (MessageBox.Show(
-				string.Format("Are you sure you want tot delete \"{0}\"?", n.Script.ShortName),
+				string.Format("Are you sure you want tot delete script \"{0}\"?", n.Script.ShortName),
 				"Delete script",
 				MessageBoxButtons.YesNo) == DialogResult.Yes) {
-				n.Parent.Nodes.Remove(n);
-				scripts.Remove(n.Script);
+				DeleteNodeRecursive(n);
 			}
+		}
+
+		private void deleteFolderToolStripMenuItem_Click(object sender, EventArgs e) {
+			FolderNode n = (FolderNode)scriptsTreeView.SelectedNode.Tag;
+			if (MessageBox.Show(
+				string.Format("Are you sure you want tot delete folder \"{0}\" and all of its contents?", n.Text),
+				"Delete folder",
+				MessageBoxButtons.YesNo) == DialogResult.Yes) {
+				DeleteNodeRecursive(n);
+			}
+
 		}
 	}
 }

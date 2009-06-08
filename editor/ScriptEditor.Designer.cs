@@ -30,16 +30,19 @@
 			this.nodeTextBox1 = new Aga.Controls.Tree.NodeControls.NodeTextBox();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
 			this.scriptContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
-			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.folderContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.deleteFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			splitContainer = new System.Windows.Forms.SplitContainer();
 			splitContainer.Panel1.SuspendLayout();
 			splitContainer.Panel2.SuspendLayout();
 			splitContainer.SuspendLayout();
 			this.scriptContextMenu.SuspendLayout();
 			this.toolStrip.SuspendLayout();
+			this.folderContextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer
@@ -109,9 +112,17 @@
 			// scriptContextMenu
 			// 
 			this.scriptContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteToolStripMenuItem});
+            this.deleteScriptToolStripMenuItem});
 			this.scriptContextMenu.Name = "scriptContextMenu";
-			this.scriptContextMenu.Size = new System.Drawing.Size(153, 48);
+			this.scriptContextMenu.Size = new System.Drawing.Size(106, 26);
+			// 
+			// deleteScriptToolStripMenuItem
+			// 
+			this.deleteScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.deleteScriptToolStripMenuItem.Name = "deleteScriptToolStripMenuItem";
+			this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+			this.deleteScriptToolStripMenuItem.Text = "Delete";
+			this.deleteScriptToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
 			// 
 			// toolStrip
 			// 
@@ -145,13 +156,20 @@
 			this.saveToolStripButton.Text = "saveToolStripButton";
 			this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
 			// 
-			// deleteToolStripMenuItem
+			// folderContextMenu
 			// 
-			this.deleteToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
-			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.deleteToolStripMenuItem.Text = "Delete";
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.folderContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteFolderToolStripMenuItem});
+			this.folderContextMenu.Name = "folderContextMenu";
+			this.folderContextMenu.Size = new System.Drawing.Size(153, 48);
+			// 
+			// deleteFolderToolStripMenuItem
+			// 
+			this.deleteFolderToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
+			this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
+			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteFolderToolStripMenuItem.Text = "Delete";
+			this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
 			// 
 			// ScriptEditor
 			// 
@@ -168,6 +186,7 @@
 			this.scriptContextMenu.ResumeLayout(false);
 			this.toolStrip.ResumeLayout(false);
 			this.toolStrip.PerformLayout();
+			this.folderContextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -183,6 +202,8 @@
 		private Aga.Controls.Tree.NodeControls.NodeIcon nodeIcon1;
 		private Aga.Controls.Tree.NodeControls.NodeTextBox nodeTextBox1;
 		private System.Windows.Forms.ContextMenuStrip scriptContextMenu;
-		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem deleteScriptToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip folderContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem deleteFolderToolStripMenuItem;
 	}
 }
