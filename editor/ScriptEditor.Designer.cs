@@ -80,8 +80,11 @@
 			this.scriptsTreeView.Size = new System.Drawing.Size(178, 372);
 			this.scriptsTreeView.TabIndex = 10;
 			this.scriptsTreeView.Text = "Scripts";
+			this.scriptsTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.scriptsTreeView_DragOver);
 			this.scriptsTreeView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.scriptsTreeView_MouseClick);
 			this.scriptsTreeView.DoubleClick += new System.EventHandler(this.scriptsTreeView_DoubleClick);
+			this.scriptsTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.scriptsTreeView_DragDrop);
+			this.scriptsTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.scriptsTreeView_ItemDrag);
 			// 
 			// nodeIcon1
 			// 
@@ -161,13 +164,13 @@
 			this.folderContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteFolderToolStripMenuItem});
 			this.folderContextMenu.Name = "folderContextMenu";
-			this.folderContextMenu.Size = new System.Drawing.Size(153, 48);
+			this.folderContextMenu.Size = new System.Drawing.Size(106, 26);
 			// 
 			// deleteFolderToolStripMenuItem
 			// 
 			this.deleteFolderToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
 			this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
-			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.deleteFolderToolStripMenuItem.Text = "Delete";
 			this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
 			// 

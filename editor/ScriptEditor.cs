@@ -22,16 +22,16 @@ namespace KFIRPG.editor {
 
 		ICSharpCode.TextEditor.TextEditorControl textEditor;
 
-		const string PageKey = "page";
-		const string EditedPageKey = "editedpage";
-		const string FolderKey = "folder";
-
 		class ScriptNode: Node {
 			public Script Script { get; private set; }
 
-
 			public ScriptNode(Script script) {
 				this.Script = script;
+				this.Image = KFIRPG.editor.Properties.Resources.page;
+			}
+
+			public ScriptNode(ScriptNode node) {
+				this.Script = new Script(node.Script);
 				this.Image = KFIRPG.editor.Properties.Resources.page;
 			}
 
@@ -51,7 +51,6 @@ namespace KFIRPG.editor {
 				this.Image = KFIRPG.editor.Properties.Resources.folder;
 			}
 		}
-
 
 		public ScriptEditor(Project project)
 			: this(null, project) {
@@ -76,20 +75,6 @@ namespace KFIRPG.editor {
 
 			if (currentScript != null) {
 				LoadScript(currentScript);
-			}
-		}
-
-		private class ScriptTreeNode: TreeNode {
-			public ScriptTreeNode(Script script, string displayName)
-				: base(displayName) {
-				this.Script = script;
-				this.ImageKey = PageKey;
-				this.SelectedImageKey = PageKey;
-			}
-
-			public Script Script {
-				get;
-				private set;
 			}
 		}
 
@@ -128,7 +113,7 @@ namespace KFIRPG.editor {
 				for (int i = 0; i < nameParts.Length - 1; ++i) {
 					//Check if folder already exists
 					Node folderNode = FindNodeByName(nameParts[i], sNodes);
-					
+
 					if (folderNode == null) {
 						folderNode = new FolderNode(nameParts[i]);
 						sNodes.Add(folderNode);
@@ -141,14 +126,22 @@ namespace KFIRPG.editor {
 			scriptsTreeView.EndUpdate();
 		}
 
-		private void LoadScript(Script script) {
-			//If the document is already open, simply switch to it
+		private DocumentTabForm FindOpenDocument(Script script) {
 			foreach (var docBase in dockPanel.Documents) {
 				DocumentTabForm doc = (DocumentTabForm)docBase;
 				if (doc.Script == script) {
-					doc.DockHandler.Activate();
-					return;
+					return doc;
 				}
+			}
+			return null;
+		}
+
+		private void LoadScript(Script script) {
+			//If the document is already open, simply switch to it
+			DocumentTabForm doc = FindOpenDocument(script);
+			if (doc != null) {
+				doc.Activate();
+				return;
 			}
 
 			//If it wasn't, open it
@@ -239,31 +232,8 @@ namespace KFIRPG.editor {
 			((DocumentTabForm)dockPanel.ActiveDocument).Save();
 		}
 
-
-		private void filesTreeView_ItemDrag(object sender, ItemDragEventArgs e) {
-			if (e.Item is ScriptTreeNode) {
-				ScriptTreeNode node = (ScriptTreeNode)e.Item;
-				DoDragDrop(node.Script, DragDropEffects.Copy | DragDropEffects.Move);
-			}
-		}
-
-		private void filesTreeView_DragOver(object sender, DragEventArgs e) {
-			//Only allow drop if we are dragging a script
-			if (e.Data.GetDataPresent(typeof(Script))) {
-				e.Effect = DragDropEffects.Move;
-			}
-		}
-
-		private void FindTreeNode(int x, int y) {
-			
-		}
-
-		private void filesTreeView_DragDrop(object sender, DragEventArgs e) {
-			//TreeNode node = filesTreeView.PointToClient
-			Console.WriteLine();
-		}
-
 		private void scriptsTreeView_DoubleClick(object sender, EventArgs e) {
+			if (scriptsTreeView.SelectedNode == null) return;
 			if (scriptsTreeView.SelectedNode.Tag is ScriptNode) {
 				LoadScript(((ScriptNode)scriptsTreeView.SelectedNode.Tag).Script);
 			}
@@ -285,7 +255,10 @@ namespace KFIRPG.editor {
 
 		private void DeleteNodeRecursive(Node node) {
 			if (node is ScriptNode) {
-				scripts.Remove(((ScriptNode)node).Script);
+				Script script = ((ScriptNode)node).Script;
+				//Close associated editor window
+				FindOpenDocument(script).Close();
+				scripts.Remove(script);
 			}
 			else {
 				while (node.Nodes.Count != 0) {
@@ -295,7 +268,36 @@ namespace KFIRPG.editor {
 			node.Parent.Nodes.Remove(node);
 		}
 
+		private void CorrectScriptNameRecursive(Node node) {
+			if (node is ScriptNode) {
+				string[] sa = Array.ConvertAll<object, string>(scriptsModel.GetPath(node).FullPath, o => o.ToString());
+				string s = String.Join("/", sa);
+				Script scr = ((ScriptNode)node).Script;
+				scr.Name = s;
+				MessageBox.Show(s.ToString());
+			}
+			else {
+				foreach (Node child in node.Nodes) {
+					CorrectScriptNameRecursive(child);
+				}
+			}
+		}
 
+		private void MoveNode(Node thisNode, Node dropNode) {
+			if (dropNode.Nodes.Contains(thisNode)) return;
+			thisNode.Parent.Nodes.Remove(thisNode);
+			dropNode.Nodes.Add(thisNode);
+			CorrectScriptNameRecursive(thisNode);
+		}
+
+		private void CopyNode(Node thisNode, Node dropNode) {
+			if (dropNode.Nodes.Contains(thisNode)) return;
+			if (!(thisNode is ScriptNode)) throw new NotImplementedException("Moving folders is not implemented");
+			ScriptNode newNode = new ScriptNode((ScriptNode)thisNode);
+			scripts.Add(newNode.Script);
+			dropNode.Nodes.Add(newNode);
+			CorrectScriptNameRecursive(newNode);
+		}
 
 		private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
@@ -316,6 +318,79 @@ namespace KFIRPG.editor {
 				DeleteNodeRecursive(n);
 			}
 
+		}
+
+		private void scriptsTreeView_ItemDrag(object sender, ItemDragEventArgs e) {
+			TreeNodeAdv node = ((TreeNodeAdv[])e.Item)[0];
+			//DoDragDrop(node.Tag, DragDropEffects.Copy | DragDropEffects.Move);
+			if (node.Tag is ScriptNode) {
+				ScriptNode snode = (ScriptNode)node.Tag;
+				DoDragDrop(snode, DragDropEffects.Copy | DragDropEffects.Move);
+			}
+		}
+
+		private Node GetRealInsertNode(TreeNodeAdv node) {
+			if (node == null) {
+				return scriptsModel.Root;
+			}
+			else if (node.Tag is ScriptNode) {
+				return ((ScriptNode)node.Tag).Parent;
+			}
+			else if (node.Tag is FolderNode) {
+				return (Node)node.Tag;
+			}
+			throw new ArgumentException("Invalid TreeNode", "node");
+		}
+
+		private object GetData(IDataObject data) {
+			return data.GetData(data.GetFormats()[0]);
+		}
+
+		const int LEFT_BUTTON = 1;
+		const int RIGHT_BUTTON = 2;
+		const int SHIFT_KEY = 4;
+		const int CTRL_KEY = 8;
+		const int MIDDLE_BUTTON = 16;
+		const int ALT_KEY = 32;
+
+		private void scriptsTreeView_DragOver(object sender, DragEventArgs e) {
+			object o = GetData(e.Data);
+			if (!(o is Node)) {
+				e.Effect = DragDropEffects.None;
+				return;
+			}
+			//TreeNodeAdv node = scriptsTreeView.GetNodeAt(scriptsTreeView.PointToClient(new Point(e.X, e.Y)));
+			TreeNodeAdv node = scriptsTreeView.DropPosition.Node;
+			Node insertHere = GetRealInsertNode(node);
+
+			if ((e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy &&
+				(e.KeyState & CTRL_KEY) == CTRL_KEY) {
+				e.Effect = DragDropEffects.Copy;
+			}
+			else if ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move) {
+				e.Effect = DragDropEffects.Move;
+			}
+			else {
+				throw new InvalidOperationException("You shouldn't be able to drag an undroppable object");
+			}
+		}
+
+		private void scriptsTreeView_DragDrop(object sender, DragEventArgs e) {
+			object o = GetData(e.Data);
+			if (!(o is Node)) {
+				e.Effect = DragDropEffects.None;
+				return;
+			}
+			//TreeNodeAdv node = scriptsTreeView.GetNodeAt(scriptsTreeView.PointToClient(new Point(e.X, e.Y)));
+			TreeNodeAdv node = scriptsTreeView.DropPosition.Node;
+			Node insertHere = GetRealInsertNode(node);
+			if (e.Effect == DragDropEffects.Move) {
+				MoveNode((Node)o, insertHere);
+			}
+			if (e.Effect == DragDropEffects.Copy) {
+				CopyNode((Node)o, insertHere);
+			}
+			throw new InvalidOperationException();
 		}
 	}
 }

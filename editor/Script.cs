@@ -28,5 +28,7 @@ namespace KFIRPG.editor {
 			this.Name = name;
 			this.Text = text;
 		}
+
+		public Script(Script script) : this(script.name, script.Text) { }
 	}
 }
