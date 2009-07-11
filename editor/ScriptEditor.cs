@@ -310,6 +310,7 @@ namespace KFIRPG.editor {
 			CopyNodeRecursive(thisNode, dropNode);
 		}
 
+		//TODO: Merge the four functions into two
 		private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
 			if (MessageBox.Show(
@@ -317,6 +318,17 @@ namespace KFIRPG.editor {
 				"Delete script",
 				MessageBoxButtons.YesNo) == DialogResult.Yes) {
 				DeleteNodeRecursive(n);
+			}
+		}
+
+		private void renameScriptToolStripMenuItem_Click(object sender, EventArgs e) {
+			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
+			using (ComposedForm form = new ComposedForm("Rename script", ComposedForm.Parts.Name)) {
+				form.AddNameChecker(name => !HasChild(n.Parent, s => name == s.Text));
+				form.SetName(n.Text);
+				if (form.ShowDialog() == DialogResult.OK) {
+					n.Script.ShortName = form.GetName();
+				}
 			}
 		}
 
@@ -329,6 +341,18 @@ namespace KFIRPG.editor {
 				DeleteNodeRecursive(n);
 			}
 
+		}
+
+		private void renameFolderToolStripMenuItem_Click(object sender, EventArgs e) {
+			FolderNode n = (FolderNode)scriptsTreeView.SelectedNode.Tag;
+			using (ComposedForm form = new ComposedForm("Rename folder", ComposedForm.Parts.Name)) {
+				form.AddNameChecker(name => !HasChild(n.Parent, s => name == s.Text));
+				form.SetName(n.Text);
+				if (form.ShowDialog() == DialogResult.OK) {
+					n.Text = form.GetName();
+					CorrectScriptNameRecursive(n);
+				}
+			}
 		}
 
 		private void scriptsTreeView_ItemDrag(object sender, ItemDragEventArgs e) {

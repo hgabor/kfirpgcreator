@@ -4,6 +4,8 @@ using System.Text;
 
 namespace KFIRPG.editor {
 	class Script {
+		public event EventHandler NameChanged;
+
 		private string name;
 		public string Name {
 			get {
@@ -12,11 +14,24 @@ namespace KFIRPG.editor {
 			set {
 				name = value;
 				string[] nameParts = name.Split('/');
-				ShortName = nameParts[nameParts.Length - 1];
+				shortName = nameParts[nameParts.Length - 1];
+
+				if (NameChanged != null) NameChanged(this, new EventArgs());
 			}
 		}
+		string shortName;
 		public string ShortName {
-			get; private set;
+			get {
+				return shortName;
+			}
+			set {
+				if (value == null) throw new ArgumentNullException();
+				if (value.Trim() == "") throw new ArgumentException("Short name cannot be empty!");
+				if (value.Contains("/")) throw new ArgumentException("Short name cannot contain / characters!");
+				string[] nameParts = name.Split('/');
+				nameParts[nameParts.Length - 1] = value;
+				Name = string.Join("", nameParts);
+			}
 		}
 		public string Text {
 			get;

@@ -35,8 +35,6 @@ namespace KFIRPG.editor {
 			DockHandler.DockAreas = DockAreas.Document;
 			DockHandler.AllowEndUserDocking = false;
 
-			this.Text = script.ShortName;
-
 			Controls.Add(textEditor);
 
 			textEditor.Location = new Point(12, 91);
@@ -51,6 +49,16 @@ namespace KFIRPG.editor {
 			textEditor.ShowTabs = true;
 			textEditor.Dock = DockStyle.Fill;
 			textEditor.Text = Script.Text;
+
+			script.NameChanged += ScriptNameChanged;
+			FormClosed += (sender, args) => {
+				script.NameChanged -= ScriptNameChanged;
+			};
+			Text = Script.ShortName;
+		}
+
+		private void ScriptNameChanged(object sender, EventArgs e) {
+			Text = Script.ShortName;
 		}
 
 		public event EventHandler Saved;
