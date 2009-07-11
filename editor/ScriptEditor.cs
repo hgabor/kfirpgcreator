@@ -140,7 +140,7 @@ namespace KFIRPG.editor {
 			//If the document is already open, simply switch to it
 			DocumentTabForm doc = FindOpenDocument(script);
 			if (doc != null) {
-				doc.Activate();
+				doc.DockHandler.Activate();
 				return;
 			}
 
@@ -274,7 +274,6 @@ namespace KFIRPG.editor {
 				string s = String.Join("/", sa);
 				Script scr = ((ScriptNode)node).Script;
 				scr.Name = s;
-				MessageBox.Show(s.ToString());
 			}
 			else {
 				foreach (Node child in node.Nodes) {
@@ -290,19 +289,31 @@ namespace KFIRPG.editor {
 			CorrectScriptNameRecursive(thisNode);
 		}
 
+		private void CopyNodeRecursive(Node thisNode, Node dropNode) {
+			if (thisNode is ScriptNode) {
+				ScriptNode newNode = new ScriptNode((ScriptNode)thisNode);
+				scripts.Add(newNode.Script);
+				dropNode.Nodes.Add(newNode);
+				CorrectScriptNameRecursive(newNode);
+			}
+			else {
+				FolderNode newNode = new FolderNode(thisNode.Text);
+				dropNode.Nodes.Add(newNode);
+				foreach (Node childNode in thisNode.Nodes) {
+					CopyNodeRecursive(childNode, newNode);
+				}
+			}
+		}
+
 		private void CopyNode(Node thisNode, Node dropNode) {
 			if (dropNode.Nodes.Contains(thisNode)) return;
-			if (!(thisNode is ScriptNode)) throw new NotImplementedException("Moving folders is not implemented");
-			ScriptNode newNode = new ScriptNode((ScriptNode)thisNode);
-			scripts.Add(newNode.Script);
-			dropNode.Nodes.Add(newNode);
-			CorrectScriptNameRecursive(newNode);
+			CopyNodeRecursive(thisNode, dropNode);
 		}
 
 		private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
 			if (MessageBox.Show(
-				string.Format("Are you sure you want tot delete script \"{0}\"?", n.Script.ShortName),
+				string.Format("Are you sure you want to delete script \"{0}\"?", n.Script.ShortName),
 				"Delete script",
 				MessageBoxButtons.YesNo) == DialogResult.Yes) {
 				DeleteNodeRecursive(n);
@@ -312,7 +323,7 @@ namespace KFIRPG.editor {
 		private void deleteFolderToolStripMenuItem_Click(object sender, EventArgs e) {
 			FolderNode n = (FolderNode)scriptsTreeView.SelectedNode.Tag;
 			if (MessageBox.Show(
-				string.Format("Are you sure you want tot delete folder \"{0}\" and all of its contents?", n.Text),
+				string.Format("Are you sure you want to delete folder \"{0}\" and all of its contents?", n.Text),
 				"Delete folder",
 				MessageBoxButtons.YesNo) == DialogResult.Yes) {
 				DeleteNodeRecursive(n);
@@ -322,10 +333,12 @@ namespace KFIRPG.editor {
 
 		private void scriptsTreeView_ItemDrag(object sender, ItemDragEventArgs e) {
 			TreeNodeAdv node = ((TreeNodeAdv[])e.Item)[0];
-			//DoDragDrop(node.Tag, DragDropEffects.Copy | DragDropEffects.Move);
-			if (node.Tag is ScriptNode) {
-				ScriptNode snode = (ScriptNode)node.Tag;
+			if (node.Tag is ScriptNode || node.Tag is FolderNode) {
+				Node snode = (Node)node.Tag;
 				DoDragDrop(snode, DragDropEffects.Copy | DragDropEffects.Move);
+			}
+			else {
+				throw new InvalidOperationException("You tried to drag a node that is not a folder nor a script.");
 			}
 		}
 
@@ -346,6 +359,25 @@ namespace KFIRPG.editor {
 			return data.GetData(data.GetFormats()[0]);
 		}
 
+		private bool HasAncestor(Node node, Predicate<Node> pred) {
+			if (node.Parent == null) {
+				return false;
+			}
+			else if (pred(node.Parent)) {
+				return true;
+			}
+			else {
+				return HasAncestor(node.Parent, pred);
+			}
+		}
+
+		private bool HasChild(Node node, Predicate<Node> pred) {
+			foreach (Node child in node.Nodes) {
+				if (pred(child)) return true;
+			}
+			return false;
+		}
+
 		const int LEFT_BUTTON = 1;
 		const int RIGHT_BUTTON = 2;
 		const int SHIFT_KEY = 4;
@@ -359,9 +391,18 @@ namespace KFIRPG.editor {
 				e.Effect = DragDropEffects.None;
 				return;
 			}
-			//TreeNodeAdv node = scriptsTreeView.GetNodeAt(scriptsTreeView.PointToClient(new Point(e.X, e.Y)));
+			Node draggedNode = (Node)o;
 			TreeNodeAdv node = scriptsTreeView.DropPosition.Node;
 			Node insertHere = GetRealInsertNode(node);
+
+			if (HasChild(insertHere, n => n.Text == draggedNode.Text)) {
+				e.Effect = DragDropEffects.None;
+				return;
+			}
+			if (insertHere == draggedNode || HasAncestor(insertHere, n => n == draggedNode)) {
+				e.Effect = DragDropEffects.None;
+				return;
+			}
 
 			if ((e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy &&
 				(e.KeyState & CTRL_KEY) == CTRL_KEY) {
@@ -386,9 +427,11 @@ namespace KFIRPG.editor {
 			Node insertHere = GetRealInsertNode(node);
 			if (e.Effect == DragDropEffects.Move) {
 				MoveNode((Node)o, insertHere);
+				return;
 			}
 			if (e.Effect == DragDropEffects.Copy) {
 				CopyNode((Node)o, insertHere);
+				return;
 			}
 			throw new InvalidOperationException();
 		}
