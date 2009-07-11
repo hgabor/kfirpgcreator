@@ -5,9 +5,9 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KFIRPG.editor {
-	abstract class DockableForm: Form, IDockContent {
+	class DockableForm: Form, IDockContent {
 
-		public DockableForm() {
+		protected DockableForm() {
 			DockHandler = new WeifenLuo.WinFormsUI.Docking.DockContentHandler(this);
 			DockHandler.DockAreas =
 				DockAreas.DockBottom |

@@ -26,6 +26,7 @@
 			this.list = new System.Windows.Forms.ListBox();
 			this.addbutton = new System.Windows.Forms.Button();
 			this.removebutton = new System.Windows.Forms.Button();
+			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
 			this.SuspendLayout();
 			// 
 			// list
@@ -49,6 +50,7 @@
 			this.addbutton.Size = new System.Drawing.Size(30, 30);
 			this.addbutton.TabIndex = 1;
 			this.addbutton.UseVisualStyleBackColor = true;
+			this.addbutton.Click += new System.EventHandler(this.addbutton_Click);
 			// 
 			// removebutton
 			// 
@@ -59,6 +61,13 @@
 			this.removebutton.Size = new System.Drawing.Size(30, 30);
 			this.removebutton.TabIndex = 2;
 			this.removebutton.UseVisualStyleBackColor = true;
+			this.removebutton.Click += new System.EventHandler(this.removebutton_Click);
+			// 
+			// openFileDialog
+			// 
+			this.openFileDialog.Filter = "Sound and music|*.ogg;*.mp3;*.wav|All files|*.*";
+			this.openFileDialog.RestoreDirectory = true;
+			this.openFileDialog.Title = "Select sound/music";
 			// 
 			// AudioLibrary
 			// 
@@ -81,5 +90,6 @@
 		private System.Windows.Forms.ListBox list;
 		private System.Windows.Forms.Button addbutton;
 		private System.Windows.Forms.Button removebutton;
+		private System.Windows.Forms.OpenFileDialog openFileDialog;
 	}
 }
