@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.editor.Cursors {
 	class TileCursor: Cursor {
 		int size;
 		int id;

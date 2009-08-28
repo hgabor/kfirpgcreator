@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.editor.Cursors {
 	class PassabilityCursor: Cursor {
 		bool passable;
 		Brush brush;

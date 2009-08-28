@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.editor.Cursors {
 	class DeleteSpriteCursor: Cursor {
 		public override void Click(Map.Layer layer) {
 			layer.objects[tileX, tileY] = null;

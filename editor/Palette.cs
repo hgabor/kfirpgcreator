@@ -5,15 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using KFIRPG.editor.Cursors;
 
 namespace KFIRPG.editor {
 	internal partial class Palette: DockableForm {
 
 		public class CursorEventArgs: EventArgs {
-			Cursor cursor;
-			public Cursor Cursor { get { return cursor; } }
+			Cursors.Cursor cursor;
+			public Cursors.Cursor Cursor { get { return cursor; } }
 
-			public CursorEventArgs(Cursor newCursor) {
+			public CursorEventArgs(Cursors.Cursor newCursor) {
 				cursor = newCursor;
 			}
 		}
@@ -123,14 +124,14 @@ namespace KFIRPG.editor {
 
 		private void SelectObjectCursor_Handler(object sender, EventArgs e) {
 			if (objectsListBox.SelectedIndex == 0) {
-				Cursor cursor = new DeleteSpriteCursor();
+				Cursors.Cursor cursor = new DeleteSpriteCursor();
 				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
 				tileSelected = false;
 			}
 			else if (objectsListBox.SelectedIndex != -1) {
 				Sprite sprite = (Sprite)objectsListBox.SelectedItem;
-				Cursor cursor = new SpriteCursor(sprite, clearScriptCheckBox.Checked, currentProject);
+				Cursors.Cursor cursor = new SpriteCursor(sprite, clearScriptCheckBox.Checked, currentProject);
 				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
 				tileSelected = false;

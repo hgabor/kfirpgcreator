@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.editor.Cursors {
 	class PlaceLadderCursor: Cursor {
 		int size;
 

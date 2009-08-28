@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml;
 using KFIRPG.corelib;
+using KFIRPG.editor.Cursors;
 
 namespace KFIRPG.editor {
 	public partial class EditorForm: Form {
@@ -35,7 +36,7 @@ namespace KFIRPG.editor {
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
 
-		Cursor cursor;
+		Cursors.Cursor cursor;
 
 		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
 			form.DockHandler.HideOnClose = true;

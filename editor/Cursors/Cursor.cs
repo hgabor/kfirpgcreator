@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor {
+namespace KFIRPG.editor.Cursors {
 	abstract class Cursor {
 		public abstract void Click(Map.Layer layer);
 		public abstract void Draw(System.Drawing.Graphics g);

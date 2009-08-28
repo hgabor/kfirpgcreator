@@ -72,8 +72,8 @@
     <Compile Include="ComposedForm.Designer.cs">
       <DependentUpon>ComposedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cursor.cs" />
-    <Compile Include="DeleteSpriteCursor.cs" />
+    <Compile Include="Cursors\Cursor.cs" />
+    <Compile Include="Cursors\DeleteSpriteCursor.cs" />
     <Compile Include="DockableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,7 +104,7 @@
     <Compile Include="KeyValueDialog.Designer.cs">
       <DependentUpon>KeyValueDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="LadderCursor.cs" />
+    <Compile Include="Cursors\LadderCursor.cs" />
     <Compile Include="LayersToolbar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,7 +126,7 @@
     <Compile Include="Palette.Designer.cs">
       <DependentUpon>Palette.cs</DependentUpon>
     </Compile>
-    <Compile Include="PassabilityCursor.cs" />
+    <Compile Include="Cursors\PassabilityCursor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -154,7 +154,7 @@
       <DependentUpon>SelectTwoLayersDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Sprite.cs" />
-    <Compile Include="SpriteCursor.cs" />
+    <Compile Include="Cursors\SpriteCursor.cs" />
     <Compile Include="SpriteDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,7 +171,7 @@
     <Compile Include="SpriteSheetDialog.Designer.cs">
       <DependentUpon>SpriteSheetDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="TileCursor.cs" />
+    <Compile Include="Cursors\TileCursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Aga.Controls, Version=1.6.1.0, Culture=neutral, PublicKeyToken=fcc90fbf924463a3, processorArchitecture=MSIL">
