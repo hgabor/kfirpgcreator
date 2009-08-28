@@ -77,7 +77,12 @@ namespace KFIRPG.editor {
 			foreach (string strScript in loader.LoadText("scripts.list").Split('\n')) {
 				string script = strScript.Trim();
 				if (script == "") continue;
-				scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
+				if (script.EndsWith("/")) {
+					scripts.Add(new Script(script));
+				}
+				else {
+					scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
+				}
 			}
 
 			foreach (string strMusic in loader.LoadText("music.list").Split('\n')) {

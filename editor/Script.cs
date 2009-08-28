@@ -5,6 +5,7 @@ using System.Text;
 namespace KFIRPG.editor {
 	class Script {
 		public event EventHandler NameChanged;
+		public bool IsFolder { get; set; }
 
 		private string name;
 		public string Name {
@@ -42,6 +43,13 @@ namespace KFIRPG.editor {
 		public Script(string name, string text) {
 			this.Name = name;
 			this.Text = text;
+			this.IsFolder = false;
+		}
+
+		public Script(string name) {
+			this.Name = name.TrimEnd('/');
+			this.Text = null;
+			this.IsFolder = true;
 		}
 
 		public Script(Script script) : this(script.name, script.Text) { }

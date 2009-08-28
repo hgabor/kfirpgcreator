@@ -111,16 +111,20 @@ namespace KFIRPG.editor {
 				Collection<Node> sNodes = scriptsModel.Nodes;
 
 				for (int i = 0; i < nameParts.Length - 1; ++i) {
-					//Check if folder already exists
+					//Check if folder exists
 					Node folderNode = FindNodeByName(nameParts[i], sNodes);
 
 					if (folderNode == null) {
-						folderNode = new FolderNode(nameParts[i]);
-						sNodes.Add(folderNode);
+						throw new Exception("Invalid folder name");
 					}
 					sNodes = folderNode.Nodes;
 				}
-				sNodes.Add(new ScriptNode(s));
+				if (s.IsFolder) {
+					sNodes.Add(new FolderNode(s.Name));
+				}
+				else {
+					sNodes.Add(new ScriptNode(s));
+				}
 			}
 
 			scriptsTreeView.EndUpdate();
