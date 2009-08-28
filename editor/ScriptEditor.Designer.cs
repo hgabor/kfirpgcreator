@@ -223,7 +223,7 @@
 			this.renameFolderToolStripMenuItem.Name = "renameFolderToolStripMenuItem";
 			this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.renameFolderToolStripMenuItem.Text = "Rename...";
-			this.renameFolderToolStripMenuItem.Click += new System.EventHandler(this.renameFolderToolStripMenuItem_Click);
+			this.renameFolderToolStripMenuItem.Click += new System.EventHandler(this.renameScriptToolStripMenuItem_Click);
 			// 
 			// deleteFolderToolStripMenuItem
 			// 
@@ -231,7 +231,7 @@
 			this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
 			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.deleteFolderToolStripMenuItem.Text = "Delete";
-			this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
+			this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
 			// 
 			// ScriptEditor
 			// 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.editor {
-	class Script {
+	class Script: IComparable<Script> {
 		public event EventHandler NameChanged;
 		public bool IsFolder { get; set; }
 
@@ -31,7 +31,7 @@ namespace KFIRPG.editor {
 				if (value.Contains("/")) throw new ArgumentException("Short name cannot contain / characters!");
 				string[] nameParts = name.Split('/');
 				nameParts[nameParts.Length - 1] = value;
-				Name = string.Join("", nameParts);
+				Name = string.Join("/", nameParts);
 			}
 		}
 		public string Text {
@@ -52,6 +52,20 @@ namespace KFIRPG.editor {
 			this.IsFolder = true;
 		}
 
-		public Script(Script script) : this(script.name, script.Text) { }
+		public Script(Script script) {
+			this.Name = script.Name;
+			this.Text = script.Text;
+			this.IsFolder = script.IsFolder;
+		}
+
+		#region IComparable<Script> Members
+
+		public int CompareTo(Script other) {
+			if (this.IsFolder && !other.IsFolder) return -1;
+			if (!this.IsFolder && other.IsFolder) return 1;
+			return this.ShortName.CompareTo(other.ShortName);
+		}
+
+		#endregion
 	}
 }

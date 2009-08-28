@@ -22,17 +22,30 @@ namespace KFIRPG.editor {
 
 		ICSharpCode.TextEditor.TextEditorControl textEditor;
 
-		class ScriptNode: Node {
+		class ScriptNode: Node, IComparable<ScriptNode> {
 			public Script Script { get; private set; }
+			public bool IsFolder {
+				get { return Script.IsFolder; }
+			}
 
 			public ScriptNode(Script script) {
 				this.Script = script;
-				this.Image = KFIRPG.editor.Properties.Resources.page;
+				if (this.IsFolder) {
+					this.Image = KFIRPG.editor.Properties.Resources.folder;
+				}
+				else {
+					this.Image = KFIRPG.editor.Properties.Resources.page;
+				}
 			}
 
 			public ScriptNode(ScriptNode node) {
 				this.Script = new Script(node.Script);
-				this.Image = KFIRPG.editor.Properties.Resources.page;
+				if (this.IsFolder) {
+					this.Image = KFIRPG.editor.Properties.Resources.folder;
+				}
+				else {
+					this.Image = KFIRPG.editor.Properties.Resources.page;
+				}
 			}
 
 			public override string Text {
@@ -43,35 +56,29 @@ namespace KFIRPG.editor {
 					throw new NotImplementedException();
 				}
 			}
+
+			#region IComparable<ScriptNode> Members
+
+			public int CompareTo(ScriptNode other) {
+				return this.Script.CompareTo(other.Script);
+			}
+
+			#endregion
 		}
 
-		class FolderNode: Node {
-			public Script Script { get; private set; }
-
-			public FolderNode(Script script) {
-				this.Script = script;
-				this.Image = KFIRPG.editor.Properties.Resources.folder;
-			}
-
-			public FolderNode(FolderNode node) {
-				this.Script = new Script(node.Script);
-				this.Image = KFIRPG.editor.Properties.Resources.folder;
-			}
-
-			public override string Text {
-				get {
-					return Script.ShortName;
-				}
-				set {
-					throw new NotImplementedException();
-				}
-			}
-		}
-
+		/// <summary>
+		/// Opens the script editor window with no scripts open.
+		/// </summary>
+		/// <param name="project"></param>
 		public ScriptEditor(Project project)
 			: this(null, project) {
 		}
 
+		/// <summary>
+		/// Opens the script editor window with the selected script open.
+		/// </summary>
+		/// <param name="currentScript">The script to open</param>
+		/// <param name="project"></param>
 		public ScriptEditor(Script currentScript, Project project) {
 			InitializeComponent();
 			scripts = project.scripts;
@@ -118,8 +125,22 @@ namespace KFIRPG.editor {
 			return null;
 		}
 
+		private void InsertNodeSorted(ScriptNode node, Collection<Node> parent) {
+			int i = 0;
+			//Find where to insert
+			while (i < parent.Count && node.CompareTo((ScriptNode)parent[i]) > 0) {
+				++i;
+			}
+			parent.Insert(i, node);
+		}
+
+		/// <summary>
+		/// Populates the tree view with the project's scripts.
+		/// </summary>
 		private void PopulateList() {
 			scriptsTreeView.BeginUpdate();
+
+			scripts.Sort();
 
 			foreach (Script s in scripts) {
 				string[] nameParts = s.Name.Split('/');
@@ -135,12 +156,7 @@ namespace KFIRPG.editor {
 					}
 					sNodes = folderNode.Nodes;
 				}
-				if (s.IsFolder) {
-					sNodes.Add(new FolderNode(s));
-				}
-				else {
-					sNodes.Add(new ScriptNode(s));
-				}
+				InsertNodeSorted(new ScriptNode(s), sNodes);
 			}
 
 			scriptsTreeView.EndUpdate();
@@ -156,6 +172,10 @@ namespace KFIRPG.editor {
 			return null;
 		}
 
+		/// <summary>
+		/// Opens a script in the editor. If the script is already open, it activates the open tab.
+		/// </summary>
+		/// <param name="script"></param>
 		private void LoadScript(Script script) {
 			//If the document is already open, simply switch to it
 			DocumentTabForm doc = FindOpenDocument(script);
@@ -192,7 +212,11 @@ namespace KFIRPG.editor {
 			saveToolStripButton.Enabled = true;
 		}
 
-		private void AddNewScript(bool isFolder) {
+		/// <summary>
+		/// Creates a new script. Asks the user for the name.
+		/// </summary>
+		/// <param name="isFolder"></param>
+		private void CreateNewScript(bool isFolder) {
 			Node n;
 			if (scriptsTreeView.SelectedNode != null) {
 				n = (Node)scriptsTreeView.SelectedNode.Tag;
@@ -202,11 +226,11 @@ namespace KFIRPG.editor {
 			}
 
 			Collection<Node> nInsertHere;
-			if (n is ScriptNode) {
+			if (n is ScriptNode && !((ScriptNode)n).IsFolder) {
 				nInsertHere = n.Parent.Nodes;
 				n = n.Parent;
 			}
-			else if (n is FolderNode || n == scriptsModel.Root) {
+			else if (((ScriptNode)n).IsFolder || n == scriptsModel.Root) {
 				nInsertHere = n.Nodes;
 			}
 			else {
@@ -244,23 +268,23 @@ namespace KFIRPG.editor {
 
 			if (isFolder) {
 				Script newScript = new Script(scriptPath + scriptName);
-				nInsertHere.Add(new FolderNode(newScript));
+				InsertNodeSorted(new ScriptNode(newScript), nInsertHere);
 				scripts.Add(newScript);
 			}
 			else {
 				Script newScript = new Script(scriptPath + scriptName, "");
-				nInsertHere.Add(new ScriptNode(newScript));
+				InsertNodeSorted(new ScriptNode(newScript), nInsertHere);
 				scripts.Add(newScript);
 				LoadScript(newScript);
 			}
 		}
 
 		private void newScript_Handler(object sender, EventArgs e) {
-			AddNewScript(false);
+			CreateNewScript(false);
 		}
 
 		private void newFolder_Handler(object sender, EventArgs e) {
-			AddNewScript(true);
+			CreateNewScript(true);
 		}
 
 		private void saveToolStripButton_Click(object sender, EventArgs e) {
@@ -272,7 +296,8 @@ namespace KFIRPG.editor {
 
 		private void scriptsTreeView_DoubleClick(object sender, EventArgs e) {
 			if (scriptsTreeView.SelectedNode == null) return;
-			if (scriptsTreeView.SelectedNode.Tag is ScriptNode) {
+			if (scriptsTreeView.SelectedNode.Tag is ScriptNode &&
+				!((ScriptNode)scriptsTreeView.SelectedNode.Tag).IsFolder) {
 				LoadScript(((ScriptNode)scriptsTreeView.SelectedNode.Tag).Script);
 			}
 		}
@@ -281,32 +306,41 @@ namespace KFIRPG.editor {
 			//Check for right clicks to open context menu
 			if (e.Button == MouseButtons.Right &&
 				scriptsTreeView.SelectedNode != null &&
-				scriptsTreeView.SelectedNode.Tag is ScriptNode) {
+				!((ScriptNode)scriptsTreeView.SelectedNode.Tag).IsFolder) {
 				scriptContextMenu.Show(scriptsTreeView, e.Location);
 			}
 			else if (e.Button == MouseButtons.Right &&
 				scriptsTreeView.SelectedNode != null &&
-				scriptsTreeView.SelectedNode.Tag is FolderNode) {
+				((ScriptNode)scriptsTreeView.SelectedNode.Tag).IsFolder) {
 				folderContextMenu.Show(scriptsTreeView, e.Location);
 			}
 		}
 
-		private void DeleteNodeRecursive(Node node) {
-			if (node is ScriptNode) {
-				Script script = ((ScriptNode)node).Script;
-				//Close associated editor window
-				FindOpenDocument(script).Close();
-				scripts.Remove(script);
-			}
-			else {
+		/// <summary>
+		/// Deletes a node and all child nodes recursively. Removes to associated scripts too.
+		/// </summary>
+		/// <param name="basenode"></param>
+		private void DeleteNodeRecursive(Node basenode) {
+			ScriptNode node = (ScriptNode)basenode;
+
+			Script script = ((ScriptNode)node).Script;
+			//Close associated editor window
+			DocumentTabForm opendoc = FindOpenDocument(script);
+			if (opendoc != null) opendoc.Close();
+			scripts.Remove(script);
+
+			if (node.IsFolder) {
 				while (node.Nodes.Count != 0) {
 					DeleteNodeRecursive(node.Nodes[0]);
 				}
-				scripts.Remove(((FolderNode)node).Script);
 			}
 			node.Parent.Nodes.Remove(node);
 		}
 
+		/// <summary>
+		/// After a rename/move/copy, the full script names will be invalid: this function repairs them.
+		/// </summary>
+		/// <param name="node"></param>
 		private void CorrectScriptNameRecursive(Node node) {
 			if (node is ScriptNode) {
 				string[] sa = Array.ConvertAll<object, string>(scriptsModel.GetPath(node).FullPath, o => o.ToString());
@@ -314,47 +348,64 @@ namespace KFIRPG.editor {
 				Script scr = ((ScriptNode)node).Script;
 				scr.Name = s;
 			}
-			else {
-				foreach (Node child in node.Nodes) {
-					CorrectScriptNameRecursive(child);
-				}
+			foreach (Node child in node.Nodes) {
+				CorrectScriptNameRecursive(child);
 			}
 		}
 
+		/// <summary>
+		/// Moves a node and all child nodes to another node. Full names will be correct after the move.
+		/// </summary>
+		/// <param name="thisNode"></param>
+		/// <param name="dropNode"></param>
 		private void MoveNode(Node thisNode, Node dropNode) {
 			if (dropNode.Nodes.Contains(thisNode)) return;
 			thisNode.Parent.Nodes.Remove(thisNode);
-			dropNode.Nodes.Add(thisNode);
+			InsertNodeSorted((ScriptNode)thisNode, dropNode.Nodes);
 			CorrectScriptNameRecursive(thisNode);
 		}
 
+		/// <summary>
+		/// Moves a node and all child nodes to another node. Full names will be correct after the copy.
+		/// Do not call this function directly, use the safer CopyNode instead.
+		/// </summary>
+		/// <param name="thisNode"></param>
+		/// <param name="dropNode"></param>
 		private void CopyNodeRecursive(Node thisNode, Node dropNode) {
-			if (thisNode is ScriptNode) {
-				ScriptNode newNode = new ScriptNode((ScriptNode)thisNode);
-				scripts.Add(newNode.Script);
-				dropNode.Nodes.Add(newNode);
-				CorrectScriptNameRecursive(newNode);
-			}
-			else {
-				FolderNode newNode = new FolderNode((FolderNode)thisNode);
-				dropNode.Nodes.Add(newNode);
+			ScriptNode newNode = new ScriptNode((ScriptNode)thisNode);
+			scripts.Add(newNode.Script);
+			InsertNodeSorted(newNode, dropNode.Nodes);
+			CorrectScriptNameRecursive(newNode);
+			if (newNode.IsFolder) {
 				foreach (Node childNode in thisNode.Nodes) {
 					CopyNodeRecursive(childNode, newNode);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Moves a node and all child nodes to another node. Full names will be correct after the copy.
+		/// Will not do anything, if trying to copy into one of the node's child nodes.
+		/// </summary>
+		/// <param name="thisNode"></param>
+		/// <param name="dropNode"></param>
 		private void CopyNode(Node thisNode, Node dropNode) {
 			if (dropNode.Nodes.Contains(thisNode)) return;
 			CopyNodeRecursive(thisNode, dropNode);
 		}
 
-		//TODO: Merge the four functions into two
+		static string qScript = "Are you sure you want to delete script \"{0}\"?";
+		static string cScript = "Delete script";
+		static string qFolder = "Are you sure you want to delete folder \"{0}\" and all of its contents?";
+		static string cFolder = "Delete folder";
 		private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
+			string question = n.IsFolder ? qFolder : qScript;
+			string caption = n.IsFolder ? cFolder : cScript;
+			
 			if (MessageBox.Show(
-				string.Format("Are you sure you want to delete script \"{0}\"?", n.Script.ShortName),
-				"Delete script",
+				string.Format(question, n.Script.ShortName),
+				caption,
 				MessageBoxButtons.YesNo) == DialogResult.Yes) {
 				DeleteNodeRecursive(n);
 			}
@@ -362,41 +413,24 @@ namespace KFIRPG.editor {
 
 		private void renameScriptToolStripMenuItem_Click(object sender, EventArgs e) {
 			ScriptNode n = (ScriptNode)scriptsTreeView.SelectedNode.Tag;
+			string caption = n.IsFolder ? "Rename folder" : "Rename script";
 			using (ComposedForm form = new ComposedForm("Rename script", ComposedForm.Parts.Name)) {
 				form.AddNameChecker(name => !HasChild(n.Parent, s => name == s.Text));
 				form.SetName(n.Text);
 				if (form.ShowDialog() == DialogResult.OK) {
 					n.Script.ShortName = form.GetName();
-				}
-			}
-		}
-
-		private void deleteFolderToolStripMenuItem_Click(object sender, EventArgs e) {
-			FolderNode n = (FolderNode)scriptsTreeView.SelectedNode.Tag;
-			if (MessageBox.Show(
-				string.Format("Are you sure you want to delete folder \"{0}\" and all of its contents?", n.Text),
-				"Delete folder",
-				MessageBoxButtons.YesNo) == DialogResult.Yes) {
-				DeleteNodeRecursive(n);
-			}
-
-		}
-
-		private void renameFolderToolStripMenuItem_Click(object sender, EventArgs e) {
-			FolderNode n = (FolderNode)scriptsTreeView.SelectedNode.Tag;
-			using (ComposedForm form = new ComposedForm("Rename folder", ComposedForm.Parts.Name)) {
-				form.AddNameChecker(name => !HasChild(n.Parent, s => name == s.Text));
-				form.SetName(n.Text);
-				if (form.ShowDialog() == DialogResult.OK) {
-					n.Text = form.GetName();
 					CorrectScriptNameRecursive(n);
+					//Re-add node to place alphabetically
+					Collection<Node> parent = n.Parent.Nodes;
+					parent.Remove(n);
+					InsertNodeSorted(n, parent);
 				}
 			}
 		}
 
 		private void scriptsTreeView_ItemDrag(object sender, ItemDragEventArgs e) {
 			TreeNodeAdv node = ((TreeNodeAdv[])e.Item)[0];
-			if (node.Tag is ScriptNode || node.Tag is FolderNode) {
+			if (node.Tag is ScriptNode) {
 				Node snode = (Node)node.Tag;
 				DoDragDrop(snode, DragDropEffects.Copy | DragDropEffects.Move);
 			}
@@ -410,10 +444,12 @@ namespace KFIRPG.editor {
 				return scriptsModel.Root;
 			}
 			else if (node.Tag is ScriptNode) {
-				return ((ScriptNode)node.Tag).Parent;
-			}
-			else if (node.Tag is FolderNode) {
-				return (Node)node.Tag;
+				if (((ScriptNode)node.Tag).IsFolder) {
+					return (Node)node.Tag;
+				}
+				else {
+					return ((ScriptNode)node.Tag).Parent;
+				}
 			}
 			throw new ArgumentException("Invalid TreeNode", "node");
 		}
