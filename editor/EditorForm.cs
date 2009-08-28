@@ -308,9 +308,9 @@ namespace KFIRPG.editor {
 			if (this.savePath == null && !SetSaveLocation()) {
 				return;
 			}
-			Saver saver = new FileSaver(this.savePath);
-			this.currentProject.Save(saver);
-			saver.RestoreCurrentDirectory();
+			using (Saver saver = new FileSaver(this.savePath)) {
+				this.currentProject.Save(saver);
+			}
 		}
 
 		private bool SetSaveLocation() {

@@ -127,12 +127,11 @@ namespace KFIRPG.corelib {
 		/// <param name="saveSlot">Number of the save slot</param>
 		[Script]
 		public void SaveGame(string saveData, int saveSlot) {
-			FileSaver saver = new FileSaver("save");
-			saver.Save(string.Format("save{0}", saveSlot), saveData);
-			PropertyWriter map = saver.CreatePropertyFile(string.Format("savemap{0}.xml", saveSlot));
-			this.game.currentMap.SaveToSaveFile(map);
-			saver.SavePropertyFiles();
-			saver.RestoreCurrentDirectory();
+			using (FileSaver saver = new FileSaver("save")) {
+				saver.Save(string.Format("save{0}", saveSlot), saveData);
+				PropertyWriter map = saver.CreatePropertyFile(string.Format("savemap{0}.xml", saveSlot));
+				this.game.currentMap.SaveToSaveFile(map);
+			}
 		}
 
 		/// <summary>

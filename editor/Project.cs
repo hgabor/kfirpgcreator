@@ -49,7 +49,6 @@ namespace KFIRPG.editor {
 			screenWidth = global.GetInt("screenwidth");
 			screenHeight = global.GetInt("screenheight");
 
-			//Create LoadList<T>(listName, loader, Converter<string, T> adder);
 			foreach (string strImg in loader.LoadText("img.list").Split('\n')) {
 				string img = strImg.Trim();
 				if (img == "") continue;
@@ -297,8 +296,6 @@ namespace KFIRPG.editor {
 			saver.Save("dialog/windowborder.png", windowBorderFile);
 			saver.Save("dialog/dialog.xml", dialogFile);
 			saver.Save("dialog/" + fontFileName, fontFile);
-
-			saver.SavePropertyFiles();
 		}
 	}
 }

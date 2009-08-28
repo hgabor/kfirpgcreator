@@ -58,15 +58,24 @@ namespace KFIRPG.corelib {
 			return new XmlPropertyWriter(root);
 		}
 
-		public void SavePropertyFiles() {
+		#endregion
+
+		private void SavePropertyFiles() {
 			foreach (var kvp in docs) {
 				CreateDir(kvp.Key);
 				kvp.Value.Save(kvp.Key);
 			}
 		}
 
-		public void RestoreCurrentDirectory() {
+		private void RestoreCurrentDirectory() {
 			Directory.SetCurrentDirectory(this.originalPath);
+		}
+
+		#region IDisposable Members
+
+		public void Dispose() {
+			SavePropertyFiles();
+			this.RestoreCurrentDirectory();
 		}
 
 		#endregion
