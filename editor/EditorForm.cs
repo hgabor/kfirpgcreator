@@ -439,10 +439,14 @@ namespace KFIRPG.editor {
 		}
 
 		private void newProjectToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (CheckForUnsavedChanges()) {
+			if (CheckForUnsavedChanges() && SetSaveLocation()) {
+				string savePathNew = savePath;
 				savePath = "NewGame";
 				Load();
-				savePath = null;
+				savePath = savePathNew;
+				Save();
+				mru.Add(savePath);
+				RecreateMRUList();
 			}
 		}
 
