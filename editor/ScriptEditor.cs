@@ -46,9 +46,25 @@ namespace KFIRPG.editor {
 		}
 
 		class FolderNode: Node {
-			public FolderNode(string name)
-				: base(name) {
+			public Script Script { get; private set; }
+
+			public FolderNode(Script script) {
+				this.Script = script;
 				this.Image = KFIRPG.editor.Properties.Resources.folder;
+			}
+
+			public FolderNode(FolderNode node) {
+				this.Script = new Script(node.Script);
+				this.Image = KFIRPG.editor.Properties.Resources.folder;
+			}
+
+			public override string Text {
+				get {
+					return Script.ShortName;
+				}
+				set {
+					throw new NotImplementedException();
+				}
 			}
 		}
 
@@ -120,7 +136,7 @@ namespace KFIRPG.editor {
 					sNodes = folderNode.Nodes;
 				}
 				if (s.IsFolder) {
-					sNodes.Add(new FolderNode(s.Name));
+					sNodes.Add(new FolderNode(s));
 				}
 				else {
 					sNodes.Add(new ScriptNode(s));
@@ -176,7 +192,7 @@ namespace KFIRPG.editor {
 			saveToolStripButton.Enabled = true;
 		}
 
-		private void newScript_Handler(object sender, EventArgs e) {
+		private void AddNewScript(bool isFolder) {
 			Node n;
 			if (scriptsTreeView.SelectedNode != null) {
 				n = (Node)scriptsTreeView.SelectedNode.Tag;
@@ -206,7 +222,9 @@ namespace KFIRPG.editor {
 			}
 
 			string scriptName;
-			using (ComposedForm f = new ComposedForm("New Script", ComposedForm.Parts.Name)) {
+			string caption = isFolder ? "New Folder" : "New Script";
+
+			using (ComposedForm f = new ComposedForm(caption, ComposedForm.Parts.Name)) {
 				f.AddNameChecker(s => {
 					return !scripts.Exists(script => script.Name == scriptPath + s);
 				});
@@ -223,10 +241,26 @@ namespace KFIRPG.editor {
 					return;
 				}
 			}
-			Script newScript = new Script(scriptPath + scriptName, "");
-			nInsertHere.Add(new ScriptNode(newScript));
-			scripts.Add(newScript);
-			LoadScript(newScript);
+
+			if (isFolder) {
+				Script newScript = new Script(scriptPath + scriptName);
+				nInsertHere.Add(new FolderNode(newScript));
+				scripts.Add(newScript);
+			}
+			else {
+				Script newScript = new Script(scriptPath + scriptName, "");
+				nInsertHere.Add(new ScriptNode(newScript));
+				scripts.Add(newScript);
+				LoadScript(newScript);
+			}
+		}
+
+		private void newScript_Handler(object sender, EventArgs e) {
+			AddNewScript(false);
+		}
+
+		private void newFolder_Handler(object sender, EventArgs e) {
+			AddNewScript(true);
 		}
 
 		private void saveToolStripButton_Click(object sender, EventArgs e) {
@@ -268,6 +302,7 @@ namespace KFIRPG.editor {
 				while (node.Nodes.Count != 0) {
 					DeleteNodeRecursive(node.Nodes[0]);
 				}
+				scripts.Remove(((FolderNode)node).Script);
 			}
 			node.Parent.Nodes.Remove(node);
 		}
@@ -301,7 +336,7 @@ namespace KFIRPG.editor {
 				CorrectScriptNameRecursive(newNode);
 			}
 			else {
-				FolderNode newNode = new FolderNode(thisNode.Text);
+				FolderNode newNode = new FolderNode((FolderNode)thisNode);
 				dropNode.Nodes.Add(newNode);
 				foreach (Node childNode in thisNode.Nodes) {
 					CopyNodeRecursive(childNode, newNode);

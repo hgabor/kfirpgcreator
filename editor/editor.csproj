@@ -339,4 +339,10 @@
   <ItemGroup>
     <None Include="Resources\page_red.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_add.png" />
+  </ItemGroup>
 </Project>
