@@ -30,6 +30,7 @@
 			this.nodeTextBox1 = new Aga.Controls.Tree.NodeControls.NodeTextBox();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
 			this.scriptContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.renameScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -37,7 +38,7 @@
 			this.folderContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.renameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.renameScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			splitContainer = new System.Windows.Forms.SplitContainer();
 			splitContainer.Panel1.SuspendLayout();
 			splitContainer.Panel2.SuspendLayout();
@@ -120,13 +121,21 @@
             this.renameScriptToolStripMenuItem,
             this.deleteScriptToolStripMenuItem});
 			this.scriptContextMenu.Name = "scriptContextMenu";
-			this.scriptContextMenu.Size = new System.Drawing.Size(153, 70);
+			this.scriptContextMenu.Size = new System.Drawing.Size(114, 48);
+			// 
+			// renameScriptToolStripMenuItem
+			// 
+			this.renameScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.pencil;
+			this.renameScriptToolStripMenuItem.Name = "renameScriptToolStripMenuItem";
+			this.renameScriptToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.renameScriptToolStripMenuItem.Text = "Rename";
+			this.renameScriptToolStripMenuItem.Click += new System.EventHandler(this.renameScriptToolStripMenuItem_Click);
 			// 
 			// deleteScriptToolStripMenuItem
 			// 
 			this.deleteScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
 			this.deleteScriptToolStripMenuItem.Name = "deleteScriptToolStripMenuItem";
-			this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
 			this.deleteScriptToolStripMenuItem.Text = "Delete";
 			this.deleteScriptToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
 			// 
@@ -149,7 +158,7 @@
 			this.newToolStripButton.Name = "newToolStripButton";
 			this.newToolStripButton.Size = new System.Drawing.Size(23, 22);
 			this.newToolStripButton.Text = "newToolStripButton";
-			this.newToolStripButton.Click += new System.EventHandler(this.newToolStripButton_Click);
+			this.newToolStripButton.Click += new System.EventHandler(this.newScript_Handler);
 			// 
 			// saveToolStripButton
 			// 
@@ -165,16 +174,17 @@
 			// folderContextMenu
 			// 
 			this.folderContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newScriptToolStripMenuItem,
             this.renameFolderToolStripMenuItem,
             this.deleteFolderToolStripMenuItem});
 			this.folderContextMenu.Name = "folderContextMenu";
-			this.folderContextMenu.Size = new System.Drawing.Size(126, 48);
+			this.folderContextMenu.Size = new System.Drawing.Size(153, 92);
 			// 
 			// renameFolderToolStripMenuItem
 			// 
 			this.renameFolderToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.pencil;
 			this.renameFolderToolStripMenuItem.Name = "renameFolderToolStripMenuItem";
-			this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+			this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.renameFolderToolStripMenuItem.Text = "Rename...";
 			this.renameFolderToolStripMenuItem.Click += new System.EventHandler(this.renameFolderToolStripMenuItem_Click);
 			// 
@@ -182,17 +192,17 @@
 			// 
 			this.deleteFolderToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.cross;
 			this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
-			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+			this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.deleteFolderToolStripMenuItem.Text = "Delete";
 			this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
 			// 
-			// renameScriptToolStripMenuItem
+			// newScriptToolStripMenuItem
 			// 
-			this.renameScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.pencil;
-			this.renameScriptToolStripMenuItem.Name = "renameScriptToolStripMenuItem";
-			this.renameScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.renameScriptToolStripMenuItem.Text = "Rename";
-			this.renameScriptToolStripMenuItem.Click += new System.EventHandler(this.renameScriptToolStripMenuItem_Click);
+			this.newScriptToolStripMenuItem.Image = global::KFIRPG.editor.Properties.Resources.page_white;
+			this.newScriptToolStripMenuItem.Name = "newScriptToolStripMenuItem";
+			this.newScriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newScriptToolStripMenuItem.Text = "New Script...";
+			this.newScriptToolStripMenuItem.Click += new System.EventHandler(this.newScript_Handler);
 			// 
 			// ScriptEditor
 			// 
@@ -230,5 +240,6 @@
 		private System.Windows.Forms.ToolStripMenuItem deleteFolderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem renameFolderToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem renameScriptToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem newScriptToolStripMenuItem;
 	}
 }

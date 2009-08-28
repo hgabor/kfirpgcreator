@@ -172,7 +172,7 @@ namespace KFIRPG.editor {
 			saveToolStripButton.Enabled = true;
 		}
 
-		private void newToolStripButton_Click(object sender, EventArgs e) {
+		private void newScript_Handler(object sender, EventArgs e) {
 			Node n;
 			if (scriptsTreeView.SelectedNode != null) {
 				n = (Node)scriptsTreeView.SelectedNode.Tag;
