@@ -25,6 +25,7 @@ namespace KFIRPG.editor {
 			}
 		}
 		string savePath = null;
+        Locker locker = new Locker();
 		MRU mru = new MRU(6, "recent");
 
 		LayersToolbar layers;
@@ -101,6 +102,8 @@ namespace KFIRPG.editor {
 			RecreateMRUList();
 
 			cursor = new TileCursor();
+
+            this.Disposed += this.OnDisposed;
 		}
 
 		public void CalculateScrollbars() {
@@ -218,6 +221,8 @@ namespace KFIRPG.editor {
 				savePath = null;
 				return false;
 			}
+
+            locker.Lock(savePath);
 
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
@@ -595,5 +600,9 @@ namespace KFIRPG.editor {
 			movementScriptToolStripMenuItem.Enabled = isObject;
 			onCollideToolStripMenuItem.Enabled = isObject;
 		}
+
+        private void OnDisposed(object sender, EventArgs e) {
+            locker.Unlock();
+        }
 	}
 }

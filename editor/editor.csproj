@@ -112,6 +112,7 @@
       <DependentUpon>LayersToolbar.cs</DependentUpon>
     </Compile>
     <Compile Include="ListDictionaryAdapter.cs" />
+    <Compile Include="Locker.cs" />
     <Compile Include="MainPanelForm.cs">
       <SubType>Form</SubType>
     </Compile>
