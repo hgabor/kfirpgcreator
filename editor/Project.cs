@@ -53,46 +53,29 @@ namespace KFIRPG.editor {
 			screenWidth = global.GetInt("screenwidth");
 			screenHeight = global.GetInt("screenheight");
 
-			foreach (string strImg in loader.LoadText("img.list").Split('\n')) {
-				string img = strImg.Trim();
-				if (img == "") continue;
+			LoadList("img.list", img => {
 				sheets.Add(img, new SpriteSheet(img, this));
-			}
-
-			foreach (string strAnim in loader.LoadText("animations.list").Split('\n')) {
-				string anim = strAnim.Trim();
-				if (anim == "") continue;
+			});
+			LoadList("animations.list", anim => {
 				animations.Add(anim, new Animation(anim, this));
-			}
-
-			foreach (string strSprite in loader.LoadText("sprites.list").Split('\n')) {
-				string sprite = strSprite.Trim();
-				if (sprite == "") continue;
+			});
+			LoadList("sprites.list", sprite => {
 				sprites.Add(sprite, new Sprite(sprite, this));
-			}
-
-			foreach (string strMap in loader.LoadText("maps.list").Split('\n')) {
-				string map = strMap.Trim();
-				if (map == "") continue;
+			});
+			LoadList("maps.list", map => {
 				maps.Add(map, new Map(map, this));
-			}
-
-			foreach (string strScript in loader.LoadText("scripts.list").Split('\n')) {
-				string script = strScript.Trim();
-				if (script == "") continue;
+			});
+			LoadList("scripts.list", script => {
 				if (script.EndsWith("/")) {
 					scripts.Add(new Script(script));
 				}
 				else {
 					scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
 				}
-			}
-
-			foreach (string strMusic in loader.LoadText("music.list").Split('\n')) {
-				string music = strMusic.Trim();
-				if (music == "") continue;
+			});
+			LoadList("music.list", music => {
 				musics.Add(music, loader.LoadRaw("music/" + music));
-			}
+			});
 
 			startX = global.GetInt("startx");
 			startY = global.GetInt("starty");
@@ -114,6 +97,14 @@ namespace KFIRPG.editor {
 			dialogFile = loader.LoadText("dialog/dialog.xml");
 			fontFileName = loader.GetPropertyReader().Select("dialog/dialog.xml").GetString("font");
 			fontFile = loader.LoadRaw("dialog/" + fontFileName);
+		}
+
+		private void LoadList(string listName, Action<string> addFunction) {
+			foreach (string str in loader.LoadText(listName).Split('\n')) {
+				string strTrimmed = str.Trim();
+				if (strTrimmed == "") continue;
+				addFunction(strTrimmed);
+			}
 		}
 
 		public static Project FromFiles(string path) {
