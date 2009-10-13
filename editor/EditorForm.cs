@@ -99,7 +99,8 @@ namespace KFIRPG.editor {
 			vScrollBar.ValueChanged += UpdateEventHandler;
 			hScrollBar.ValueChanged += UpdateEventHandler;
 
-			RecreateMRUList();
+            mru.Changed += (sender, args) => RecreateMRUList();
+            RecreateMRUList();
 
 			cursor = new TileCursor();
 
@@ -192,7 +193,6 @@ namespace KFIRPG.editor {
 							if (MessageBox.Show(this, "The specified directory does not exist!\nDo you want to remove it from the list?",
 								"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
 								mru.Remove(path);
-								RecreateMRUList();
 							}
 						}
 						else {
@@ -201,7 +201,6 @@ namespace KFIRPG.editor {
 								if (MessageBox.Show(this, "Do you want to remove it from the list?",
 									"Invalid Directory", MessageBoxButtons.YesNo) == DialogResult.Yes) {
 									mru.Remove(path);
-									RecreateMRUList();
 									savePath = null;
 								}
 							}
@@ -407,7 +406,6 @@ namespace KFIRPG.editor {
 			if (SetSaveLocation()) {
 				Save();
 				mru.Add(savePath);
-				RecreateMRUList();
 			}
 		}
 
@@ -451,7 +449,6 @@ namespace KFIRPG.editor {
 				savePath = savePathNew;
 				Save();
 				mru.Add(savePath);
-				RecreateMRUList();
 			}
 		}
 
@@ -459,7 +456,6 @@ namespace KFIRPG.editor {
 			if (SetSaveLocation()) {
 				Load();
 				mru.Add(savePath);
-				RecreateMRUList();
 			}
 		}
 

@@ -9,6 +9,8 @@ namespace KFIRPG.editor {
 		int maxItems;
 		string fileName;
 
+        public event EventHandler Changed;
+
 		public MRU(int maxItems, string fileName) {
 			this.maxItems = maxItems;
 			this.fileName = fileName;
@@ -31,11 +33,13 @@ namespace KFIRPG.editor {
 			items.Insert(0, item);
 			if (items.Count > maxItems) items.RemoveAt(items.Count - 1);
 			Save();
+            if (Changed != null) Changed(this, new EventArgs());
 		}
 
 		public void Remove(string item) {
 			if (items.Contains(item)) items.Remove(item);
 			Save();
+            if (Changed != null) Changed(this, new EventArgs());
 		}
 
 		#region IEnumerable<string> Members
