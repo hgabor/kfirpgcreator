@@ -9,13 +9,13 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KFIRPG.editor {
-	partial class AudioLibrary: DockableForm {
+	partial class AudioLibrary: DockableForm, Project.Loadable {
 		public AudioLibrary() {
 			InitializeComponent();
 		}
 
 		BindingList<KeyValuePair<string, byte[]>> musicList;
-		internal new void Load(Project project) {
+		public new void Load(Project project) {
 			musicList = new BindingList<KeyValuePair<string, byte[]>>(new ListDictionaryAdapter<string, byte[]>(project.musics));
 			this.list.DisplayMember = "Key";
 			this.list.DataSource = musicList;

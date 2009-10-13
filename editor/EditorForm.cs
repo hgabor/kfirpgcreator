@@ -28,11 +28,10 @@ namespace KFIRPG.editor {
         Locker locker = new Locker();
 		MRU mru = new MRU(6, "recent");
 
+
 		LayersToolbar layers;
-		AudioLibrary audio;
-		ImageLibrary images;
-		Palette palette;
-		AnimationLibrary animations;
+
+        List<Project.Loadable> projectLoadables = new List<Project.Loadable>();
 		DoubleBufferedPanel mainPanel;
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
@@ -58,54 +57,122 @@ namespace KFIRPG.editor {
 			};
 		}
 
-		public EditorForm() {
-			InitializeComponent();
+        public EditorForm() {
+            InitializeComponent();
 
-			MainPanelForm mainPanelForm = new MainPanelForm();
-			mainPanel = mainPanelForm.mainPanel;
-			hScrollBar = mainPanelForm.hScrollBar;
-			vScrollBar = mainPanelForm.vScrollBar;
-			mainPanelForm.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
-			mainPanel.MouseClick += this.mainPanel_MouseClick;
-			mainPanel.Paint += this.mainPanel_Paint;
-			mainPanel.MouseDown += this.mainPanel_MouseDown;
-			mainPanel.MouseUp += this.mainPanel_MouseUp;
-			mainPanel.MouseMove += this.mainPanel_MouseMove;
+            MainPanelForm mainPanelForm = new MainPanelForm();
+            mainPanel = mainPanelForm.mainPanel;
+            hScrollBar = mainPanelForm.hScrollBar;
+            vScrollBar = mainPanelForm.vScrollBar;
+            mainPanelForm.DockHandler.Show(dockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+            mainPanel.MouseClick += this.mainPanel_MouseClick;
+            mainPanel.Paint += this.mainPanel_Paint;
+            mainPanel.MouseDown += this.mainPanel_MouseDown;
+            mainPanel.MouseUp += this.mainPanel_MouseUp;
+            mainPanel.MouseMove += this.mainPanel_MouseMove;
 
-			layers = new LayersToolbar();
-			BindFormWithMenuItem(layers, layersToolStripMenuItem);
-			layers.checkedListBox.ItemCheck += UpdateEventHandler;
-			layers.checkedListBox.SelectedIndexChanged += UpdateEventHandler;
+            layers = new LayersToolbar();
+            BindFormWithMenuItem(layers, layersToolStripMenuItem);
+            layers.checkedListBox.ItemCheck += UpdateEventHandler;
+            layers.checkedListBox.SelectedIndexChanged += UpdateEventHandler;
+            layers.addbutton.Click += (sender, args) => {
+                using (ComposedForm form = new ComposedForm("New layer", ComposedForm.Parts.Name)) {
+                    if (form.ShowDialog() == DialogResult.OK) {
+                        currentMap.CreateNewLayer(form.GetName());
+                        layers.Load(currentMap);
+                        mainPanel.Invalidate();
+                    }
+                }
+            };
+            layers.deletebutton.Click += (sender, args) => {
+                if (currentMap.layers.Count == 1) {
+                    MessageBox.Show("Cannot remove last layer!", "Last layer");
+                }
+                else {
+                    int count = 0;
+                    for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
+                        for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
+                            Map.Ladder ladder = currentMap.ladders[i, j];
+                            if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) ++count;
+                        }
+                    }
+                    string message;
+                    if (count == 0) {
+                        message = string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem);
+                    }
+                    else {
+                        message = string.Format("Do you want to remove layer \"{0}\"? The layer contains {1} ladder(s), they will be removed!", layers.checkedListBox.SelectedItem, count);
+                    }
+                    if (MessageBox.Show(layers, message, "Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                        for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
+                            for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
+                                Map.Ladder ladder = currentMap.ladders[i, j];
+                                if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) currentMap.ladders[i, j] = null;
+                            }
+                        }
+                        currentMap.layers.Remove(CurrentLayer);
+                        layers.Load(currentMap);
+                        mainPanel.Invalidate();
+                    }
+                }
+            };
+            layers.upbutton.Click += (sender, args) => {
+                int index = layers.checkedListBox.SelectedIndex;
+                if (index == 0) return;
+                int lindex = currentMap.layers.Count - index - 1;
+                Map.Layer layer = currentMap.layers[lindex];
+                currentMap.layers.RemoveAt(lindex);
+                currentMap.layers.Insert(lindex + 1, layer);
+                layers.Load(currentMap);
+                layers.checkedListBox.SelectedIndex = index - 1;
+                mainPanel.Invalidate();
+            };
+            layers.downbutton.Click += (sender, args) => {
+                int index = layers.checkedListBox.SelectedIndex;
+                if (index == currentMap.layers.Count - 1) return;
+                int lindex = currentMap.layers.Count - index - 1;
+                Map.Layer layer = currentMap.layers[lindex];
+                currentMap.layers.RemoveAt(lindex);
+                currentMap.layers.Insert(lindex - 1, layer);
+                layers.Load(currentMap);
+                layers.checkedListBox.SelectedIndex = index + 1;
+                mainPanel.Invalidate();
+            };
 
-			audio = new AudioLibrary();
-			BindFormWithMenuItem(audio, audioLibraryToolStripMenuItem);
 
-			images = new ImageLibrary();
-			BindFormWithMenuItem(images, imageLibraryToolStripMenuItem);
+            var audio = new AudioLibrary();
+            projectLoadables.Add(audio);
+            BindFormWithMenuItem(audio, audioLibraryToolStripMenuItem);
 
-			palette = new Palette();
-			BindFormWithMenuItem(palette, paletteToolStripMenuItem);
-			palette.PaletteSelectionChanged += (sender, args) => {
-				this.cursor = args.Cursor;
-			};
+            var images = new ImageLibrary();
+			projectLoadables.Add(images);
+            BindFormWithMenuItem(images, imageLibraryToolStripMenuItem);
 
-			animations = new AnimationLibrary();
-			BindFormWithMenuItem(animations, animationLibraryToolStripMenuItem);
+            var palette = new Palette();
+			projectLoadables.Add(palette);
+            BindFormWithMenuItem(palette, paletteToolStripMenuItem);
+            palette.PaletteSelectionChanged += (sender, args) => {
+                this.cursor = args.Cursor;
+            };
 
-			specialViewComboBox.SelectedIndex = 0;
+            var animations = new AnimationLibrary();
+			projectLoadables.Add(animations);
+            BindFormWithMenuItem(animations, animationLibraryToolStripMenuItem);
 
-			mainPanel.Resize += (sender, args) => CalculateScrollbars();
-			CalculateScrollbars();
-			vScrollBar.ValueChanged += UpdateEventHandler;
-			hScrollBar.ValueChanged += UpdateEventHandler;
+            specialViewComboBox.SelectedIndex = 0;
+
+            mainPanel.Resize += (sender, args) => CalculateScrollbars();
+            CalculateScrollbars();
+            vScrollBar.ValueChanged += UpdateEventHandler;
+            hScrollBar.ValueChanged += UpdateEventHandler;
 
             mru.Changed += (sender, args) => RecreateMRUList();
             RecreateMRUList();
 
-			cursor = new TileCursor();
+            cursor = new TileCursor();
 
             this.Disposed += this.OnDisposed;
-		}
+        }
 
 		public void CalculateScrollbars() {
 			if (currentMap == null) {
@@ -225,75 +292,8 @@ namespace KFIRPG.editor {
 
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
-			audio.Load(currentProject);
-			images.Load(currentProject);
-			palette.Load(currentProject);
+            projectLoadables.ForEach(l => l.Load(currentProject));
 			layers.Load(currentMap);
-			animations.Load(currentProject);
-
-			layers.addbutton.Click += (sender, args) => {
-				using (ComposedForm form = new ComposedForm("New layer", ComposedForm.Parts.Name)) {
-					if (form.ShowDialog() == DialogResult.OK) {
-						currentMap.CreateNewLayer(form.GetName());
-						layers.Load(currentMap);
-						mainPanel.Invalidate();
-					}
-				}
-			};
-			layers.deletebutton.Click += (sender, args) => {
-				if (currentMap.layers.Count == 1) {
-					MessageBox.Show("Cannot remove last layer!", "Last layer");
-				}
-				else {
-					int count = 0;
-					for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
-						for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
-							Map.Ladder ladder = currentMap.ladders[i, j];
-							if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) ++count;
-						}
-					}
-					string message;
-					if (count == 0) {
-						message = string.Format("Do you want to remove layer \"{0}\"?", layers.checkedListBox.SelectedItem);
-					}
-					else {
-						message = string.Format("Do you want to remove layer \"{0}\"? The layer contains {1} ladder(s), they will be removed!", layers.checkedListBox.SelectedItem, count);
-					}
-					if (MessageBox.Show(layers, message, "Remove layer", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-						for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
-							for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
-								Map.Ladder ladder = currentMap.ladders[i, j];
-								if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) currentMap.ladders[i, j] = null;
-							}
-						}
-						currentMap.layers.Remove(CurrentLayer);
-						layers.Load(currentMap);
-						mainPanel.Invalidate();
-					}
-				}
-			};
-			layers.upbutton.Click += (sender, args) => {
-				int index = layers.checkedListBox.SelectedIndex;
-				if (index == 0) return;
-				int lindex = currentMap.layers.Count - index - 1;
-				Map.Layer layer = currentMap.layers[lindex];
-				currentMap.layers.RemoveAt(lindex);
-				currentMap.layers.Insert(lindex + 1, layer);
-				layers.Load(currentMap);
-				layers.checkedListBox.SelectedIndex = index - 1;
-				mainPanel.Invalidate();
-			};
-			layers.downbutton.Click += (sender, args) => {
-				int index = layers.checkedListBox.SelectedIndex;
-				if (index == currentMap.layers.Count - 1) return;
-				int lindex = currentMap.layers.Count - index - 1;
-				Map.Layer layer = currentMap.layers[lindex];
-				currentMap.layers.RemoveAt(lindex);
-				currentMap.layers.Insert(lindex - 1, layer);
-				layers.Load(currentMap);
-				layers.checkedListBox.SelectedIndex = index + 1;
-				mainPanel.Invalidate();
-			};
 
 			foreach(string mapName in currentProject.maps.Keys) {
 				mapComboBox.Items.Add(mapName);

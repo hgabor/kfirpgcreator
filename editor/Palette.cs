@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using KFIRPG.editor.Cursors;
 
 namespace KFIRPG.editor {
-	internal partial class Palette: DockableForm {
+	internal partial class Palette: DockableForm, Project.Loadable {
 
 		public class CursorEventArgs: EventArgs {
 			Cursors.Cursor cursor;
@@ -34,7 +34,7 @@ namespace KFIRPG.editor {
 		Project currentProject;
 		SpriteSheet sheet = null;
 
-		internal new void Load(Project project) {
+		public new void Load(Project project) {
 			currentProject = project;
 			sheet = project.sheets["tiles"];
 

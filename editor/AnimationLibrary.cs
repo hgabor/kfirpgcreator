@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace KFIRPG.editor {
-	partial class AnimationLibrary: DockableForm {
+	partial class AnimationLibrary: DockableForm, Project.Loadable {
 		private Project project;
 
 		public AnimationLibrary() {
@@ -15,7 +15,7 @@ namespace KFIRPG.editor {
 		}
 
 		BindingList<KeyValuePair<string, Animation>> animations;
-		internal new void Load(Project project) {
+		public new void Load(Project project) {
 			this.project = project;
 			animations = new BindingList<KeyValuePair<string,Animation>>(new ListDictionaryAdapter<string, Animation>(project.animations));
 			listBox.DisplayMember = "Key";

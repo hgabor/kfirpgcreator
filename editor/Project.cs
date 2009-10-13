@@ -5,6 +5,10 @@ using KFIRPG.corelib;
 
 namespace KFIRPG.editor {
 	class Project {
+        public interface Loadable {
+            void Load(Project project);
+        }
+
 		public class LoadException:Exception {
 			public LoadException(Exception innerException)
 				: base("Project could not be loaded! See the inner exception for details.", innerException) { }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace KFIRPG.editor {
-	partial class ImageLibrary: DockableForm {
+	partial class ImageLibrary: DockableForm, Project.Loadable {
 		public ImageLibrary() {
 			InitializeComponent();
 		}
@@ -21,7 +21,7 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		internal new void Load(Project project) {
+		public new void Load(Project project) {
 			this.project = project;
 			LoadItems();
 			listbox.SelectedIndexChanged += (sender, args) => {
