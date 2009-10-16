@@ -1,11 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using KFIRPG.editor.Commands;
 
 namespace KFIRPG.editor.Cursors {
 	abstract class Cursor {
 		public abstract void Click(Map.Layer layer);
 		public abstract void Draw(System.Drawing.Graphics g);
+
+		/// <summary>
+		/// Returns a command containing the action to be performed
+		/// </summary>
+		/// <param name="layer"></param>
+		/// <returns></returns>
+		protected virtual void Edit(Map.Layer layer) { }
+
+		public EventHandler<CommandEventArgs> CommandReady;
+		private void OnCommand(CommandEventArgs e) {
+			if (CommandReady != null) CommandReady(this, e);
+		}
+
+		protected CommandList commandList = new CommandList();
+
+		public void DoEdit(Map.Layer layer) {
+			this.Edit(layer);
+		}
+		public void EndEdit() {
+			if (commandList.IsEmpty) return;
+			OnCommand(new CommandEventArgs(commandList));
+			commandList = new CommandList();
+		}
 
 		protected int x = 0;
 		protected int y = 0;

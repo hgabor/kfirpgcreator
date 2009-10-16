@@ -36,7 +36,14 @@ namespace KFIRPG.editor {
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
 
-		Cursors.Cursor cursor;
+		Cursors.Cursor _cursor;
+		Cursors.Cursor cursor {
+			get { return _cursor; }
+			set {
+				_cursor = value;
+				_cursor.CommandReady += (sender, args) => currentProject.DoCommand(args.Command);
+			}
+		}
 
 		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
 			form.DockHandler.HideOnClose = true;
@@ -205,6 +212,7 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
+			currentProject.Command += (sender, args) => this.UpdateUndoRedoState();
 			//layers.Show();
 			//audio.Show();
 			//images.Show();
@@ -506,7 +514,8 @@ namespace KFIRPG.editor {
 
 			if (dragging && e.Button == MouseButtons.Left) {
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					//cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					cursor.DoEdit(CurrentLayer);
 				}
 			}
 
@@ -515,19 +524,24 @@ namespace KFIRPG.editor {
 
 		private void EditorForm_Deactivate(object sender, EventArgs e) {
 			dragging = false;
+			cursor.EndEdit();
 		}
 
 		private void mainPanel_MouseDown(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
 				dragging = true;
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					//cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					cursor.DoEdit(CurrentLayer);
 				}
 			}
 		}
 
 		private void mainPanel_MouseUp(object sender, MouseEventArgs e) {
 			dragging = false;
+			if (e.Button == MouseButtons.Left) {
+				cursor.EndEdit();
+			}
 		}
 
 		private bool IsOutOfBounds(Point point) {
@@ -600,5 +614,18 @@ namespace KFIRPG.editor {
         private void OnDisposed(object sender, EventArgs e) {
             locker.Unlock();
         }
+
+		private void UpdateUndoRedoState() {
+			undoToolStripMenuItem.Enabled = currentProject.CanUndo;
+			redoToolStripMenuItem.Enabled = currentProject.CanRedo;
+		}
+
+		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
+			currentProject.Undo();
+		}
+
+		private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
+			currentProject.Redo();
+		}
 	}
 }

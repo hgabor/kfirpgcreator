@@ -59,6 +59,9 @@
 			this.onCollideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.movementScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+			this.editStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip.SuspendLayout();
 			this.toolStrip.SuspendLayout();
 			this.contextMenu.SuspendLayout();
@@ -68,6 +71,7 @@
 			// 
 			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.editStripMenuItem,
             this.viewToolStripMenuItem,
             this.mapToolStripMenuItem,
             this.gameToolStripMenuItem});
@@ -367,6 +371,32 @@
 			this.dockPanel.Size = new System.Drawing.Size(499, 349);
 			this.dockPanel.TabIndex = 5;
 			// 
+			// editStripMenuItem
+			// 
+			this.editStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem});
+			this.editStripMenuItem.Enabled = false;
+			this.editStripMenuItem.Name = "editStripMenuItem";
+			this.editStripMenuItem.Size = new System.Drawing.Size(37, 20);
+			this.editStripMenuItem.Text = "Edit";
+			// 
+			// undoToolStripMenuItem
+			// 
+			this.undoToolStripMenuItem.Enabled = false;
+			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.undoToolStripMenuItem.Text = "Undo";
+			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+			// 
+			// redoToolStripMenuItem
+			// 
+			this.redoToolStripMenuItem.Enabled = false;
+			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.redoToolStripMenuItem.Text = "Redo";
+			this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -428,5 +458,8 @@
 		private System.Windows.Forms.ToolStripMenuItem onCollideToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveProjectAsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem editStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
 	}
 }

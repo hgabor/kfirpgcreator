@@ -4,6 +4,32 @@ using System.Text;
 
 namespace KFIRPG.editor.Cursors {
 	class PlaceLadderCursor: Cursor {
+		class PlaceLadderCommand: Commands.Command {
+			public override string Name {
+				get { return "Place ladder"; }
+			}
+
+			public override void Do() {
+				map.ladders[tileX, tileY] = new Map.Ladder(baseLayer, topLayer);
+			}
+
+			public override void Undo() {
+				map.ladders[tileX, tileY] = null;
+			}
+
+			Map map;
+			int tileX, tileY;
+			Map.Layer baseLayer, topLayer;
+			public PlaceLadderCommand(Map map, int tileX, int tileY, Map.Layer baseLayer, Map.Layer topLayer) {
+				this.map = map;
+				this.tileX = tileX;
+				this.tileY = tileY;
+				this.baseLayer = baseLayer;
+				this.topLayer = topLayer;
+			}
+		}
+
+
 		int size;
 
 		public PlaceLadderCursor(Project project) {
@@ -17,6 +43,19 @@ namespace KFIRPG.editor.Cursors {
 				Map.Layer baseLayer = layer, topLayer = layer;
 				if (SelectTwoLayersDialog.SelectTwoDifferentLayers(map, ref baseLayer, ref topLayer)) {
 					map.ladders[tileX, tileY] = new Map.Ladder(baseLayer, topLayer);
+				}
+			}
+		}
+
+		protected override void Edit(Map.Layer layer) {
+			Map map = layer.Map;
+			if (tileX >= map.width || tileY >= map.height || tileY == 0) return;
+			if (map.ladders[tileX, tileY] == null && map.ladders[tileX, tileY - 1] == null && (tileY == map.height - 1 || map.ladders[tileX, tileY + 1] == null)) {
+				Map.Layer baseLayer = layer, topLayer = layer;
+				if (SelectTwoLayersDialog.SelectTwoDifferentLayers(map, ref baseLayer, ref topLayer)) {
+					commandList.Add(new PlaceLadderCommand(map, tileX, tileY, baseLayer, topLayer));
+					EndEdit();
+					//map.ladders[tileX, tileY] = new Map.Ladder(baseLayer, topLayer);
 				}
 			}
 		}
