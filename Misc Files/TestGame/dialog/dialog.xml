@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<dialog>
+  <border>10</border>
+  <background>
+    <red>0</red>
+    <green>128</green>
+    <blue>0</blue>
+    <alpha>192</alpha>
+  </background>
+  <selectedborder>
+    <red>128</red>
+    <green>128</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+  </selectedborder>
+  <selectedbackground>
+    <red>0</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>128</alpha>
+  </selectedbackground>
+  <font>DejaVuSans.ttf</font>
+  <fontsize>14</fontsize>
+</dialog>

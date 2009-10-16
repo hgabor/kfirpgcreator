@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<sprite>
+  <animation>door</animation>
+  <speed>0</speed>
+  <noclip>0</noclip>
+  <exts>
+    <ext>
+      <key>name</key>
+      <value>Door</value>
+    </ext>
+  </exts>
+</sprite>

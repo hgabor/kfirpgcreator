@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<events>
+  <event>
+    <x>8</x>
+    <y>0</y>
+    <layer>4</layer>
+    <script>map/teleport</script>
+  </event>
+  <event>
+    <x>1</x>
+    <y>3</y>
+    <layer>4</layer>
+    <script>map/bridgecreaks</script>
+  </event>
+</events>

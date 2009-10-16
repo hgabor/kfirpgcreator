@@ -1,0 +1,46 @@
+include("Message")
+include("Character")
+include("Battle")
+
+NewGame()
+
+-- State table
+-- All scripts should use it for states specific to a game
+-- The state table is saved when saving the game
+s = {}
+
+local char = Character()
+char.Name = "Bigsticky"
+char.MaxHp = 10
+char.Hp = char.MaxHp
+char.Attack = 10
+char.AttackDelta = 2
+char.Defense = 5
+char.gfx = AnimatedGraphics("bigstickman")
+char.isDead = false
+
+local c2 = Character()
+c2.Name = "Smallsticky"
+c2.MaxHp = 25
+c2.Hp = c2.MaxHp
+c2.Attack = 8
+c2.AttackDelta = 3
+c2.Defense = 3
+c2.gfx = AnimatedGraphics("stickman")
+c2.isDead = false
+
+s.PlayerParty = { char, c2 }
+
+StartMusic("Canon in D Major.ogg")
+--[[
+Message("Welcome to the wonderful world of KFI!\nPress the action key to close this window. This is a really long string that should be broken into little pieces, one by one.")
+Message("You can start moving around using the arrow keys!")
+
+if Ask("Do you like tea?", "Yes", "No", "Cancel") == 1 then
+  Message("Me too!")
+else
+  Message("Neither do I!")
+end
+
+Message("So long, farewell!")
+--]]

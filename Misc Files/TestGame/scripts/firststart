@@ -1,0 +1,11 @@
+include("Common")
+include("MainMenu")
+include("save")
+
+include("Message")
+include("Character")
+include("Battle")
+
+s = {}
+
+MainMenu()

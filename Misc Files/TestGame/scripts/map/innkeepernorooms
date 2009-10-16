@@ -1,0 +1,2 @@
+Turn(self, player)
+Message("I am awfully sorry, but we have no vacant rooms at the moment. Please come back later.")

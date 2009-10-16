@@ -1,0 +1,5 @@
+include("Message")
+
+if Ask("Do you really want to quit?", "No way!", "Yes, goodbye!") == 2 then
+  MainMenu(TakeScreenshot())
+end

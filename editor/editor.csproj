@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{39C91657-E23D-4850-A567-D4A8CF378643}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KFIRPG.editor</RootNamespace>
+    <AssemblyName>editor</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="AnimationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimationDialog.Designer.cs">
+      <DependentUpon>AnimationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnimationLibrary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimationLibrary.Designer.cs">
+      <DependentUpon>AnimationLibrary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnimationSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnimationSelector.Designer.cs">
+      <DependentUpon>AnimationSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Animation.cs" />
+    <Compile Include="AudioLibrary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AudioLibrary.Designer.cs">
+      <DependentUpon>AudioLibrary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ComposedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ComposedForm.Designer.cs">
+      <DependentUpon>ComposedForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cursors\Cursor.cs" />
+    <Compile Include="Cursors\DeleteSpriteCursor.cs" />
+    <Compile Include="DockableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentTabForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentTabForm.Designer.cs">
+      <DependentUpon>DocumentTabForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditorForm.Designer.cs">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageLibrary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImageLibrary.Designer.cs">
+      <DependentUpon>ImageLibrary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyValueDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyValueDialog.Designer.cs">
+      <DependentUpon>KeyValueDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cursors\LadderCursor.cs" />
+    <Compile Include="LayersToolbar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LayersToolbar.Designer.cs">
+      <DependentUpon>LayersToolbar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListDictionaryAdapter.cs" />
+    <Compile Include="Locker.cs" />
+    <Compile Include="MainPanelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainPanelForm.Designer.cs">
+      <DependentUpon>MainPanelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map.cs" />
+    <Compile Include="MRU.cs" />
+    <Compile Include="Palette.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Palette.Designer.cs">
+      <DependentUpon>Palette.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cursors\PassabilityCursor.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptSelector.Designer.cs">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Script.cs" />
+    <Compile Include="ScriptEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptEditor.Designer.cs">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectTwoLayersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectTwoLayersDialog.Designer.cs">
+      <DependentUpon>SelectTwoLayersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sprite.cs" />
+    <Compile Include="Cursors\SpriteCursor.cs" />
+    <Compile Include="SpriteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpriteDialog.Designer.cs">
+      <DependentUpon>SpriteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SpriteSelector.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SpriteSheet.cs" />
+    <Compile Include="SpriteSheetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpriteSheetDialog.Designer.cs">
+      <DependentUpon>SpriteSheetDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cursors\TileCursor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Aga.Controls, Version=1.6.1.0, Culture=neutral, PublicKeyToken=fcc90fbf924463a3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\Aga.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3800, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.2.2864.18696, Culture=neutral, PublicKeyToken=d481317c817cec47, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AnimationDialog.resx">
+      <DependentUpon>AnimationDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnimationLibrary.resx">
+      <DependentUpon>AnimationLibrary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnimationSelector.resx">
+      <DependentUpon>AnimationSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AudioLibrary.resx">
+      <DependentUpon>AudioLibrary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComposedForm.resx">
+      <DependentUpon>ComposedForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentTabForm.resx">
+      <DependentUpon>DocumentTabForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditorForm.resx">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImageLibrary.resx">
+      <DependentUpon>ImageLibrary.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyValueDialog.resx">
+      <DependentUpon>KeyValueDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LayersToolbar.resx">
+      <DependentUpon>LayersToolbar.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainPanelForm.resx">
+      <DependentUpon>MainPanelForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Palette.resx">
+      <DependentUpon>Palette.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptSelector.resx">
+      <DependentUpon>ScriptSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptEditor.resx">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectTwoLayersDialog.resx">
+      <DependentUpon>SelectTwoLayersDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpriteDialog.resx">
+      <DependentUpon>SpriteDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpriteSheetDialog.resx">
+      <DependentUpon>SpriteSheetDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\corelib\corelib.csproj">
+      <Project>{F38AEFA8-5B0F-45AE-958F-42176B0A399C}</Project>
+      <Name>corelib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\door.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\map_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lightning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\palette.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white_stack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\film.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layers.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_add.png" />
+  </ItemGroup>
+</Project>

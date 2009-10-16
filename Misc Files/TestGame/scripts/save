@@ -1,0 +1,65 @@
+
+saveFunctions = {}
+loadFunctions = {}
+
+
+function serialize(o, intend)
+	if intend == nil then intend = "" end
+	local str = ""
+	if type(o) == "number" then
+		str = str .. o
+	elseif type(o) == "string" then
+		str = str .. string.format("%q", o)
+	elseif type(o) == "boolean" then
+		if o then
+			str = str .. "true"
+		else
+			str = str .. "false"
+		end
+	elseif type(o) == "table" then
+		str = str .. "{\n"
+		for k,v in pairs(o) do
+			str = str .. intend .. "  [" .. serialize(k) .. "] = "
+			str = str .. serialize(v, intend .. "  ")
+			str = str ..  ",\n"
+		end
+		str = str .. intend .. "}"
+	else
+		error("cannot serialize a " .. type(o))
+	end
+	return str
+end
+
+function Save(saveSlot)
+	local saveTable = {}
+	for i, func in ipairs(saveFunctions) do
+		func(saveTable)
+	end
+	SaveGame("return " .. serialize(saveTable), saveSlot)
+end
+
+function Load(saveSlot)
+	LoadGame(saveSlot)
+	local loadTable = dofile("save/save" .. saveSlot)
+	for i, func in ipairs(loadFunctions) do
+		func(loadTable)
+	end
+end
+
+
+function SelectSaveSlot()
+	local slots = GetSaveSlots()
+	local question = FullScreen_Ask_Prepare("MainMenu", "Back", unpack(slots))
+	return question:Ask(screenshot) - 1
+end
+
+function SelectLoadSlot()
+	local slots = GetSaveSlots()
+	local question = FullScreen_Ask_Prepare("MainMenu", "Back", unpack(slots))
+	local answer = question:Ask(screenshot) - 1
+	if answer == 0 or slots[answer] == "" then
+		return 0
+	else
+		return answer
+	end
+end

@@ -1,0 +1,9 @@
+
+--Shallow clone of table t
+table.clone = function(t)
+	ret = {}
+	for k, v in pairs(t) do
+		ret[k] = v
+	end
+	return ret
+end

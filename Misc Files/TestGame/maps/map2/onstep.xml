@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<events>
+  <event>
+    <x>2</x>
+    <y>5</y>
+    <layer>0</layer>
+    <script>map/houseexit</script>
+  </event>
+</events>

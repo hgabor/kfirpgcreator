@@ -1,0 +1,45 @@
+
+--[[
+Required members:
+Name
+MaxHp
+Hp
+//MaxMana
+//Mana
+Attack
+AttackDelta
+Defense
+gfx
+gfxName
+isDead
+
+--]]
+
+Character = class(function(self)
+end)
+
+function Attack(self, other)
+  local damage = math.random(self.Attack - self.AttackDelta, self.Attack + self.AttackDelta + 1) - other.Defense
+  if damage <= 0 then
+    return
+  else
+    other.Hp = other.Hp - damage
+    if (other.Hp <= 0) then other.Hp = 0 end
+  end
+end
+
+table.insert(saveFunctions, function(t)
+	t.chars = {}
+	for i, char in ipairs(s.PlayerParty) do
+		t.chars[i] = table.clone(char)
+		t.chars[i].gfx = nil
+	end
+end)
+
+table.insert(loadFunctions, function(t)
+	s.PlayerParty = {}
+	for i, char in ipairs(t.chars) do
+		s.PlayerParty[i] = char
+		s.PlayerParty[i].gfx = AnimatedGraphics(s.PlayerParty[i].gfxName)
+	end
+end)

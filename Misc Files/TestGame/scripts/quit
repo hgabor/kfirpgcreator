@@ -1,0 +1,13 @@
+include("Message")
+
+local answer = Ask("Choose:", "Back to game", "Save game", "Quit")
+
+if answer == 2 then
+	local slot = SelectSaveSlot()
+	if slot ~= 0 then
+		Save(slot)
+	end
+
+elseif answer == 3 then
+	MainMenu(TakeScreenshot())
+end
