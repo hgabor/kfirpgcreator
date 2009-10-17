@@ -10,6 +10,12 @@ namespace KFIRPG.editor.Cursors {
 		Pen pen;
 		int size;
 
+		public override string Name {
+			get {
+				return "Set passability";
+			}
+		}
+
 		public PassabilityCursor(bool passable, Project project) {
 			this.passable = passable;
 			this.size = project.tileSize;
@@ -23,14 +29,22 @@ namespace KFIRPG.editor.Cursors {
 			}
 		}
 
-		public override void Click(Map.Layer layer) {
-			if (tileX <= layer.tiles.GetUpperBound(0) && tileY <= layer.tiles.GetUpperBound(1)) {
-				layer.tiles[tileX, tileY].passable = passable;
-			}
-		}
-
 		protected override void Edit(Map.Layer layer) {
-			base.Edit(layer);
+			int tileX = this.tileX;
+			int tileY = this.tileY;
+			if (tileX <= layer.tiles.GetUpperBound(0) && tileY <= layer.tiles.GetUpperBound(1)) {
+				if (layer.tiles[tileX, tileY].passable != passable) {
+					Commands.Command c = new Commands.Command(
+						delegate() {
+							layer.tiles[tileX, tileY].passable = passable;
+						},
+						delegate() {
+							layer.tiles[tileX, tileY].passable = !passable;
+						}
+					);
+					commandList.Add(c);
+				}
+			}
 		}
 
 		public override void Draw(System.Drawing.Graphics g) {
