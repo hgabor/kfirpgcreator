@@ -618,6 +618,18 @@ namespace KFIRPG.editor {
 		private void UpdateUndoRedoState() {
 			undoToolStripMenuItem.Enabled = currentProject.CanUndo;
 			redoToolStripMenuItem.Enabled = currentProject.CanRedo;
+			if (undoToolStripMenuItem.Enabled) {
+				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", currentProject.UndoName);
+			}
+			else {
+				undoToolStripMenuItem.Text = "Undo";
+			}
+			if (redoToolStripMenuItem.Enabled) {
+				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", currentProject.RedoName);
+			}
+			else {
+				redoToolStripMenuItem.Text = "Redo";
+			}
 		}
 
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {

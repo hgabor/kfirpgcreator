@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.editor.Commands {
-	class CommandList: Command {
+	class CommandList {
 		List<Command> list = new List<Command>();
+
+		public CommandList(string name) {
+			this.Name = name;
+		}
 
 		public void Add(Command command) {
 			list.Add(command);
@@ -16,19 +20,15 @@ namespace KFIRPG.editor.Commands {
 			get { return list.Count == 0; }
 		}
 
-		public override string Name {
-			get {
-				return string.Join(" ", list.ConvertAll<string>(c => c.Name).ToArray());
-			}
-		}
+		public string Name { get; private set; }
 
-		public override void Do() {
+		public void Do() {
 			for (int i = 0; i < list.Count; ++i) {
 				list[i].Do();
 			}
 		}
 
-		public override void Undo() {
+		public void Undo() {
 			for (int i = list.Count - 1; i >= 0; --i) {
 				list[i].Undo();
 			}

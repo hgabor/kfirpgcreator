@@ -5,7 +5,11 @@ using KFIRPG.editor.Commands;
 
 namespace KFIRPG.editor.Cursors {
 	abstract class Cursor {
-		public abstract void Click(Map.Layer layer);
+		public Cursor() {
+			commandList = new CommandList(Name);
+		}
+
+		public virtual void Click(Map.Layer layer) { }
 		public abstract void Draw(System.Drawing.Graphics g);
 
 		/// <summary>
@@ -15,12 +19,16 @@ namespace KFIRPG.editor.Cursors {
 		/// <returns></returns>
 		protected virtual void Edit(Map.Layer layer) { }
 
+		public virtual string Name { get { return ""; } }
+
 		public EventHandler<CommandEventArgs> CommandReady;
 		private void OnCommand(CommandEventArgs e) {
 			if (CommandReady != null) CommandReady(this, e);
 		}
 
-		protected CommandList commandList = new CommandList();
+		protected CommandList commandList;
+
+
 
 		public void DoEdit(Map.Layer layer) {
 			this.Edit(layer);
@@ -28,7 +36,7 @@ namespace KFIRPG.editor.Cursors {
 		public void EndEdit() {
 			if (commandList.IsEmpty) return;
 			OnCommand(new CommandEventArgs(commandList));
-			commandList = new CommandList();
+			commandList = new CommandList(Name);
 		}
 
 		protected int x = 0;

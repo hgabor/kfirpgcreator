@@ -29,6 +29,10 @@ namespace KFIRPG.editor.Cursors {
 			}
 		}
 
+		protected override void Edit(Map.Layer layer) {
+			base.Edit(layer);
+		}
+
 		public override void Draw(System.Drawing.Graphics g) {
 			g.FillRectangle(brush, x / size * size, y / size * size, size - 1, size - 1);
 			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);

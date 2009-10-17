@@ -293,14 +293,14 @@ namespace KFIRPG.editor {
 			saver.Save("dialog/" + fontFileName, fontFile);
 		}
 
-		Stack<Commands.Command> undoStack = new Stack<KFIRPG.editor.Commands.Command>();
-		Stack<Commands.Command> redoStack = new Stack<KFIRPG.editor.Commands.Command>();
+		Stack<Commands.CommandList> undoStack = new Stack<Commands.CommandList>();
+		Stack<Commands.CommandList> redoStack = new Stack<Commands.CommandList>();
 
 		public event EventHandler Command;
 		void OnCommand(EventArgs e) {
 			if (Command != null) Command(this, e);
 		}
-		public void DoCommand(Commands.Command c) {
+		public void DoCommand(Commands.CommandList c) {
 			c.Do();
 			undoStack.Push(c);
 			redoStack.Clear();

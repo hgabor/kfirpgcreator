@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace KFIRPG.editor.Commands {
-	abstract class Command {
-		private class NoneCommand: Command {
-			public override string Name {
-				get { return "None"; }
-			}
-			public override void Do() { }
-			public override void Undo() { }
+	class Command {
+		public delegate void Function();
+
+		Function doFunc, undoFunc;
+		public Command(Function doFunc, Function undoFunc) {
+			this.doFunc = doFunc;
+			this.undoFunc = undoFunc;
 		}
-		public static readonly Command None = new NoneCommand();
 
-
-		public abstract string Name { get; }
-
-		public abstract void Do();
-		public abstract void Undo();
+		public void Do() {
+			doFunc();
+		}
+		public void Undo() {
+			undoFunc();
+		}
 	}
 }
