@@ -9,6 +9,12 @@ namespace KFIRPG.editor.Cursors {
 		private bool clearScriptInfo;
 		private SpriteSheet.Gfx gfx;
 
+		public override string Name {
+			get {
+				return "Place sprite(s)";
+			}
+		}
+
 		int size;
 		public SpriteCursor(Sprite sprite, bool clearScriptInfo, Project project) {
 			this.sprite = sprite;
@@ -17,17 +23,44 @@ namespace KFIRPG.editor.Cursors {
 			gfx = sprite.animation.sheet.GetGfxById(1);
 		}
 
-		public override void Click(Map.Layer layer) {
+		protected override void Edit(Map.Layer layer) {
+			int tileX = this.tileX;
+			int tileY = this.tileY;
 			if (tileX >= layer.objects.GetLength(0)|| tileY >= layer.objects.GetLength(1)) {
 				return;
 			}
 			if (layer.objects[tileX, tileY] == null) {
-				layer.objects[tileX, tileY] = new Map.Obj();
+				commandList.Add(new Commands.Command(
+					delegate() {
+						layer.objects[tileX, tileY] = new Map.Obj();
+					},
+					delegate() {
+						layer.objects[tileX, tileY] = null;
+					}));
 			}
-			layer.objects[tileX, tileY].Sprite = sprite;
+			Sprite oldSprite = layer.objects[tileX, tileY].Sprite;
+			commandList.Add(new Commands.Command(
+				delegate() {
+					layer.objects[tileX, tileY].Sprite = sprite;
+				},
+				delegate() {
+					layer.objects[tileX, tileY].Sprite = oldSprite;
+				}));
 			if (clearScriptInfo) {
-				layer.objects[tileX, tileY].actionScript = "";
-				layer.objects[tileX, tileY].movementAIScript = "";
+				string oldAction = layer.objects[tileX, tileY].actionScript;
+				string oldCollide = layer.objects[tileX,tileY].collideScript;
+				string oldMovement = layer.objects[tileX, tileY].movementAIScript;
+				commandList.Add(new Commands.Command(
+					delegate() {
+						layer.objects[tileX, tileY].actionScript = "";
+						layer.objects[tileX, tileY].movementAIScript = "";
+						layer.objects[tileX, tileY].collideScript = "";
+					},
+					delegate() {
+						layer.objects[tileX, tileY].actionScript = oldAction;
+						layer.objects[tileX, tileY].movementAIScript = oldMovement;
+						layer.objects[tileX, tileY].collideScript = oldCollide;
+					}));
 			}
 		}
 		
