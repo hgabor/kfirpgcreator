@@ -50,15 +50,48 @@ namespace KFIRPG.editor.Cursors {
 	class RemoveLadderCursor: Cursor {
 		Project project;
 
+		public override string Name {
+			get {
+				return "Delete ladder(s)";
+			}
+		}
+
 		public RemoveLadderCursor(Project project) {
 			this.project = project;
 		}
 
-		public override void Click(Map.Layer layer) {
+		protected override void Edit(Map.Layer layer) {
 			Map map = layer.Map;
+			int tileX = this.tileX;
+			int tileY = this.tileY;
 			if (tileX >= map.ladders.GetLength(0) || tileY >= map.ladders.GetLength(1)) return;
-			map.ladders[tileX, tileY] = null;
-			if (tileY < map.height - 1) map.ladders[tileX, tileY + 1] = null;
+
+			Map.Ladder oldLadder = map.ladders[tileX, tileY];
+			if (oldLadder != null) {
+				Commands.Command c = new Commands.Command(
+					delegate() {
+						map.ladders[tileX, tileY] = null;
+					},
+					delegate() {
+						map.ladders[tileX, tileY] = oldLadder;
+					}
+				);
+				commandList.Add(c);
+			}
+			if (tileY < map.height - 1) {
+				Map.Ladder oldLadder2 = map.ladders[tileX, tileY + 1];
+				if (oldLadder2 != null) {
+					Commands.Command c = new Commands.Command(
+						delegate() {
+							map.ladders[tileX, tileY + 1] = null;
+						},
+						delegate() {
+							map.ladders[tileX, tileY + 1] = oldLadder2;
+						}
+					);
+					commandList.Add(c);
+				}
+			}
 		}
 
 		public override void Draw(System.Drawing.Graphics g) { }
