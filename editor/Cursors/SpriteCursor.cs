@@ -33,19 +33,22 @@ namespace KFIRPG.editor.Cursors {
 				commandList.Add(new Commands.Command(
 					delegate() {
 						layer.objects[tileX, tileY] = new Map.Obj();
+						layer.objects[tileX, tileY].Sprite = sprite;
 					},
 					delegate() {
 						layer.objects[tileX, tileY] = null;
 					}));
 			}
-			Sprite oldSprite = layer.objects[tileX, tileY].Sprite;
-			commandList.Add(new Commands.Command(
-				delegate() {
-					layer.objects[tileX, tileY].Sprite = sprite;
-				},
-				delegate() {
-					layer.objects[tileX, tileY].Sprite = oldSprite;
-				}));
+			else {
+				Sprite oldSprite = layer.objects[tileX, tileY].Sprite;
+				commandList.Add(new Commands.Command(
+					delegate() {
+						layer.objects[tileX, tileY].Sprite = sprite;
+					},
+					delegate() {
+						layer.objects[tileX, tileY].Sprite = oldSprite;
+					}));
+			}
 			if (clearScriptInfo) {
 				string oldAction = layer.objects[tileX, tileY].actionScript;
 				string oldCollide = layer.objects[tileX,tileY].collideScript;
