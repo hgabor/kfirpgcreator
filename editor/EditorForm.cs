@@ -227,7 +227,7 @@ namespace KFIRPG.editor {
 			}
 
 			DialogResult res = MessageBox.Show(this, "Your project might have unsaved changes. Do you wish to save them now?",
-				"Exit", MessageBoxButtons.YesNoCancel);
+				"Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
 			switch (res) {
 				//If user clicked cancel, we should not continue
@@ -287,6 +287,23 @@ namespace KFIRPG.editor {
 		}
 
 		private new bool Load() {
+
+			if (locker.IsLocked(savePath)) {
+				if (MessageBox.Show("The project is already open in another application, or the application closed " +
+					"without properly closing the project. Do you really want to open it?",
+					"Project is locked",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+					locker.Unlock();
+					locker.Lock(savePath, true);
+				}
+				else {
+					return true;
+				}
+			}
+			else {
+				locker.Lock(savePath);
+			}
+
 			try {
 				currentProject = Project.FromFiles(savePath);
 			}
@@ -295,8 +312,6 @@ namespace KFIRPG.editor {
 				savePath = null;
 				return false;
 			}
-
-            locker.Lock(savePath);
 
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
