@@ -634,10 +634,12 @@ namespace KFIRPG.editor {
 
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
 			currentProject.Undo();
+			mainPanel.Invalidate();
 		}
 
 		private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
 			currentProject.Redo();
+			mainPanel.Invalidate();
 		}
 	}
 }
