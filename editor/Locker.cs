@@ -67,7 +67,7 @@ namespace KFIRPG.editor {
 		}
 
 		/// <summary>
-		/// Locks the target folder. An exception is thrown is the folder is already locked.
+		/// Locks the target folder. An exception is thrown if the folder is already locked.
 		/// Releases the lock on the currently locked folder.
 		/// </summary>
 		/// <param name="targetFolder">The folder to lock</param>
@@ -105,7 +105,7 @@ namespace KFIRPG.editor {
 		#region IDisposable Members
 
 		/// <summary>
-		/// Releases the locked on the currently locked folder.
+		/// Releases the lock on the currently locked folder.
 		/// </summary>
 		public void Dispose() {
 			this.Unlock();

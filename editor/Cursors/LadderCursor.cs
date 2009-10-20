@@ -23,8 +23,7 @@ namespace KFIRPG.editor.Cursors {
 			if (map.ladders[tileX, tileY] == null && map.ladders[tileX, tileY - 1] == null && (tileY == map.height - 1 || map.ladders[tileX, tileY + 1] == null)) {
 				Map.Layer baseLayer = layer, topLayer = layer;
 				if (SelectTwoLayersDialog.SelectTwoDifferentLayers(map, ref baseLayer, ref topLayer)) {
-					//commandList.Add(new PlaceLadderCommand(map, tileX, tileY, baseLayer, topLayer));
-					Commands.Command c = new Commands.Command(
+					AddCommand(
 						delegate() {
 							map.ladders[tileX, tileY] = new Map.Ladder(baseLayer, topLayer);
 						},
@@ -32,17 +31,15 @@ namespace KFIRPG.editor.Cursors {
 							map.ladders[tileX, tileY] = null;
 						}
 					);
-					commandList.Add(c);
-
-
 					EndEdit();
-					//map.ladders[tileX, tileY] = new Map.Ladder(baseLayer, topLayer);
 				}
 			}
 		}
 
+		protected override void PreDraw(int x, int y, System.Drawing.Graphics g) { }
+
 		readonly System.Drawing.Pen ladderPen = System.Drawing.Pens.Purple;
-		public override void Draw(System.Drawing.Graphics g) {
+		protected override void DrawCursor(System.Drawing.Graphics g) {
 			g.DrawRectangle(ladderPen, x / size * size, (y / size - 1) * size, size - 1, size * 2 - 1);
 		}
 	}
@@ -68,7 +65,7 @@ namespace KFIRPG.editor.Cursors {
 
 			Map.Ladder oldLadder = map.ladders[tileX, tileY];
 			if (oldLadder != null) {
-				Commands.Command c = new Commands.Command(
+				AddCommand(
 					delegate() {
 						map.ladders[tileX, tileY] = null;
 					},
@@ -76,12 +73,11 @@ namespace KFIRPG.editor.Cursors {
 						map.ladders[tileX, tileY] = oldLadder;
 					}
 				);
-				commandList.Add(c);
 			}
 			if (tileY < map.height - 1) {
 				Map.Ladder oldLadder2 = map.ladders[tileX, tileY + 1];
 				if (oldLadder2 != null) {
-					Commands.Command c = new Commands.Command(
+					AddCommand(
 						delegate() {
 							map.ladders[tileX, tileY + 1] = null;
 						},
@@ -89,11 +85,11 @@ namespace KFIRPG.editor.Cursors {
 							map.ladders[tileX, tileY + 1] = oldLadder2;
 						}
 					);
-					commandList.Add(c);
 				}
 			}
 		}
 
-		public override void Draw(System.Drawing.Graphics g) { }
+		protected override void PreDraw(int x, int y, System.Drawing.Graphics g) { }
+		protected override void DrawCursor(System.Drawing.Graphics g) { }
 	}
 }

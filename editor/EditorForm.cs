@@ -512,20 +512,27 @@ namespace KFIRPG.editor {
 		bool dragging = false;
 
 		Point? tileLocation = null;
+		private Point GetTileCoords(int x, int y) {
+			return new Point(
+				(hScrollBar.Value * currentProject.tileSize + x) / currentProject.tileSize,
+				(vScrollBar.Value * currentProject.tileSize + y) / currentProject.tileSize
+				);
+		}
+
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Right && currentProject != null && !IsOutOfBounds(e.Location)) {
-				tileLocation = new Point(-hScrollBar.Value * currentProject.tileSize + e.X / currentProject.tileSize,
-					-vScrollBar.Value * currentProject.tileSize + e.Y / currentProject.tileSize);
+				tileLocation = GetTileCoords(e.X, e.Y);
+				//tileLocation = new Point(-hScrollBar.Value * currentProject.tileSize + e.X / currentProject.tileSize,
+				//	-vScrollBar.Value * currentProject.tileSize + e.Y / currentProject.tileSize);
 				contextMenu.Show(mainPanel, e.Location);
 			}
 		}
 
 		private void mainPanel_MouseMove(object sender, MouseEventArgs e) {
 			if (currentProject == null) return;
-			int x = -hScrollBar.Value * currentProject.tileSize;
-			int y = -vScrollBar.Value * currentProject.tileSize;
 
-			cursor.UpdateCoords(e.X, e.Y, e.X / currentProject.tileSize + x, e.Y / currentProject.tileSize + y);
+			Point p = GetTileCoords(e.X, e.Y);
+			cursor.UpdateCoords(e.X, e.Y, p.X, p.Y);
 
 			if (dragging && e.Button == MouseButtons.Left) {
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {

@@ -34,7 +34,7 @@ namespace KFIRPG.editor.Cursors {
 			int tileY = this.tileY;
 			if (tileX <= layer.tiles.GetUpperBound(0) && tileY <= layer.tiles.GetUpperBound(1)) {
 				if (layer.tiles[tileX, tileY].passable != passable) {
-					Commands.Command c = new Commands.Command(
+					AddCommand(
 						delegate() {
 							layer.tiles[tileX, tileY].passable = passable;
 						},
@@ -42,12 +42,16 @@ namespace KFIRPG.editor.Cursors {
 							layer.tiles[tileX, tileY].passable = !passable;
 						}
 					);
-					commandList.Add(c);
 				}
 			}
 		}
 
-		public override void Draw(System.Drawing.Graphics g) {
+		protected override void PreDraw(int x, int y, Graphics g) {
+			g.FillRectangle(brush, x / size * size, y / size * size, size - 1, size - 1);
+			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);
+		}
+
+		protected override void DrawCursor(System.Drawing.Graphics g) {
 			g.FillRectangle(brush, x / size * size, y / size * size, size - 1, size - 1);
 			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);
 		}

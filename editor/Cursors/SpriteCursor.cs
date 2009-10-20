@@ -30,30 +30,30 @@ namespace KFIRPG.editor.Cursors {
 				return;
 			}
 			if (layer.objects[tileX, tileY] == null) {
-				commandList.Add(new Commands.Command(
+				AddCommand(
 					delegate() {
 						layer.objects[tileX, tileY] = new Map.Obj();
 						layer.objects[tileX, tileY].Sprite = sprite;
 					},
 					delegate() {
 						layer.objects[tileX, tileY] = null;
-					}));
+					});
 			}
 			else {
 				Sprite oldSprite = layer.objects[tileX, tileY].Sprite;
-				commandList.Add(new Commands.Command(
+				AddCommand(
 					delegate() {
 						layer.objects[tileX, tileY].Sprite = sprite;
 					},
 					delegate() {
 						layer.objects[tileX, tileY].Sprite = oldSprite;
-					}));
+					});
 			}
 			if (clearScriptInfo) {
 				string oldAction = layer.objects[tileX, tileY].actionScript;
 				string oldCollide = layer.objects[tileX,tileY].collideScript;
 				string oldMovement = layer.objects[tileX, tileY].movementAIScript;
-				commandList.Add(new Commands.Command(
+				AddCommand(
 					delegate() {
 						layer.objects[tileX, tileY].actionScript = "";
 						layer.objects[tileX, tileY].movementAIScript = "";
@@ -63,13 +63,20 @@ namespace KFIRPG.editor.Cursors {
 						layer.objects[tileX, tileY].actionScript = oldAction;
 						layer.objects[tileX, tileY].movementAIScript = oldMovement;
 						layer.objects[tileX, tileY].collideScript = oldCollide;
-					}));
+					});
 			}
 		}
 		
 		Pen pen = Pens.Cyan;
 		Brush brush = new SolidBrush(Color.FromArgb(128, Color.Cyan));
-		public override void Draw(System.Drawing.Graphics g) {
+
+		protected override void PreDraw(int x, int y, Graphics g) {
+			g.FillRectangle(brush, x / size * size, y / size * size, size - 1, size - 1);
+			gfx.Draw(x / size * size, y / size * size, g);
+			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);
+		}
+
+		protected override void DrawCursor(System.Drawing.Graphics g) {
 			g.FillRectangle(brush, x / size * size, y / size * size, size - 1, size - 1);
 			gfx.Draw(x / size * size, y / size * size, g);
 			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);

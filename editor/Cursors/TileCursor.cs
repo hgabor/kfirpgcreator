@@ -38,7 +38,7 @@ namespace KFIRPG.editor.Cursors {
 						SpriteSheet.Gfx.Empty :
 						new SpriteSheet.Gfx(id - 1, tileSheet);
 					if (oldGfx != newGfx) {
-						Commands.Command c = new Commands.Command(
+						AddCommand(
 							delegate() {
 								currentLayer.tiles[tileX, tileY].gfx = newGfx;
 							},
@@ -46,14 +46,18 @@ namespace KFIRPG.editor.Cursors {
 								currentLayer.tiles[tileX, tileY].gfx = oldGfx;
 							}
 						);
-						commandList.Add(c);
 					}
 				}
 				
 			}
 		}
 
-		public override void Draw(Graphics g) {
+		protected override void PreDraw(int x, int y, Graphics g) {
+			//TODO: draw something if the Gfx is Gfx.Empty
+			tileSheet.GetGfxById(id).Draw(x / size * size, y / size * size, g);
+		}
+
+		protected override void DrawCursor(Graphics g) {
 			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);
 		}
 	}

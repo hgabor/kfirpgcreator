@@ -9,26 +9,34 @@ namespace KFIRPG.editor.Cursors {
 			commandList = new CommandList(Name);
 		}
 
-		public virtual void Click(Map.Layer layer) { }
-		public abstract void Draw(System.Drawing.Graphics g);
+		public void Draw(System.Drawing.Graphics g) {
+			commandList.ForEach(c => PreDraw(c.X, c.Y, g));
+			DrawCursor(g);
+		}
 
-		/// <summary>
-		/// Returns a command containing the action to be performed
-		/// </summary>
-		/// <param name="layer"></param>
-		/// <returns></returns>
-		protected virtual void Edit(Map.Layer layer) { }
+		protected abstract void DrawCursor(System.Drawing.Graphics g);
+		protected virtual void PreDraw(int x, int y, System.Drawing.Graphics g) { }
+		protected abstract void Edit(Map.Layer layer);
 
-		public virtual string Name { get { return ""; } }
+		public abstract string Name { get; }
 
 		public EventHandler<CommandEventArgs> CommandReady;
 		private void OnCommand(CommandEventArgs e) {
 			if (CommandReady != null) CommandReady(this, e);
 		}
 
-		protected CommandList commandList;
+		CommandList commandList;
 
+		protected void AddCommand(Command.Function doCmd, Command.Function redoCmd) {
+			Command c = new Command(x, y, tileX, tileY, doCmd, redoCmd);
+			AddCommand(c);
+		}
 
+		private void AddCommand(Command c) {
+			if (commandList.TrueForAll(o => !(o.TileX == c.TileX && o.TileY == c.TileY))) {
+				commandList.Add(c);
+			}
+		}
 
 		public void DoEdit(Map.Layer layer) {
 			this.Edit(layer);

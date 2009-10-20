@@ -4,6 +4,14 @@ using System.Text;
 
 namespace KFIRPG.editor.Cursors {
 	class DeleteSpriteCursor: Cursor {
+		int size;
+
+		public DeleteSpriteCursor(Project project) {
+			this.size = project.tileSize;
+			this.pen = new System.Drawing.Pen(System.Drawing.Color.Red);
+			this.pen.Width = 2;
+		}
+
 		public override string Name {
 			get {
 				return "Delete sprite(s)";
@@ -18,15 +26,24 @@ namespace KFIRPG.editor.Cursors {
 			}
 			Map.Obj oldObj = layer.objects[tileX, tileY];
 			if (oldObj == null) return;
-			commandList.Add(new Commands.Command(
+			AddCommand(
 				delegate() {
 					layer.objects[tileX, tileY] = null;
 				},
 				delegate() {
 					layer.objects[tileX, tileY] = oldObj;
-				}));
+				});
 		}
 
-		public override void Draw(System.Drawing.Graphics g) { }
+		System.Drawing.Pen pen;
+		protected override void PreDraw(int x, int y, System.Drawing.Graphics g) {
+			int realX = x / size * size;
+			int realY = y / size * size;
+			//Draw a red X
+			g.DrawLine(pen, realX, realY, realX + size, realY + size);
+			g.DrawLine(pen, realX + size, realY, realX, realY + size);
+		}
+
+		protected override void DrawCursor(System.Drawing.Graphics g) { }
 	}
 }
