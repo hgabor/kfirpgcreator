@@ -24,6 +24,12 @@ namespace KFIRPG.editor {
 			private set;
 		}
 
+		public new void OnActivated(EventArgs e) {
+		}
+
+		public new void OnDeactivate(EventArgs e) {
+		}
+
 		#endregion
 	}
 }
