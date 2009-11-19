@@ -124,7 +124,7 @@ namespace KFIRPG.editor {
 
 		private void SelectObjectCursor_Handler(object sender, EventArgs e) {
 			if (objectsListBox.SelectedIndex == 0) {
-				Cursors.Cursor cursor = new DeleteSpriteCursor();
+				Cursors.Cursor cursor = new DeleteSpriteCursor(currentProject);
 				OnPaletteSelectionChanged(new CursorEventArgs(cursor));
 
 				tileSelected = false;

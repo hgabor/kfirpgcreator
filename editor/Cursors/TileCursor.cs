@@ -10,6 +10,12 @@ namespace KFIRPG.editor.Cursors {
 		SpriteSheet tileSheet;
 		readonly Pen pen = new Pen(Color.Red);
 
+		public override string Name {
+			get {
+				return "Draw tiles";
+			}
+		}
+
 		public TileCursor() {
 			id = 0;
 			tileSheet = null;
@@ -22,19 +28,36 @@ namespace KFIRPG.editor.Cursors {
 			tileSheet = project.sheets["tiles"];
 		}
 
-		public override void Click(Map.Layer currentLayer) {
+		protected override void Edit(Map.Layer currentLayer) {
+			int tileX = this.tileX;
+			int tileY = this.tileY;
 			if (tileSheet != null) {
-				if (id == 0) {
-					currentLayer.tiles[tileX, tileY].gfx = SpriteSheet.Gfx.Empty;
-				}
-				else if (tileX <= currentLayer.tiles.GetUpperBound(0) && tileY <= currentLayer.tiles.GetUpperBound(1)) {
-					currentLayer.tiles[tileX, tileY].gfx = new SpriteSheet.Gfx(id - 1, tileSheet);
+				if (tileX <= currentLayer.tiles.GetUpperBound(0) && tileY <= currentLayer.tiles.GetUpperBound(1)) {
+					SpriteSheet.Gfx oldGfx = currentLayer.tiles[tileX, tileY].gfx;
+					SpriteSheet.Gfx newGfx = (id == 0) ?
+						SpriteSheet.Gfx.Empty :
+						new SpriteSheet.Gfx(id - 1, tileSheet);
+					if (oldGfx != newGfx) {
+						AddCommand(
+							delegate() {
+								currentLayer.tiles[tileX, tileY].gfx = newGfx;
+							},
+							delegate() {
+								currentLayer.tiles[tileX, tileY].gfx = oldGfx;
+							}
+						);
+					}
 				}
 				
 			}
 		}
 
-		public override void Draw(Graphics g) {
+		protected override void PreDraw(int x, int y, Graphics g) {
+			//TODO: draw something if the Gfx is Gfx.Empty
+			tileSheet.GetGfxById(id).Draw(x / size * size, y / size * size, g);
+		}
+
+		protected override void DrawCursor(Graphics g) {
 			g.DrawRectangle(pen, x / size * size, y / size * size, size - 1, size - 1);
 		}
 	}

@@ -1,3 +1,4 @@
+movement/
 movement/random
 movement/random_nostop
 Battle
@@ -9,4 +10,5 @@ firststart
 quit
 Screen
 startup
+luabit/
 luabit/bit.lua

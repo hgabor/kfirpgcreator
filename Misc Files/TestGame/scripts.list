@@ -1,7 +1,9 @@
+map/
 map/houseexit
 map/blahblah
 map/bridgecreaks
 map/teleport
+movement/
 movement/random
 movement/random_nostop
 map/door
@@ -18,4 +20,5 @@ quit
 save
 Screen
 startup
+luabit/
 luabit/bit.lua

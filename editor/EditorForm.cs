@@ -36,7 +36,14 @@ namespace KFIRPG.editor {
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
 
-		Cursors.Cursor cursor;
+		Cursors.Cursor _cursor;
+		Cursors.Cursor cursor {
+			get { return _cursor; }
+			set {
+				_cursor = value;
+				_cursor.CommandReady += (sender, args) => currentProject.DoCommand(args.Command);
+			}
+		}
 
 		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
 			form.DockHandler.HideOnClose = true;
@@ -205,6 +212,7 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
+			currentProject.Command += (sender, args) => this.UpdateUndoRedoState();
 			//layers.Show();
 			//audio.Show();
 			//images.Show();
@@ -219,7 +227,7 @@ namespace KFIRPG.editor {
 			}
 
 			DialogResult res = MessageBox.Show(this, "Your project might have unsaved changes. Do you wish to save them now?",
-				"Exit", MessageBoxButtons.YesNoCancel);
+				"Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
 			switch (res) {
 				//If user clicked cancel, we should not continue
@@ -279,6 +287,23 @@ namespace KFIRPG.editor {
 		}
 
 		private new bool Load() {
+
+			if (locker.IsLocked(savePath)) {
+				if (MessageBox.Show("The project is already open in another application, or the application closed " +
+					"without properly closing the project. Do you really want to open it?",
+					"Project is locked",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+					locker.Unlock();
+					locker.Lock(savePath, true);
+				}
+				else {
+					return true;
+				}
+			}
+			else {
+				locker.Lock(savePath);
+			}
+
 			try {
 				currentProject = Project.FromFiles(savePath);
 			}
@@ -287,8 +312,6 @@ namespace KFIRPG.editor {
 				savePath = null;
 				return false;
 			}
-
-            locker.Lock(savePath);
 
 			currentMap = currentProject.maps[currentProject.startupMapName];
 
@@ -489,24 +512,32 @@ namespace KFIRPG.editor {
 		bool dragging = false;
 
 		Point? tileLocation = null;
+		private Point GetTileCoords(int x, int y) {
+			return new Point(
+				(hScrollBar.Value * currentProject.tileSize + x) / currentProject.tileSize,
+				(vScrollBar.Value * currentProject.tileSize + y) / currentProject.tileSize
+				);
+		}
+
 		private void mainPanel_MouseClick(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Right && currentProject != null && !IsOutOfBounds(e.Location)) {
-				tileLocation = new Point(-hScrollBar.Value * currentProject.tileSize + e.X / currentProject.tileSize,
-					-vScrollBar.Value * currentProject.tileSize + e.Y / currentProject.tileSize);
+				tileLocation = GetTileCoords(e.X, e.Y);
+				//tileLocation = new Point(-hScrollBar.Value * currentProject.tileSize + e.X / currentProject.tileSize,
+				//	-vScrollBar.Value * currentProject.tileSize + e.Y / currentProject.tileSize);
 				contextMenu.Show(mainPanel, e.Location);
 			}
 		}
 
 		private void mainPanel_MouseMove(object sender, MouseEventArgs e) {
 			if (currentProject == null) return;
-			int x = -hScrollBar.Value * currentProject.tileSize;
-			int y = -vScrollBar.Value * currentProject.tileSize;
 
-			cursor.UpdateCoords(e.X, e.Y, e.X / currentProject.tileSize + x, e.Y / currentProject.tileSize + y);
+			Point p = GetTileCoords(e.X, e.Y);
+			cursor.UpdateCoords(e.X, e.Y, p.X, p.Y);
 
 			if (dragging && e.Button == MouseButtons.Left) {
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					//cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					cursor.DoEdit(CurrentLayer);
 				}
 			}
 
@@ -515,24 +546,29 @@ namespace KFIRPG.editor {
 
 		private void EditorForm_Deactivate(object sender, EventArgs e) {
 			dragging = false;
+			cursor.EndEdit();
 		}
 
 		private void mainPanel_MouseDown(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
 				dragging = true;
 				if (layers.checkedListBox.CheckedIndices.Contains(layers.checkedListBox.SelectedIndex)) {
-					cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					//cursor.Click(currentMap.layers[currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1]);
+					cursor.DoEdit(CurrentLayer);
 				}
 			}
 		}
 
 		private void mainPanel_MouseUp(object sender, MouseEventArgs e) {
 			dragging = false;
+			if (e.Button == MouseButtons.Left) {
+				cursor.EndEdit();
+			}
 		}
 
 		private bool IsOutOfBounds(Point point) {
-			int x = -hScrollBar.Value * currentProject.tileSize;
-			int y = -vScrollBar.Value * currentProject.tileSize;
+			int x = hScrollBar.Value * currentProject.tileSize;
+			int y = vScrollBar.Value * currentProject.tileSize;
 			return (point.X + x >= currentMap.width * currentProject.tileSize) || (point.Y + y >= currentMap.height * currentProject.tileSize);
 		}
 
@@ -600,5 +636,32 @@ namespace KFIRPG.editor {
         private void OnDisposed(object sender, EventArgs e) {
             locker.Unlock();
         }
+
+		private void UpdateUndoRedoState() {
+			undoToolStripMenuItem.Enabled = currentProject.CanUndo;
+			redoToolStripMenuItem.Enabled = currentProject.CanRedo;
+			if (undoToolStripMenuItem.Enabled) {
+				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", currentProject.UndoName);
+			}
+			else {
+				undoToolStripMenuItem.Text = "Undo";
+			}
+			if (redoToolStripMenuItem.Enabled) {
+				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", currentProject.RedoName);
+			}
+			else {
+				redoToolStripMenuItem.Text = "Redo";
+			}
+		}
+
+		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
+			currentProject.Undo();
+			mainPanel.Invalidate();
+		}
+
+		private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
+			currentProject.Redo();
+			mainPanel.Invalidate();
+		}
 	}
 }
