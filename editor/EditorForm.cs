@@ -567,8 +567,8 @@ namespace KFIRPG.editor {
 		}
 
 		private bool IsOutOfBounds(Point point) {
-			int x = -hScrollBar.Value * currentProject.tileSize;
-			int y = -vScrollBar.Value * currentProject.tileSize;
+			int x = hScrollBar.Value * currentProject.tileSize;
+			int y = vScrollBar.Value * currentProject.tileSize;
 			return (point.X + x >= currentMap.width * currentProject.tileSize) || (point.Y + y >= currentMap.height * currentProject.tileSize);
 		}
 
