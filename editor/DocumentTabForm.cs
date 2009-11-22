@@ -37,12 +37,9 @@ namespace KFIRPG.editor {
 
 			Controls.Add(textEditor);
 
-			textEditor.Location = new Point(12, 91);
-			textEditor.Size = new Size(241, 147);
 			textEditor.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
 			textEditor.Name = "textEditor";
 			textEditor.BorderStyle = BorderStyle.Fixed3D;
-			textEditor.TextChanged += (sender, args) => textEditor.Refresh();
 			textEditor.ShowMatchingBracket = true;
 			textEditor.SetHighlighting("lua");
 			textEditor.ShowSpaces = true;

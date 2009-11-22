@@ -20,8 +20,6 @@ namespace KFIRPG.editor {
 
 		TreeModel scriptsModel = new TreeModel();
 
-		ICSharpCode.TextEditor.TextEditorControl textEditor;
-
 		class ScriptNode: Node, IComparable<ScriptNode> {
 			public Script Script { get; private set; }
 			public bool IsFolder {
@@ -82,15 +80,6 @@ namespace KFIRPG.editor {
 		public ScriptEditor(Script currentScript, Project project) {
 			InitializeComponent();
 			scripts = project.scripts;
-
-			dockPanel.ActiveDocumentChanged += (sender, args) => {
-				if (dockPanel.ActiveDocument != null) {
-					textEditor = ((DocumentTabForm)dockPanel.ActiveDocument).TextEditor;
-				}
-				else {
-					textEditor = null;
-				}
-			};
 
 			scriptsTreeView.Model = scriptsModel;
 
