@@ -9,6 +9,7 @@ using System.IO;
 using System.Xml;
 using KFIRPG.corelib;
 using KFIRPG.editor.Cursors;
+using KFIRPG.editor.Commands;
 
 namespace KFIRPG.editor {
 	public partial class EditorForm: Form {
@@ -577,17 +578,15 @@ namespace KFIRPG.editor {
 				string originalName = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName;
 				form.SetName(originalName);
 				if (form.ShowDialog(this) == DialogResult.OK) {
-					var com = new Commands.Command(
+					var undoName = string.Format("Changed location: {0} -> {1}", originalName, form.GetName());
+					currentProject.DoCommand(new CommandList(undoName, new Command(
 						delegate() {
 							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
 						},
 						delegate() {
 							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = originalName;
 						}
-					);
-					var comList = new Commands.CommandList(string.Format("Changed location: {0} -> {1}", originalName, form.GetName()));
-					comList.Add(com);
-					currentProject.DoCommand(comList);
+					)));
 				}
 			}
 		}
@@ -602,7 +601,14 @@ namespace KFIRPG.editor {
 			string currentScript = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
+					currentProject.DoCommand(new CommandList("Changed OnStep event", new Command(
+						delegate() {
+							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
+						},
+						delegate() {
+							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = currentScript;
+						}
+					)));
 				}
 			}
 		}
@@ -612,7 +618,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.actionScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					obj.actionScript = selector.Script;
+					currentProject.DoCommand(new CommandList("Changed OnAction event", new Command(
+						delegate() {
+							obj.actionScript = selector.Script;
+						},
+						delegate() {
+							obj.actionScript = currentScript;
+						}
+					)));
 				}
 			}
 		}
@@ -622,7 +635,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.collideScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					obj.collideScript = selector.Script;
+					currentProject.DoCommand(new CommandList("Changed OnCollide event", new Command(
+						delegate() {
+							obj.collideScript = selector.Script;
+						},
+						delegate() {
+							obj.collideScript = currentScript;
+						}
+					)));
 				}
 			}
 		}
@@ -632,7 +652,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.movementAIScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					obj.movementAIScript = selector.Script;
+					currentProject.DoCommand(new CommandList("Changed Movement script", new Command(
+						delegate() {
+							obj.movementAIScript = selector.Script;
+						},
+						delegate() {
+							obj.movementAIScript = currentScript;
+						}
+					)));
 				}
 			}
 		}

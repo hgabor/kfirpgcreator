@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KFIRPG.editor.Commands {
 	class CommandList: List<Command> {
-		public CommandList(string name) {
+		public CommandList(string name, params Command[] commands) : base(commands) {
 			this.Name = name;
 		}
 
