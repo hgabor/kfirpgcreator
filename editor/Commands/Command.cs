@@ -23,6 +23,9 @@ namespace KFIRPG.editor.Commands {
 
 		public Command(int x, int y, Function doFunc, Function undoFunc)
 			: this(x, y, 0, 0, doFunc, undoFunc) { }
+		
+		public Command(Function doFunc, Function undoFunc)
+			: this(0, 0, 0, 0, doFunc, undoFunc) { }
 
 		public void Do() {
 			doFunc();
