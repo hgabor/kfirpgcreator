@@ -47,11 +47,10 @@ namespace KFIRPG.editor {
 		}
 
 		private void BindFormWithMenuItem(DockableForm form, ToolStripMenuItem menuitem) {
-			form.DockHandler.HideOnClose = true;
-			form.DockHandler.DockStateChanged += (sender, args) => {
-				if (form.DockHandler.IsHidden) {
-					menuitem.Checked = false;
-				}
+			form.Closing += (sender, args) => {
+				args.Cancel = true;
+				form.DockHandler.Hide();
+				menuitem.Checked = false;
 			};
 			menuitem.Click += (sender, args) => {
 				if (menuitem.Checked) {
