@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using KFIRPG.editor.Commands;
+using KFIRPG.editor.Undo;
 
 namespace KFIRPG.editor.Cursors {
 	abstract class Cursor {
 		public Cursor() {
-			commandList = new CommandList(Name);
+			commandList = new UndoCommandList(Name);
 		}
 
 		public void Draw(System.Drawing.Graphics g) {
@@ -20,19 +20,19 @@ namespace KFIRPG.editor.Cursors {
 
 		public abstract string Name { get; }
 
-		public EventHandler<CommandEventArgs> CommandReady;
-		private void OnCommand(CommandEventArgs e) {
+		public EventHandler<UndoEventArgs> CommandReady;
+		private void OnCommand(UndoEventArgs e) {
 			if (CommandReady != null) CommandReady(this, e);
 		}
 
-		CommandList commandList;
+		UndoCommandList commandList;
 
-		protected void AddCommand(Command.Function doCmd, Command.Function redoCmd) {
-			Command c = new Command(x, y, tileX, tileY, doCmd, redoCmd);
+		protected void AddCommand(UndoCommand.Function doCmd, UndoCommand.Function redoCmd) {
+			UndoCommand c = new UndoCommand(x, y, tileX, tileY, doCmd, redoCmd);
 			AddCommand(c);
 		}
 
-		private void AddCommand(Command c) {
+		private void AddCommand(UndoCommand c) {
 			if (commandList.TrueForAll(o => !(o.TileX == c.TileX && o.TileY == c.TileY))) {
 				commandList.Add(c);
 			}
@@ -43,8 +43,8 @@ namespace KFIRPG.editor.Cursors {
 		}
 		public void EndEdit() {
 			if (commandList.IsEmpty) return;
-			OnCommand(new CommandEventArgs(commandList));
-			commandList = new CommandList(Name);
+			OnCommand(new UndoEventArgs(commandList));
+			commandList = new UndoCommandList(Name);
 		}
 
 		protected int x = 0;

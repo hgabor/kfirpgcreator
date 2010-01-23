@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor.Commands {
-	class Command {
+namespace KFIRPG.editor.Undo {
+	public class UndoCommand {
 		public delegate void Function();
 
 		public int X { get; private set; }
@@ -12,7 +12,7 @@ namespace KFIRPG.editor.Commands {
 		public int TileY { get; private set; }
 
 		Function doFunc, undoFunc;
-		public Command(int x, int y, int tileX, int tileY, Function doFunc, Function undoFunc) {
+		public UndoCommand(int x, int y, int tileX, int tileY, Function doFunc, Function undoFunc) {
 			this.X = x;
 			this.Y = y;
 			this.TileX = tileX;
@@ -21,10 +21,10 @@ namespace KFIRPG.editor.Commands {
 			this.undoFunc = undoFunc;
 		}
 
-		public Command(int x, int y, Function doFunc, Function undoFunc)
+		public UndoCommand(int x, int y, Function doFunc, Function undoFunc)
 			: this(x, y, 0, 0, doFunc, undoFunc) { }
 		
-		public Command(Function doFunc, Function undoFunc)
+		public UndoCommand(Function doFunc, Function undoFunc)
 			: this(0, 0, 0, 0, doFunc, undoFunc) { }
 
 		public void Do() {

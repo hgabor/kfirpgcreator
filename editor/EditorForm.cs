@@ -9,7 +9,7 @@ using System.IO;
 using System.Xml;
 using KFIRPG.corelib;
 using KFIRPG.editor.Cursors;
-using KFIRPG.editor.Commands;
+using KFIRPG.editor.Undo;
 
 namespace KFIRPG.editor {
 	public partial class EditorForm: Form {
@@ -36,13 +36,15 @@ namespace KFIRPG.editor {
 		DoubleBufferedPanel mainPanel;
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
+		
+		UndoStack undo;
 
 		Cursors.Cursor _cursor;
 		Cursors.Cursor cursor {
 			get { return _cursor; }
 			set {
 				_cursor = value;
-				_cursor.CommandReady += (sender, args) => currentProject.DoCommand(args.Command);
+				_cursor.CommandReady += (sender, args) => undo.DoCommand(args.Command);
 			}
 		}
 
@@ -178,6 +180,11 @@ namespace KFIRPG.editor {
 
 			cursor = new TileCursor();
 
+			this.ProjectLoaded += (sender, args) => {
+				this.undo = new UndoStack();
+				EnableControls();
+				mainPanel.Invalidate();
+			};
 			this.Disposed += this.OnDisposed;
 		}
 
@@ -212,7 +219,7 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
-			currentProject.Command += (sender, args) => this.UpdateUndoRedoState();
+			undo.Command += (sender, args) => this.UpdateUndoRedoState();
 			//layers.Show();
 			//audio.Show();
 			//images.Show();
@@ -288,8 +295,12 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		private event EventHandler ProjectLoaded;
+		private void OnProjectLoaded(EventArgs e) {
+			if (ProjectLoaded != null) ProjectLoaded(this, e);
+		}
+		
 		private new bool Load() {
-
 			if (locker.IsLocked(savePath)) {
 				if (MessageBox.Show("The project is already open in another application, or the application closed " +
 				                    "without properly closing the project. Do you really want to open it?",
@@ -328,8 +339,7 @@ namespace KFIRPG.editor {
 				ChangeCurrentMap((string)mapComboBox.SelectedItem);
 			};
 
-			EnableControls();
-			mainPanel.Invalidate();
+			OnProjectLoaded(EventArgs.Empty);
 			return true;
 		}
 
@@ -592,7 +602,7 @@ namespace KFIRPG.editor {
 				form.SetName(originalName);
 				if (form.ShowDialog(this) == DialogResult.OK) {
 					var undoName = string.Format("Changed location: {0} -> {1}", originalName, form.GetName());
-					currentProject.DoCommand(new CommandList(undoName, new Command(
+					undo.DoCommand(new UndoCommandList(undoName, new UndoCommand(
 						delegate() {
 							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
 						},
@@ -614,7 +624,7 @@ namespace KFIRPG.editor {
 			string currentScript = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					currentProject.DoCommand(new CommandList("Changed OnStep event", new Command(
+					undo.DoCommand(new UndoCommandList("Changed OnStep event", new UndoCommand(
 						delegate() {
 							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
 						},
@@ -631,7 +641,7 @@ namespace KFIRPG.editor {
 			string currentScript = obj.actionScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					currentProject.DoCommand(new CommandList("Changed OnAction event", new Command(
+					undo.DoCommand(new UndoCommandList("Changed OnAction event", new UndoCommand(
 						delegate() {
 							obj.actionScript = selector.Script;
 						},
@@ -648,7 +658,7 @@ namespace KFIRPG.editor {
 			string currentScript = obj.collideScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					currentProject.DoCommand(new CommandList("Changed OnCollide event", new Command(
+					undo.DoCommand(new UndoCommandList("Changed OnCollide event", new UndoCommand(
 						delegate() {
 							obj.collideScript = selector.Script;
 						},
@@ -665,7 +675,7 @@ namespace KFIRPG.editor {
 			string currentScript = obj.movementAIScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					currentProject.DoCommand(new CommandList("Changed Movement script", new Command(
+					undo.DoCommand(new UndoCommandList("Changed Movement script", new UndoCommand(
 						delegate() {
 							obj.movementAIScript = selector.Script;
 						},
@@ -691,16 +701,16 @@ namespace KFIRPG.editor {
 		}
 
 		private void UpdateUndoRedoState() {
-			undoToolStripMenuItem.Enabled = currentProject.CanUndo;
-			redoToolStripMenuItem.Enabled = currentProject.CanRedo;
+			undoToolStripMenuItem.Enabled = undo.CanUndo;
+			redoToolStripMenuItem.Enabled = undo.CanRedo;
 			if (undoToolStripMenuItem.Enabled) {
-				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", currentProject.UndoName);
+				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", undo.UndoName);
 			}
 			else {
 				undoToolStripMenuItem.Text = "Undo";
 			}
 			if (redoToolStripMenuItem.Enabled) {
-				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", currentProject.RedoName);
+				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", undo.RedoName);
 			}
 			else {
 				redoToolStripMenuItem.Text = "Redo";
@@ -708,12 +718,12 @@ namespace KFIRPG.editor {
 		}
 
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
-			currentProject.Undo();
+			undo.Undo();
 			mainPanel.Invalidate();
 		}
 
 		private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
-			currentProject.Redo();
+			undo.Redo();
 			mainPanel.Invalidate();
 		}
 	}

@@ -81,9 +81,9 @@
     <Compile Include="AudioLibrary.Designer.cs">
       <DependentUpon>AudioLibrary.cs</DependentUpon>
     </Compile>
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CommandEventArgs.cs" />
-    <Compile Include="Commands\CommandList.cs" />
+    <Compile Include="Undo\UndoCommand.cs" />
+    <Compile Include="Undo\UndoEventArgs.cs" />
+    <Compile Include="Undo\UndoCommandList.cs" />
     <Compile Include="ComposedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,6 +191,7 @@
       <DependentUpon>SpriteSheetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Cursors\TileCursor.cs" />
+    <Compile Include="Undo\UndoStack.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Aga.Controls, Version=1.6.1.0, Culture=neutral, PublicKeyToken=fcc90fbf924463a3, processorArchitecture=MSIL">

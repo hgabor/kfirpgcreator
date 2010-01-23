@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KFIRPG.editor.Commands {
-	class CommandList: List<Command> {
-		public CommandList(string name, params Command[] commands) : base(commands) {
+namespace KFIRPG.editor.Undo {
+	public class UndoCommandList: List<UndoCommand> {
+		public UndoCommandList(string name, params UndoCommand[] commands) : base(commands) {
 			this.Name = name;
 		}
 
