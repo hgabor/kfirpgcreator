@@ -81,6 +81,7 @@
     <Compile Include="AudioLibrary.Designer.cs">
       <DependentUpon>AudioLibrary.cs</DependentUpon>
     </Compile>
+    <Compile Include="BigFile.cs" />
     <Compile Include="Undo\UndoCommand.cs" />
     <Compile Include="Undo\UndoEventArgs.cs" />
     <Compile Include="Undo\UndoCommandList.cs" />

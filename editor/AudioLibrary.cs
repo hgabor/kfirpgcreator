@@ -14,16 +14,16 @@ namespace KFIRPG.editor {
 			InitializeComponent();
 		}
 
-		BindingList<KeyValuePair<string, byte[]>> musicList;
+		BindingList<KeyValuePair<string, BigFile>> musicList;
 		public new void Load(Project project) {
-			musicList = new BindingList<KeyValuePair<string, byte[]>>(new ListDictionaryAdapter<string, byte[]>(project.musics));
+			musicList = new BindingList<KeyValuePair<string, BigFile>>(new ListDictionaryAdapter<string, BigFile>(project.musics));
 			this.list.DisplayMember = "Key";
 			this.list.DataSource = musicList;
 		}
 
 		private void removebutton_Click(object sender, EventArgs e) {
 			if (list.SelectedItem != null) {
-				musicList.Remove((KeyValuePair<string, byte[]>)list.SelectedItem);
+				musicList.Remove((KeyValuePair<string, BigFile>)list.SelectedItem);
 			}
 		}
 
@@ -37,8 +37,8 @@ namespace KFIRPG.editor {
 						return;
 					}
 				}
-				byte[] contents = System.IO.File.ReadAllBytes(openFileDialog.FileName);
-				musicList.Add(new KeyValuePair<string, byte[]>(fileName, contents));
+				BigFile contents = new BigFile(System.IO.File.ReadAllBytes(openFileDialog.FileName));
+				musicList.Add(new KeyValuePair<string, BigFile>(fileName, contents));
 			}
 		}
 	}

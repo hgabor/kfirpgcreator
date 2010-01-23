@@ -47,6 +47,10 @@ namespace KFIRPG.corelib {
 			File.WriteAllBytes(Path.Combine(this.path, path), raw);
 		}
 
+		public bool Exists(string path) {
+			return File.Exists(Path.Combine(this.path, path));
+		}
+
 		private Dictionary<string, XmlDocument> docs = new Dictionary<string, XmlDocument>();
 		public PropertyWriter CreatePropertyFile(string path) {
 			XmlDocument doc = new XmlDocument();

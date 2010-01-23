@@ -18,7 +18,7 @@ namespace KFIRPG.editor {
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 		public Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
-		public Dictionary<string, byte[]> musics = new Dictionary<string, byte[]>();
+		public Dictionary<string, BigFile> musics = new Dictionary<string, BigFile>();
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;
@@ -74,7 +74,7 @@ namespace KFIRPG.editor {
 				}
 			});
 			LoadList("music.list", music => {
-				musics.Add(music, loader.LoadRaw("music/" + music));
+				musics.Add(music, new BigFile("music/" + music, loader));
 			});
 
 			startX = global.GetInt("startx");
@@ -283,7 +283,9 @@ namespace KFIRPG.editor {
 			List<string> musicList = new List<string>();
 			foreach (var musicKvp in musics) {
 				musicList.Add(musicKvp.Key);
-				saver.Save("music/" + musicKvp.Key, musicKvp.Value);
+				if (musicKvp.Value.NeedsSaving || !saver.Exists("music/" + musicKvp.Key)) {
+					saver.Save("music/" + musicKvp.Key, musicKvp.Value.Content);
+				}
 			}
 			saver.Save("music.list", string.Join("\n", musicList.ToArray()));
 

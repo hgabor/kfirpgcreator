@@ -8,6 +8,8 @@ namespace KFIRPG.corelib {
 		void Save(string path, string text);
 		void Save(string path, byte[] raw);
 
+		bool Exists(string path);
+
 		PropertyWriter CreatePropertyFile(string path);
 	}
 }
