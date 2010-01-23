@@ -219,6 +219,8 @@ namespace KFIRPG.editor {
 			//animations.Show();
 			//palette.Show();
 		}
+		
+		#region Load/Save
 
 		private bool CheckForUnsavedChanges() {
 			//If there is no open project, there is nothing to save...
@@ -347,6 +349,59 @@ namespace KFIRPG.editor {
 			}
 			else return false;
 		}
+		
+		private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) {
+			Save();
+		}
+
+		private void saveProjectAsToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (SetSaveLocation()) {
+				Save();
+				mru.Add(savePath);
+			}
+		}
+
+		private void exportToolStripMenuItem_Click(object sender, EventArgs e) {
+			string oldSavePath = this.savePath;
+			if (SetSaveLocation()) {
+				string saveBase = this.savePath;
+				this.savePath = Path.Combine(this.savePath, "data");
+				if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
+				Save();
+				File.WriteAllLines(Path.Combine(this.savePath, "game.xml"),
+				                   new string[] {
+				                       "<?xml version=\"1.0\"?>",
+				                       "<settings>",
+				                       "  <loader>file</loader>",
+				                       "  <loadpath>data</loadpath>",
+				                       "</settings>",
+				                   });
+				Array.ForEach(new string[] {
+				    "corelib.dll", "SdlDotNet.dll", "Tao.Lua.dll", "Tao.Sdl.dll", "runner.exe"
+				}, s => File.Copy(s, Path.Combine(saveBase, s), true));
+			}
+			this.savePath = oldSavePath;
+		}
+
+		private void newProjectToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (CheckForUnsavedChanges() && SetSaveLocation()) {
+				string savePathNew = savePath;
+				savePath = "NewGame";
+				Load();
+				savePath = savePathNew;
+				Save();
+				mru.Add(savePath);
+			}
+		}
+
+		private void loadProjectToolStripMenuItem_Click(object sender, EventArgs e) {
+			if (SetSaveLocation()) {
+				Load();
+				mru.Add(savePath);
+			}
+		}
+
+		#endregion
 
 		private void ChangeCurrentMap(string mapName) {
 			currentMap = currentProject.maps[mapName];
@@ -354,6 +409,8 @@ namespace KFIRPG.editor {
 			layers.Load(currentMap);
 		}
 
+		#region Rendering
+		
 		readonly Brush stepEventBrush = new SolidBrush(Color.FromArgb(128, Color.Orange));
 		readonly Pen stepEventPen = Pens.Orange;
 		readonly Brush actionBrush = new SolidBrush(Color.FromArgb(128, Color.Yellow));
@@ -420,39 +477,8 @@ namespace KFIRPG.editor {
 		private void UpdateEventHandler(object sender, EventArgs args) {
 			mainPanel.Invalidate();
 		}
-
-		private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) {
-			Save();
-		}
-
-		private void saveProjectAsToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (SetSaveLocation()) {
-				Save();
-				mru.Add(savePath);
-			}
-		}
-
-		private void exportToolStripMenuItem_Click(object sender, EventArgs e) {
-			string oldSavePath = this.savePath;
-			if (SetSaveLocation()) {
-				string saveBase = this.savePath;
-				this.savePath = Path.Combine(this.savePath, "data");
-				if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
-				Save();
-				File.WriteAllLines(Path.Combine(this.savePath, "game.xml"),
-				                   new string[] {
-				                       "<?xml version=\"1.0\"?>",
-				                       "<settings>",
-				                       "  <loader>file</loader>",
-				                       "  <loadpath>data</loadpath>",
-				                       "</settings>",
-				                   });
-				Array.ForEach(new string[] {
-				    "corelib.dll", "SdlDotNet.dll", "Tao.Lua.dll", "Tao.Sdl.dll", "runner.exe"
-				}, s => File.Copy(s, Path.Combine(saveBase, s), true));
-			}
-			this.savePath = oldSavePath;
-		}
+		
+		#endregion
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
 			this.Close();
@@ -461,24 +487,6 @@ namespace KFIRPG.editor {
 		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e) {
 			if (!CheckForUnsavedChanges()) {
 				e.Cancel = true;
-			}
-		}
-
-		private void newProjectToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (CheckForUnsavedChanges() && SetSaveLocation()) {
-				string savePathNew = savePath;
-				savePath = "NewGame";
-				Load();
-				savePath = savePathNew;
-				Save();
-				mru.Add(savePath);
-			}
-		}
-
-		private void loadProjectToolStripMenuItem_Click(object sender, EventArgs e) {
-			if (SetSaveLocation()) {
-				Load();
-				mru.Add(savePath);
 			}
 		}
 
@@ -509,6 +517,8 @@ namespace KFIRPG.editor {
 			}
 		}
 
+		#region Mouse events
+		
 		bool dragging = false;
 
 		Point? tileLocation = null;
@@ -571,7 +581,11 @@ namespace KFIRPG.editor {
 			int y = vScrollBar.Value * currentProject.tileSize;
 			return (point.X + x >= currentMap.width * currentProject.tileSize) || (point.Y + y >= currentMap.height * currentProject.tileSize);
 		}
+		
+		#endregion
 
+		#region Context menu
+		
 		private void locationMenuItem_Click(object sender, EventArgs e) {
 			using(ComposedForm form = new ComposedForm("Location name", ComposedForm.Parts.Name, ComposedForm.Parts.None)) {
 				string originalName = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName;
@@ -669,6 +683,8 @@ namespace KFIRPG.editor {
 			movementScriptToolStripMenuItem.Enabled = isObject;
 			onCollideToolStripMenuItem.Enabled = isObject;
 		}
+		
+		#endregion
 
 		private void OnDisposed(object sender, EventArgs e) {
 			locker.Unlock();
