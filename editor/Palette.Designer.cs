@@ -25,6 +25,7 @@
 		private void InitializeComponent() {
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tilePage = new System.Windows.Forms.TabPage();
+			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.hScrollBar = new System.Windows.Forms.HScrollBar();
 			this.vScrollBar = new System.Windows.Forms.VScrollBar();
 			this.objectPage = new System.Windows.Forms.TabPage();
@@ -39,7 +40,6 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.impassableButton = new System.Windows.Forms.Button();
 			this.passableButton = new System.Windows.Forms.Button();
-			this.tilesPanel = new KFIRPG.editor.DoubleBufferedPanel();
 			this.tabControl1.SuspendLayout();
 			this.tilePage.SuspendLayout();
 			this.objectPage.SuspendLayout();
@@ -71,10 +71,22 @@
 			this.tilePage.Text = "Tiles";
 			this.tilePage.UseVisualStyleBackColor = true;
 			// 
+			// tilesPanel
+			// 
+			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+									| System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
+			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
+			this.tilesPanel.Name = "tilesPanel";
+			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
+			this.tilesPanel.TabIndex = 3;
+			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
+			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
+			// 
 			// hScrollBar
 			// 
-			this.hScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.hScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
 			this.hScrollBar.Enabled = false;
 			this.hScrollBar.Location = new System.Drawing.Point(0, 240);
 			this.hScrollBar.Name = "hScrollBar";
@@ -83,8 +95,8 @@
 			// 
 			// vScrollBar
 			// 
-			this.vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.vScrollBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+									| System.Windows.Forms.AnchorStyles.Right)));
 			this.vScrollBar.Enabled = false;
 			this.vScrollBar.Location = new System.Drawing.Point(273, 0);
 			this.vScrollBar.Name = "vScrollBar";
@@ -123,6 +135,7 @@
 			this.removeObjectButton.Size = new System.Drawing.Size(30, 30);
 			this.removeObjectButton.TabIndex = 2;
 			this.removeObjectButton.UseVisualStyleBackColor = true;
+			this.removeObjectButton.Click += new System.EventHandler(this.RemoveObjectButtonClick);
 			// 
 			// clearScriptCheckBox
 			// 
@@ -221,18 +234,6 @@
 			this.passableButton.UseVisualStyleBackColor = true;
 			this.passableButton.Click += new System.EventHandler(this.passableButton_Click);
 			// 
-			// tilesPanel
-			// 
-			this.tilesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.tilesPanel.Location = new System.Drawing.Point(0, 0);
-			this.tilesPanel.Name = "tilesPanel";
-			this.tilesPanel.Size = new System.Drawing.Size(273, 240);
-			this.tilesPanel.TabIndex = 3;
-			this.tilesPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tilesPanel_Paint);
-			this.tilesPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tilesPanel_MouseClick);
-			// 
 			// Palette
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -250,7 +251,6 @@
 			this.specialPage.ResumeLayout(false);
 			this.specialPage.PerformLayout();
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion

@@ -2,21 +2,57 @@
 using System.Collections.Generic;
 using System.Text;
 using KFIRPG.corelib;
+using KFIRPG.editor.Undo;
 
 namespace KFIRPG.editor {
 	class Project {
-        public interface Loadable {
-            void Load(Project project);
-        }
-
-		public class LoadException:Exception {
-			public LoadException(Exception innerException)
-				: base("Project could not be loaded! See the inner exception for details.", innerException) { }
+		public interface Loadable {
+			void Load(Project project);
 		}
+
+		public class LoadException: Exception {
+			public LoadException(Exception innerException)
+			: base("Project could not be loaded! See the inner exception for details.", innerException) { }
+		}
+
+		public class CannotRemoveException: Exception {
+			public CannotRemoveException(string cause)
+			: base(string.Format("Selected object cannot be removed, because it is used by \"{0}\".", cause)) { }
+		}
+
+		public readonly UndoStack Undo = new UndoStack();
 
 		public Dictionary<string, SpriteSheet> sheets = new Dictionary<string, SpriteSheet>();
 		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
 		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+
+		public void RemoveSprite(Sprite s, UndoCommandList list) {
+			foreach (var map in maps) {
+				foreach (var l in map.Value.layers) {
+					foreach (var o in l.objects) {
+						if (o != null && o.Sprite == s) {
+							throw new CannotRemoveException(o.ToString());
+						}
+					}
+				}
+			}
+			string name = s.Name;
+			list.Add(new UndoCommand(
+			             delegate() {
+			                 sprites.Remove(name);
+			             },
+			             delegate() {
+			                 sprites.Add(name, s);
+			             }
+			         ));
+		}
+
+		public void RemoveSprite(Sprite s) {
+			var l = new UndoCommandList("Remove sprite " + s.Name);
+			RemoveSprite(s, l);
+			Undo.DoCommand(l);
+		}
+
 		public Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
 		public Dictionary<string, BigFile> musics = new Dictionary<string, BigFile>();
 		public List<Script> scripts = new List<Script>();
@@ -54,27 +90,27 @@ namespace KFIRPG.editor {
 			screenHeight = global.GetInt("screenheight");
 
 			LoadList("img.list", img => {
-				sheets.Add(img, new SpriteSheet(img, this));
+			    sheets.Add(img, new SpriteSheet(img, this));
 			});
 			LoadList("animations.list", anim => {
-				animations.Add(anim, new Animation(anim, this));
+			    animations.Add(anim, new Animation(anim, this));
 			});
 			LoadList("sprites.list", sprite => {
-				sprites.Add(sprite, new Sprite(sprite, this));
+			    sprites.Add(sprite, new Sprite(sprite, this));
 			});
 			LoadList("maps.list", map => {
-				maps.Add(map, new Map(map, this));
+			    maps.Add(map, new Map(map, this));
 			});
 			LoadList("scripts.list", script => {
-				if (script.EndsWith("/")) {
-					scripts.Add(new Script(script));
-				}
-				else {
-					scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
-				}
-			});
+			    if (script.EndsWith("/")) {
+			        scripts.Add(new Script(script));
+			    }
+			    else {
+				        scripts.Add(new Script(script, loader.LoadText("scripts/" + script)));
+				    }
+				});
 			LoadList("music.list", music => {
-				musics.Add(music, new BigFile("music/" + music, loader));
+			    musics.Add(music, new BigFile("music/" + music, loader));
 			});
 
 			startX = global.GetInt("startx");
@@ -155,7 +191,7 @@ namespace KFIRPG.editor {
 				pImg.Set("y", sheet.Value.y);
 			}
 			saver.Save("img.list", string.Join("\n", imageList.ToArray()));
-			
+
 			//Sprites
 			List<string> spriteList = new List<string>();
 			foreach (KeyValuePair<string, Sprite> sprite in this.sprites) {

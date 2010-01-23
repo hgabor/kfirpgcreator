@@ -36,15 +36,13 @@ namespace KFIRPG.editor {
 		DoubleBufferedPanel mainPanel;
 		HScrollBar hScrollBar;
 		VScrollBar vScrollBar;
-		
-		UndoStack undo;
 
 		Cursors.Cursor _cursor;
 		Cursors.Cursor cursor {
 			get { return _cursor; }
 			set {
 				_cursor = value;
-				_cursor.CommandReady += (sender, args) => undo.DoCommand(args.Command);
+				_cursor.CommandReady += (sender, args) => currentProject.Undo.DoCommand(args.Command);
 			}
 		}
 
@@ -67,6 +65,8 @@ namespace KFIRPG.editor {
 		}
 
 		public EditorForm() {
+			Application.ThreadException += this.UnhandledExceptionHandler;
+
 			InitializeComponent();
 
 			MainPanelForm mainPanelForm = new MainPanelForm();
@@ -181,7 +181,6 @@ namespace KFIRPG.editor {
 			cursor = new TileCursor();
 
 			this.ProjectLoaded += (sender, args) => {
-				this.undo = new UndoStack();
 				EnableControls();
 				mainPanel.Invalidate();
 			};
@@ -219,14 +218,14 @@ namespace KFIRPG.editor {
 			foreach (ToolStripItem item in menuStrip.Items) {
 				item.Enabled = true;
 			}
-			undo.Command += (sender, args) => this.UpdateUndoRedoState();
+			currentProject.Undo.Command += (sender, args) => this.UpdateUndoRedoState();
 			//layers.Show();
 			//audio.Show();
 			//images.Show();
 			//animations.Show();
 			//palette.Show();
 		}
-		
+
 		#region Load/Save
 
 		private bool CheckForUnsavedChanges() {
@@ -299,7 +298,7 @@ namespace KFIRPG.editor {
 		private void OnProjectLoaded(EventArgs e) {
 			if (ProjectLoaded != null) ProjectLoaded(this, e);
 		}
-		
+
 		private new bool Load() {
 			if (locker.IsLocked(savePath)) {
 				if (MessageBox.Show("The project is already open in another application, or the application closed " +
@@ -359,7 +358,7 @@ namespace KFIRPG.editor {
 			}
 			else return false;
 		}
-		
+
 		private void saveProjectToolStripMenuItem_Click(object sender, EventArgs e) {
 			Save();
 		}
@@ -420,7 +419,7 @@ namespace KFIRPG.editor {
 		}
 
 		#region Rendering
-		
+
 		readonly Brush stepEventBrush = new SolidBrush(Color.FromArgb(128, Color.Orange));
 		readonly Pen stepEventPen = Pens.Orange;
 		readonly Brush actionBrush = new SolidBrush(Color.FromArgb(128, Color.Yellow));
@@ -487,7 +486,7 @@ namespace KFIRPG.editor {
 		private void UpdateEventHandler(object sender, EventArgs args) {
 			mainPanel.Invalidate();
 		}
-		
+
 		#endregion
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -528,7 +527,7 @@ namespace KFIRPG.editor {
 		}
 
 		#region Mouse events
-		
+
 		bool dragging = false;
 
 		Point? tileLocation = null;
@@ -591,25 +590,25 @@ namespace KFIRPG.editor {
 			int y = vScrollBar.Value * currentProject.tileSize;
 			return (point.X + x >= currentMap.width * currentProject.tileSize) || (point.Y + y >= currentMap.height * currentProject.tileSize);
 		}
-		
+
 		#endregion
 
 		#region Context menu
-		
+
 		private void locationMenuItem_Click(object sender, EventArgs e) {
 			using(ComposedForm form = new ComposedForm("Location name", ComposedForm.Parts.Name, ComposedForm.Parts.None)) {
 				string originalName = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName;
 				form.SetName(originalName);
 				if (form.ShowDialog(this) == DialogResult.OK) {
 					var undoName = string.Format("Changed location: {0} -> {1}", originalName, form.GetName());
-					undo.DoCommand(new UndoCommandList(undoName, new UndoCommand(
-						delegate() {
-							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
-						},
-						delegate() {
-							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = originalName;
-						}
-					)));
+					currentProject.Undo.DoCommand(new UndoCommandList(undoName, new UndoCommand(
+					                                  delegate() {
+					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
+					                                  },
+					                                  delegate() {
+					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = originalName;
+					                                  }
+					                              )));
 				}
 			}
 		}
@@ -624,14 +623,14 @@ namespace KFIRPG.editor {
 			string currentScript = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					undo.DoCommand(new UndoCommandList("Changed OnStep event", new UndoCommand(
-						delegate() {
-							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
-						},
-						delegate() {
-							CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = currentScript;
-						}
-					)));
+					currentProject.Undo.DoCommand(new UndoCommandList("Changed OnStep event", new UndoCommand(
+					                                  delegate() {
+					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
+					                                  },
+					                                  delegate() {
+					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = currentScript;
+					                                  }
+					                              )));
 				}
 			}
 		}
@@ -641,14 +640,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.actionScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					undo.DoCommand(new UndoCommandList("Changed OnAction event", new UndoCommand(
-						delegate() {
-							obj.actionScript = selector.Script;
-						},
-						delegate() {
-							obj.actionScript = currentScript;
-						}
-					)));
+					currentProject.Undo.DoCommand(new UndoCommandList("Changed OnAction event", new UndoCommand(
+					                                  delegate() {
+					                                      obj.actionScript = selector.Script;
+					                                  },
+					                                  delegate() {
+					                                      obj.actionScript = currentScript;
+					                                  }
+					                              )));
 				}
 			}
 		}
@@ -658,14 +657,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.collideScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					undo.DoCommand(new UndoCommandList("Changed OnCollide event", new UndoCommand(
-						delegate() {
-							obj.collideScript = selector.Script;
-						},
-						delegate() {
-							obj.collideScript = currentScript;
-						}
-					)));
+					currentProject.Undo.DoCommand(new UndoCommandList("Changed OnCollide event", new UndoCommand(
+					                                  delegate() {
+					                                      obj.collideScript = selector.Script;
+					                                  },
+					                                  delegate() {
+					                                      obj.collideScript = currentScript;
+					                                  }
+					                              )));
 				}
 			}
 		}
@@ -675,14 +674,14 @@ namespace KFIRPG.editor {
 			string currentScript = obj.movementAIScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
-					undo.DoCommand(new UndoCommandList("Changed Movement script", new UndoCommand(
-						delegate() {
-							obj.movementAIScript = selector.Script;
-						},
-						delegate() {
-							obj.movementAIScript = currentScript;
-						}
-					)));
+					currentProject.Undo.DoCommand(new UndoCommandList("Changed Movement script", new UndoCommand(
+					                                  delegate() {
+					                                      obj.movementAIScript = selector.Script;
+					                                  },
+					                                  delegate() {
+					                                      obj.movementAIScript = currentScript;
+					                                  }
+					                              )));
 				}
 			}
 		}
@@ -693,7 +692,7 @@ namespace KFIRPG.editor {
 			movementScriptToolStripMenuItem.Enabled = isObject;
 			onCollideToolStripMenuItem.Enabled = isObject;
 		}
-		
+
 		#endregion
 
 		private void OnDisposed(object sender, EventArgs e) {
@@ -701,16 +700,16 @@ namespace KFIRPG.editor {
 		}
 
 		private void UpdateUndoRedoState() {
-			undoToolStripMenuItem.Enabled = undo.CanUndo;
-			redoToolStripMenuItem.Enabled = undo.CanRedo;
+			undoToolStripMenuItem.Enabled = currentProject.Undo.CanUndo;
+			redoToolStripMenuItem.Enabled = currentProject.Undo.CanRedo;
 			if (undoToolStripMenuItem.Enabled) {
-				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", undo.UndoName);
+				undoToolStripMenuItem.Text = string.Format("Undo \"{0}\"", currentProject.Undo.UndoName);
 			}
 			else {
 				undoToolStripMenuItem.Text = "Undo";
 			}
 			if (redoToolStripMenuItem.Enabled) {
-				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", undo.RedoName);
+				redoToolStripMenuItem.Text = string.Format("Redo \"{0}\"", currentProject.Undo.RedoName);
 			}
 			else {
 				redoToolStripMenuItem.Text = "Redo";
@@ -718,13 +717,25 @@ namespace KFIRPG.editor {
 		}
 
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
-			undo.Undo();
+			currentProject.Undo.Undo();
 			mainPanel.Invalidate();
 		}
 
 		private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
-			undo.Redo();
+			currentProject.Undo.Redo();
 			mainPanel.Invalidate();
+		}
+
+		private void UnhandledExceptionHandler(object sender, System.Threading.ThreadExceptionEventArgs args) {
+			if (args.Exception is Project.CannotRemoveException) {
+				var ex = (Project.CannotRemoveException)args.Exception;
+				MessageBox.Show(ex.Message, "Cannot remove object", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			else {
+				MessageBox.Show("An unexpected error occured. The program will now close.", "Unexpected error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				System.Diagnostics.Debug.WriteLine(args.Exception.ToString());
+				this.Close();
+			}
 		}
 	}
 }

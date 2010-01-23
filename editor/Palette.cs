@@ -14,7 +14,7 @@ namespace KFIRPG.editor {
 			Cursors.Cursor cursor;
 			public Cursors.Cursor Cursor { get { return cursor; } }
 
-			public CursorEventArgs(Cursors.Cursor newCursor) {
+				public CursorEventArgs(Cursors.Cursor newCursor) {
 				cursor = newCursor;
 			}
 		}
@@ -153,7 +153,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void addObjectButton_Click(object sender, EventArgs e) {
-			using (SpriteDialog sd = new SpriteDialog(currentProject, null)) {
+			using(SpriteDialog sd = new SpriteDialog(currentProject, null)) {
 				sd.ShowDialog(this);
 			}
 			LoadObjects();
@@ -161,9 +161,15 @@ namespace KFIRPG.editor {
 
 		private void objectsListBox_DoubleClick(object sender, EventArgs e) {
 			if (objectsListBox.SelectedIndex == -1 || objectsListBox.SelectedIndex == 0) return;
-			using (SpriteDialog sd = new SpriteDialog(currentProject, (Sprite)objectsListBox.SelectedItem)) {
+			using(SpriteDialog sd = new SpriteDialog(currentProject, (Sprite)objectsListBox.SelectedItem)) {
 				sd.ShowDialog(this);
 			}
+			LoadObjects();
+		}
+
+		private void RemoveObjectButtonClick(object sender, EventArgs e) {
+			if (objectsListBox.SelectedIndex <= 0) return;
+			currentProject.RemoveSprite((Sprite)objectsListBox.SelectedItem);
 			LoadObjects();
 		}
 	}
