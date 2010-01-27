@@ -23,7 +23,17 @@ namespace KFIRPG.editor {
 		private void addButton_Click(object sender, EventArgs e) {
 			using(AnimationDialog dialog = new AnimationDialog(project)) {
 				if (dialog.ShowDialog(this) == DialogResult.OK) {
-					project.animations.Add(dialog.AnimationName, dialog.Animation);
+					string name = dialog.AnimationName;
+					var anim = dialog.Animation;
+					var list = new Undo.UndoCommandList("Add animation " + name, new Undo.UndoCommand(
+						delegate() {
+							project.animations.Add(name, anim);
+						},
+						delegate() {
+							project.animations.Remove(name);
+						}
+					));
+					project.Undo.DoCommand(list);
 				}
 			}
 		}
@@ -37,12 +47,28 @@ namespace KFIRPG.editor {
 				if (dialog.ShowDialog(this) == DialogResult.OK) {
 					Animation newAnim = dialog.Animation;
 					string newName = dialog.AnimationName;
-					anim.groups = newAnim.groups;
-					anim.sheet = newAnim.sheet;
-					if (name != newName) {
-						//Hack, move method needed
-						//project.animations[project.animations.IndexOf(animKvp)] = new KeyValuePair<string, Animation>(newName, anim);
-					}
+					var oldGroups = anim.groups;
+					var oldSheet = anim.sheet;
+					
+					var list = new Undo.UndoCommandList("Modify sprite " + anim.Name, new Undo.UndoCommand(
+						delegate() {
+							anim.groups = newAnim.groups;
+							anim.sheet = newAnim.sheet;
+							if (name != newName) {
+								project.animations.Remove(name);
+								project.animations.Add(newName, anim);
+							}
+						},
+						delegate() {
+							anim.groups = oldGroups;
+							anim.sheet = oldSheet;
+							if (name != newName) {
+								project.animations.Remove(newName);
+								project.animations.Add(name, anim);
+							}
+						}
+					));
+					project.Undo.DoCommand(list);
 				}
 			}
 		}
