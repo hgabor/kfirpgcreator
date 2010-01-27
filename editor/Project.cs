@@ -53,7 +53,31 @@ namespace KFIRPG.editor {
 			Undo.DoCommand(l);
 		}
 
-		public Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
+		public IDictionary<string, Animation> animations = new BindingDictionary<string, Animation>();
+
+		public void RemoveAnimation(Animation a, UndoCommandList list) {
+			foreach (var sprite in sprites.Values) {
+				if (sprite.animation == a) {
+					throw new CannotRemoveException("Sprite " + sprite.Name);
+				}
+			}
+			string name = a.Name;
+			list.Add(new UndoCommand(
+			             delegate() {
+			                 animations.Remove(name);
+			             },
+			             delegate() {
+			                 animations.Add(name, a);
+			             }
+			         ));
+		}
+
+		public void RemoveAnimation(Animation a) {
+			var undoComm = new UndoCommandList("Remove animation " + a.Name);
+			RemoveAnimation(a, undoComm);
+			Undo.DoCommand(undoComm);
+		}
+
 		public Dictionary<string, BigFile> musics = new Dictionary<string, BigFile>();
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;

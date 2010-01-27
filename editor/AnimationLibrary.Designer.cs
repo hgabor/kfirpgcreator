@@ -23,20 +23,16 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.components = new System.ComponentModel.Container();
 			this.listBox = new System.Windows.Forms.ListBox();
 			this.addButton = new System.Windows.Forms.Button();
 			this.delButton = new System.Windows.Forms.Button();
-			this.animationBindingSource = new System.Windows.Forms.BindingSource(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.animationBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// listBox
 			// 
-			this.listBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.listBox.FormattingEnabled = true;
+			this.listBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+									| System.Windows.Forms.AnchorStyles.Left) 
+									| System.Windows.Forms.AnchorStyles.Right)));
 			this.listBox.IntegralHeight = false;
 			this.listBox.Location = new System.Drawing.Point(12, 12);
 			this.listBox.Name = "listBox";
@@ -66,10 +62,7 @@
 			this.delButton.TabIndex = 2;
 			this.delButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.delButton.UseVisualStyleBackColor = true;
-			// 
-			// animationBindingSource
-			// 
-			this.animationBindingSource.DataSource = typeof(KFIRPG.editor.Animation);
+			this.delButton.Click += new System.EventHandler(this.DelButtonClick);
 			// 
 			// AnimationLibrary
 			// 
@@ -81,9 +74,7 @@
 			this.Controls.Add(this.listBox);
 			this.Name = "AnimationLibrary";
 			this.Text = "AnimationLibrary";
-			((System.ComponentModel.ISupportInitialize)(this.animationBindingSource)).EndInit();
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion
@@ -91,6 +82,5 @@
 		private System.Windows.Forms.ListBox listBox;
 		private System.Windows.Forms.Button addButton;
 		private System.Windows.Forms.Button delButton;
-		private System.Windows.Forms.BindingSource animationBindingSource;
 	}
 }

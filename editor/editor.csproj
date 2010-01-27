@@ -29,6 +29,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\KILLER\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <StartWorkingDirectory>c:\Projects\kfirpgcreator All\</StartWorkingDirectory>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <StartArguments>${TargetPath}</StartArguments>
+    <StartWorkingDirectory>c:\Projects\kfirpgcreator All\</StartWorkingDirectory>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -82,6 +91,7 @@
       <DependentUpon>AudioLibrary.cs</DependentUpon>
     </Compile>
     <Compile Include="BigFile.cs" />
+    <Compile Include="BindingDictionary.cs" />
     <Compile Include="Undo\UndoCommand.cs" />
     <Compile Include="Undo\UndoEventArgs.cs" />
     <Compile Include="Undo\UndoCommandList.cs" />

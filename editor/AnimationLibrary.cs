@@ -14,18 +14,16 @@ namespace KFIRPG.editor {
 			InitializeComponent();
 		}
 
-		BindingList<KeyValuePair<string, Animation>> animations;
 		public new void Load(Project project) {
 			this.project = project;
-			animations = new BindingList<KeyValuePair<string,Animation>>(new ListDictionaryAdapter<string, Animation>(project.animations));
 			listBox.DisplayMember = "Key";
-			listBox.DataSource = animations;
+			listBox.DataSource = project.animations;
 		}
 
 		private void addButton_Click(object sender, EventArgs e) {
-			using (AnimationDialog dialog = new AnimationDialog(project)) {
+			using(AnimationDialog dialog = new AnimationDialog(project)) {
 				if (dialog.ShowDialog(this) == DialogResult.OK) {
-					animations.Add(new KeyValuePair<string, Animation>(dialog.AnimationName, dialog.Animation));
+					project.animations.Add(dialog.AnimationName, dialog.Animation);
 				}
 			}
 		}
@@ -35,17 +33,24 @@ namespace KFIRPG.editor {
 			var animKvp = (KeyValuePair<string, Animation>)listBox.SelectedItem;
 			Animation anim = animKvp.Value;
 			string name = animKvp.Key;
-			using (AnimationDialog dialog = new AnimationDialog(anim, project)) {
+			using(AnimationDialog dialog = new AnimationDialog(anim, project)) {
 				if (dialog.ShowDialog(this) == DialogResult.OK) {
 					Animation newAnim = dialog.Animation;
 					string newName = dialog.AnimationName;
 					anim.groups = newAnim.groups;
 					anim.sheet = newAnim.sheet;
 					if (name != newName) {
-						animations[animations.IndexOf(animKvp)] = new KeyValuePair<string, Animation>(newName, anim);
+						//Hack, move method needed
+						//project.animations[project.animations.IndexOf(animKvp)] = new KeyValuePair<string, Animation>(newName, anim);
 					}
 				}
 			}
+		}
+
+		void DelButtonClick(object sender, EventArgs e) {
+			if (listBox.SelectedIndex == -1) return;
+			var animKvp = (KeyValuePair<string, Animation>)listBox.SelectedItem;
+			project.RemoveAnimation(animKvp.Value);
 		}
 	}
 }
