@@ -9,13 +9,12 @@ using System.Windows.Forms;
 namespace KFIRPG.editor {
 	partial class AnimationDialog: Form {
 		Project project;
-		Dictionary<string, Animation.Group> groups;
-		BindingList<KeyValuePair<string, Animation.Group>> groupList;
+		BindingDictionary<string, Animation.Group> groups = new BindingDictionary<string, Animation.Group>();
 
 		public Animation Animation {
 			get {
 				Animation ret = new Animation(CurrentSheet, project);
-				ret.groups = groups;
+				ret.groups = new Dictionary<string, Animation.Group>(groups);
 				return ret;
 			}
 		}
@@ -34,7 +33,7 @@ namespace KFIRPG.editor {
 			sheetComboBox.SelectedItem = new KeyValuePair<string, SpriteSheet>(baseAnimation.sheet.Name, baseAnimation.sheet);
 
 			foreach (var kvp in baseAnimation.groups) {
-				groupList.Add(kvp);
+				groups.Add(kvp);
 			}
 		}
 
@@ -47,19 +46,21 @@ namespace KFIRPG.editor {
 		public AnimationDialog(Project project) {
 			InitializeComponent();
 			this.project = project;
-			groups = new Dictionary<string, Animation.Group>();
-			groupList = new BindingList<KeyValuePair<string, Animation.Group>>(new ListDictionaryAdapter<string, Animation.Group>(groups));
-
+			
 			groupsListBox.DisplayMember = "Key";
-			groupsListBox.DataSource = groupList;
+			groupsListBox.DataSource = groups;
 
 			sheetComboBox.SelectedIndexChanged += (sender, args) => {
 				pictureBox.Image = CurrentSheet.sheet;
 			};
 			sheetComboBox.DisplayMember = "Key";
 			sheetComboBox.ValueMember = "Value";
-			sheetComboBox.DataSource = new ListDictionaryAdapter<string, SpriteSheet>(project.sheets);
-			if (sheetComboBox.Items.Count != 0) sheetComboBox.SelectedIndex = 0;
+			sheetComboBox.DataSource = project.sheets;
+			
+			if (sheetComboBox.Items.Count != 0) {
+				sheetComboBox.SelectedIndex = 0;
+				pictureBox.Image = CurrentSheet.sheet;
+			}
 		}
 
 		private void nameTextBox_TextChanged(object sender, EventArgs e) {
@@ -82,7 +83,7 @@ namespace KFIRPG.editor {
 		private void AddAnimationGroup(string name, Animation.Frame[] frames) {
 			Animation.Group group = new Animation.Group();
 			group.frames = new List<Animation.Frame>(frames);
-			groupList.Add(new KeyValuePair<string,Animation.Group>(name, group));
+			groups.Add(new KeyValuePair<string,Animation.Group>(name, group));
 		}
 
 		private void addButton_Click(object sender, EventArgs e) {

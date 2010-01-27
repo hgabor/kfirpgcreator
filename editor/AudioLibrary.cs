@@ -10,20 +10,21 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KFIRPG.editor {
 	partial class AudioLibrary: DockableForm, Project.Loadable {
+		Project project;
+		
 		public AudioLibrary() {
 			InitializeComponent();
 		}
 
-		BindingList<KeyValuePair<string, BigFile>> musicList;
 		public new void Load(Project project) {
-			musicList = new BindingList<KeyValuePair<string, BigFile>>(new ListDictionaryAdapter<string, BigFile>(project.musics));
+			this.project = project;
 			this.list.DisplayMember = "Key";
-			this.list.DataSource = musicList;
+			this.list.DataSource = project.musics;
 		}
 
 		private void removebutton_Click(object sender, EventArgs e) {
 			if (list.SelectedItem != null) {
-				musicList.Remove((KeyValuePair<string, BigFile>)list.SelectedItem);
+				project.musics.Remove(((KeyValuePair<string, BigFile>)list.SelectedItem).Key);
 			}
 		}
 
@@ -31,14 +32,14 @@ namespace KFIRPG.editor {
 			if (openFileDialog.ShowDialog() == DialogResult.OK) {
 				string fileName = Path.GetFileName(openFileDialog.FileName);
 				//If a file already exists with the same name, do not allow to add
-				foreach (var kvp in musicList) {
+				foreach (var kvp in project.musics) {
 					if (kvp.Key.ToLower() == fileName.ToLower()) {
 						MessageBox.Show("A file with the same name already exists!", "Cannot add sound/music");
 						return;
 					}
 				}
 				BigFile contents = new BigFile(System.IO.File.ReadAllBytes(openFileDialog.FileName));
-				musicList.Add(new KeyValuePair<string, BigFile>(fileName, contents));
+				project.musics.Add(fileName, contents);
 			}
 		}
 	}

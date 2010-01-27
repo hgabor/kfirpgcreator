@@ -22,9 +22,9 @@ namespace KFIRPG.editor {
 
 		public readonly UndoStack Undo = new UndoStack();
 
-		public Dictionary<string, SpriteSheet> sheets = new Dictionary<string, SpriteSheet>();
-		public Dictionary<string, Map> maps = new Dictionary<string, Map>();
-		public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+		public IDictionary<string, SpriteSheet> sheets = new BindingDictionary<string, SpriteSheet>();
+		public IDictionary<string, Map> maps = new BindingDictionary<string, Map>();
+		public IDictionary<string, Sprite> sprites = new BindingDictionary<string, Sprite>();
 
 		public void RemoveSprite(Sprite s, UndoCommandList list) {
 			foreach (var map in maps) {
@@ -78,7 +78,7 @@ namespace KFIRPG.editor {
 			Undo.DoCommand(undoComm);
 		}
 
-		public Dictionary<string, BigFile> musics = new Dictionary<string, BigFile>();
+		public IDictionary<string, BigFile> musics = new BindingDictionary<string, BigFile>();
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;
