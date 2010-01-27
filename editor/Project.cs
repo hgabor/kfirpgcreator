@@ -79,6 +79,31 @@ namespace KFIRPG.editor {
 		}
 
 		public IDictionary<string, BigFile> musics = new BindingDictionary<string, BigFile>();
+
+		public void RemoveMusic(BigFile music, UndoCommandList list) {
+			string name = null;
+			foreach (var m in musics) {
+				if (m.Value == music) {
+					name = m.Key;
+				}
+			}
+			if (name == null) throw new ArgumentException("Music is not in the list!");
+			list.Add(new UndoCommand(
+			             delegate() {
+			                 musics.Remove(name);
+			             },
+			             delegate() {
+			                 musics.Add(name, music);
+			             }
+			         ));
+		}
+
+		public void RemoveMusic(BigFile music) {
+			var list = new UndoCommandList("Remove audio file");
+			RemoveMusic(music, list);
+			Undo.DoCommand(list);
+		}
+
 		public List<Script> scripts = new List<Script>();
 		public int tileSize;
 		public KFIRPG.corelib.Loader loader;

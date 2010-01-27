@@ -24,7 +24,7 @@ namespace KFIRPG.editor {
 
 		private void removebutton_Click(object sender, EventArgs e) {
 			if (list.SelectedItem != null) {
-				project.musics.Remove(((KeyValuePair<string, BigFile>)list.SelectedItem).Key);
+				project.RemoveMusic(((KeyValuePair<string, BigFile>)list.SelectedItem).Value);
 			}
 		}
 
