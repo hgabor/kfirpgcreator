@@ -11,7 +11,7 @@ using WeifenLuo.WinFormsUI.Docking;
 namespace KFIRPG.editor {
 	partial class AudioLibrary: DockableForm, Project.Loadable {
 		Project project;
-		
+
 		public AudioLibrary() {
 			InitializeComponent();
 		}
@@ -39,7 +39,16 @@ namespace KFIRPG.editor {
 					}
 				}
 				BigFile contents = new BigFile(System.IO.File.ReadAllBytes(openFileDialog.FileName));
-				project.musics.Add(fileName, contents);
+
+				var list = new Undo.UndoCommandList("Add music " + fileName, new Undo.UndoCommand(
+				                                        delegate() {
+				                                            project.musics.Add(fileName, contents);
+				                                        },
+				                                        delegate() {
+				                                            project.musics.Remove(fileName);
+				                                        }
+				                                    ));
+				project.Undo.DoCommand(list);
 			}
 		}
 	}
