@@ -1,4 +1,3 @@
-
 **KFI RPG Creator** is a tool for creating JRPG style games (think Final Fantasy VI). It is a work-in-progress, don't expect it to be done (or even usable) in the near future.
 It contains an "editor" part (to create the game) and a "runner" part (so you don't have to redistribute the whole editor to play the game).
 
@@ -37,4 +36,4 @@ Linux requires to map your windows .dlls to .so files.
 
 ## License
 
-MIT, see [COPYING].
+MIT, see [COPYING](COPYING).
