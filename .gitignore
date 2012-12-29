@@ -1,0 +1,8 @@
+.*
+*.suo
+*.pdb
+doc
+bin
+obj
+*.user
+Thumbs.db
