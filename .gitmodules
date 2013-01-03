@@ -1,0 +1,3 @@
+[submodule "submodules/dockpanelsuite"]
+	path = submodules/dockpanelsuite
+	url = git://github.com/dockpanelsuite/dockpanelsuite.git

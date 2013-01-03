@@ -32,6 +32,10 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,12 +62,6 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <StartArguments>${TargetPath}</StartArguments>
     <StartWorkingDirectory>c:\Projects\kfirpgcreator All\</StartWorkingDirectory>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <RegisterForComInterop>False</RegisterForComInterop>
-    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -213,13 +211,11 @@
     <Compile Include="Undo\UndoStack.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Aga.Controls, Version=1.6.1.0, Culture=neutral, PublicKeyToken=fcc90fbf924463a3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\Aga.Controls.dll</HintPath>
+    <Reference Include="Aga.Controls">
+      <HintPath>..\lib\Aga.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3800, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\ICSharpCode.TextEditor.dll</HintPath>
+    <Reference Include="ICSharpCode.TextEditor">
+      <HintPath>..\lib\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -316,8 +312,8 @@
       <Project>{F38AEFA8-5B0F-45AE-958F-42176B0A399C}</Project>
       <Name>corelib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\externals\DockPanel\WinFormsUI.csproj">
-      <Project>{C75532C4-765B-418E-B09B-46D36B2ABDB1}</Project>
+    <ProjectReference Include="..\submodules\dockpanelsuite\WinFormsUI\WinFormsUI.csproj">
+      <Project>FE92CC9D-8F54-4599-BF62-364EE56277C4</Project>
       <Name>WinFormsUI</Name>
     </ProjectReference>
   </ItemGroup>

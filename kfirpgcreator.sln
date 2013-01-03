@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 4.2.2.8818
+# SharpDevelop 4.3
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "corelib", "corelib\corelib.csproj", "{F38AEFA8-5B0F-45AE-958F-42176B0A399C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "editor", "editor\editor.csproj", "{39C91657-E23D-4850-A567-D4A8CF378643}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runner", "runner\runner.csproj", "{169C6F45-D000-4E36-883B-3AB7CAF217FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsUI", "externals\DockPanel\WinFormsUI.csproj", "{C75532C4-765B-418E-B09B-46D36B2ABDB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsUI", "submodules\dockpanelsuite\WinFormsUI\WinFormsUI.csproj", "FE92CC9D-8F54-4599-BF62-364EE56277C4"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,10 @@ Global
 		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{169C6F45-D000-4E36-883B-3AB7CAF217FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C75532C4-765B-418E-B09B-46D36B2ABDB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		FE92CC9D-8F54-4599-BF62-364EE56277C4.Debug|Any CPU.Build.0 = Debug|Any CPU
+		FE92CC9D-8F54-4599-BF62-364EE56277C4.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		FE92CC9D-8F54-4599-BF62-364EE56277C4.Release|Any CPU.Build.0 = Release|Any CPU
+		FE92CC9D-8F54-4599-BF62-364EE56277C4.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,3 +6,5 @@ bin
 obj
 *.user
 Thumbs.db
+lib
+output
