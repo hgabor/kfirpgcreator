@@ -42,9 +42,13 @@ namespace KFIRPG.corelib {
 			}
 
 			startupScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("startscript")));
-			startupScript.Run();
 			quitScript = vm.LoadResumableScript(loader.LoadText("scripts/" + globalSettings.GetString("quitscript")));
 		}
+
+        public void Startup()
+        {
+            startupScript.Run();
+        }
 
 		internal void NewGame() {
 			PropertyReader globalSettings = loader.GetPropertyReader().Select("global.xml");

@@ -53,6 +53,7 @@ namespace KFIRPG.runner {
 			bool F4Pressed = false;
 			bool ReturnPressed = false;
 
+            game.Startup();
 			while (!quit) {
 				Events.Poll();
 				UserInput.Buttons buttons = UserInput.Buttons.None;
