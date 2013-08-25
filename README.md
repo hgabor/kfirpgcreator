@@ -28,7 +28,6 @@ Linux requires to map your windows .dlls to .so files.
 
 ## Known issues
 
-* Editor does not compile.
 * Building requires external libraries which are not included.
 * The lua prepackaged with Tao requires msvcr80.dll, which might not be present on a modern system. Rebuilding lua with MinGW fixes the problem.
 * The Tao framework is not mantained anymore.

@@ -10,3 +10,4 @@ copy editor\bin\Release\editor.exe output\
 
 xcopy /s "Misc Files" output
 xcopy lib\*.dll output
+xcopy lib_native\*.dll output
