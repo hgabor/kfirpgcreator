@@ -99,6 +99,8 @@
     </Compile>
     <Compile Include="BigFile.cs" />
     <Compile Include="BindingDictionary.cs" />
+    <Compile Include="LayerGroup.cs" />
+    <Compile Include="SimpleLayerGroup.cs" />
     <Compile Include="Undo\UndoCommand.cs" />
     <Compile Include="Undo\UndoEventArgs.cs" />
     <Compile Include="Undo\UndoCommandList.cs" />
