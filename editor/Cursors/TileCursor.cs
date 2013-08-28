@@ -30,7 +30,7 @@ namespace KFIRPG.editor.Cursors {
 
 		protected override void Edit(LayerGroup layerGroup) {
 			// For now it will only draw on the bottommost layer in the group
-			Map.Layer currentLayer = layerGroup[0];
+			Layer currentLayer = layerGroup[0];
 			int tileX = this.tileX;
 			int tileY = this.tileY;
 			if (tileSheet != null) {

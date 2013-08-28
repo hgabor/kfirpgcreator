@@ -34,63 +34,6 @@ namespace KFIRPG.editor {
 			public string collideScript;
 		}
 
-		// TODO: move to own file
-		public class Layer {
-			public readonly Map Map;
-			public Tile[,] tiles;
-			public Obj[,] objects;
-			public Layer(int width, int height, string pathBase, Map map, Project project) {
-				this.Map = map;
-				Loader loader = project.loader;
-				SpriteSheet sheet = project.sheets["tiles"];
-				tiles = new Tile[width, height];
-				objects = new Obj[width, height];
-				string[] passLines = loader.LoadText(string.Format(pathBase, "passability")).Split('\n');
-				string[] gfxLines = loader.LoadText(string.Format(pathBase, "tiles")).Split('\n');
-				for (int j = 0; j < height; ++j) {
-					string[] passLine = passLines[j].Split(' ');
-					string[] gfxLine = gfxLines[j].Split(' ');
-					for (int i = 0; i < width; ++i) {
-						tiles[i, j] = new Tile(sheet.GetGfxById(int.Parse(gfxLine[i])), int.Parse(passLine[i]) == 1);
-					}
-				}
-			}
-			public Layer(int width, int height, Map map) {
-				this.Map = map;
-				tiles = new Tile[width, height];
-				objects = new Obj[width, height];
-				for (int i = 0; i < width; ++i) {
-					for (int j = 0; j < height; ++j) {
-						tiles[i, j] = new Tile(SpriteSheet.Gfx.Empty, true);
-					}
-				}
-			}
-
-			public void Resize(int newX, int newY) {
-				int oldX = tiles.GetUpperBound(0) + 1;
-				int oldY = tiles.GetUpperBound(1) + 1;
-				Tile[,] newTiles = new Tile[newX, newY];
-				Obj[,] newObjs = new Obj[newX, newY];
-				for (int i = 0; i < newX; ++i) {
-					for (int j = 0; j < newY; ++j) {
-						if (i < oldX && j < oldY) {
-							newTiles[i, j] = tiles[i, j];
-							newObjs[i, j] = objects[i, j];
-						}
-						else {
-							newTiles[i, j] = new Tile(SpriteSheet.Gfx.Empty, false);
-						}
-					}
-				}
-				tiles = newTiles;
-				objects = newObjs;
-			}
-
-			public override string ToString() {
-				return "<Layer>";
-			}
-		}
-
 		public class Ladder {
 			public Layer baseLayer;
 			public Layer topLayer;

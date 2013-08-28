@@ -99,6 +99,8 @@
     </Compile>
     <Compile Include="BigFile.cs" />
     <Compile Include="BindingDictionary.cs" />
+    <Compile Include="Cursors\RemoveLadderCursor.cs" />
+    <Compile Include="Layer.cs" />
     <Compile Include="LayerGroup.cs" />
     <Compile Include="SimpleLayerGroup.cs" />
     <Compile Include="Undo\UndoCommand.cs" />
@@ -142,7 +144,7 @@
     <Compile Include="KeyValueDialog.Designer.cs">
       <DependentUpon>KeyValueDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cursors\LadderCursor.cs" />
+    <Compile Include="Cursors\PlaceLadderCursor.cs" />
     <Compile Include="LayersToolbar.cs">
       <SubType>Form</SubType>
     </Compile>

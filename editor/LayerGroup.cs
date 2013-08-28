@@ -11,14 +11,14 @@ namespace KFIRPG.editor
 	/// A group of layers. It is represented to the a user as a layer, but in reality it can contain
 	/// multiple game layers.
 	/// </summary>
-	abstract class LayerGroup : IEnumerable<Map.Layer>
+	abstract class LayerGroup : IEnumerable<Layer>
 	{
-		protected readonly Map.Layer[] layers;
+		protected readonly Layer[] layers;
 		public string Name { get; private set; }
 
 		public int LayerCount { get { return layers.Length; } }
 
-		public Map.Layer this[int i]
+		public Layer this[int i]
 		{
 			get { return layers[i]; }
 		}
@@ -26,7 +26,7 @@ namespace KFIRPG.editor
 		protected LayerGroup(string name, int layerCount = 1)
 		{
 			this.Name = name;
-			layers = new Map.Layer[layerCount];
+			layers = new Layer[layerCount];
 		}
 
 		internal void Resize(int newX, int newY)
@@ -39,16 +39,16 @@ namespace KFIRPG.editor
 			switch (type)
 			{
 				case "simple":
-					Map.Layer layer = new Map.Layer(width, height, path, map, project);
+					Layer layer = new Layer(width, height, path, map, project);
 					return new SimpleLayerGroup(name, layer);
 				default:
 					throw new ArgumentException(string.Format("LayerGroup type '{0}' is not supported"));
 			}
 		}
 
-		IEnumerator<Map.Layer> IEnumerable<Map.Layer>.GetEnumerator()
+		IEnumerator<Layer> IEnumerable<Layer>.GetEnumerator()
 		{
-			return ((IEnumerable<Map.Layer>)layers).GetEnumerator();
+			return ((IEnumerable<Layer>)layers).GetEnumerator();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

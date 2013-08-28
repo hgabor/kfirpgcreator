@@ -29,24 +29,24 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		private static bool SelectLayers(SelectTwoLayersDialog form, ref Map.Layer layer1, ref Map.Layer layer2) {
+		private static bool SelectLayers(SelectTwoLayersDialog form, ref Layer layer1, ref Layer layer2) {
 			form.baseListBox.SelectedItem = layer1;
 			form.topListBox.SelectedItem = layer2;
 			if (form.ShowDialog() == DialogResult.OK) {
-				layer1 = (Map.Layer)form.baseListBox.SelectedItem;
-				layer2 = (Map.Layer)form.topListBox.SelectedItem;
+				layer1 = (Layer)form.baseListBox.SelectedItem;
+				layer2 = (Layer)form.topListBox.SelectedItem;
 				return true;
 			}
 			else return false;
 		}
 
-		public static bool SelectTwoLayers(Map map, ref Map.Layer layer1, ref Map.Layer layer2) {
+		public static bool SelectTwoLayers(Map map, ref Layer layer1, ref Layer layer2) {
 			using (SelectTwoLayersDialog form = new SelectTwoLayersDialog(false, map)) {
 				return SelectLayers(form, ref layer1, ref layer2);
 			}
 		}
 
-		public static bool SelectTwoDifferentLayers(Map map, ref Map.Layer layer1, ref Map.Layer layer2) {
+		public static bool SelectTwoDifferentLayers(Map map, ref Layer layer1, ref Layer layer2) {
 			using (SelectTwoLayersDialog form = new SelectTwoLayersDialog(true, map)) {
 				return SelectLayers(form, ref layer1, ref layer2);
 			}

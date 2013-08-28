@@ -25,7 +25,7 @@ namespace KFIRPG.editor.Cursors {
 
 		protected override void Edit(LayerGroup layerGroup) {
 			if (!(layerGroup is SimpleLayerGroup)) throw new NotSupportedException();
-			Map.Layer layer = layerGroup[0];
+			Layer layer = layerGroup[0];
 			int tileX = this.tileX;
 			int tileY = this.tileY;
 			if (tileX >= layer.objects.GetLength(0)|| tileY >= layer.objects.GetLength(1)) {
