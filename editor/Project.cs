@@ -28,8 +28,9 @@ namespace KFIRPG.editor {
 
 		public void RemoveSprite(Sprite s, UndoCommandList list) {
 			foreach (var map in maps) {
-				foreach (var l in map.Value.layers) {
-					foreach (var o in l.objects) {
+				foreach (var l in map.Value.layerGroups) {
+					if (!(l is SimpleLayerGroup)) continue;
+					foreach (var o in l[0].objects) {
 						if (o != null && o.Sprite == s) {
 							throw new CannotRemoveException(o.ToString());
 						}
@@ -174,7 +175,7 @@ namespace KFIRPG.editor {
 				int y = loc.GetInt("y");
 				int l = loc.GetInt("layer");
 				string mapName = loc.GetString("map");
-				maps[mapName].layers[l].tiles[x, y].locationName = locName;
+				maps[mapName].layerGroups[l][0].tiles[x, y].locationName = locName;
 			}
 
 			//All the stuff we don't deal with yet
@@ -205,6 +206,10 @@ namespace KFIRPG.editor {
 		}
 
 		public void Save(Saver saver) {
+			throw new NotImplementedException("Saving is disabled until layer grouping is finished.");
+
+#if SAVE_ENABLED
+
 			//Global.xml
 			PropertyWriter pGlobal = saver.CreatePropertyFile("global.xml");
 
@@ -263,7 +268,7 @@ namespace KFIRPG.editor {
 			foreach (KeyValuePair<string, Map> map in this.maps) {
 				mapList.Add(map.Key);
 				PropertyWriter pInfo = saver.CreatePropertyFile("maps/" + map.Key + "/info.xml");
-				pInfo.Set("layers", map.Value.layers.Count);
+				pInfo.Set("layers", map.Value.layerGroups.Count);
 				pInfo.Set("width", map.Value.width);
 				pInfo.Set("height", map.Value.height);
 
@@ -271,7 +276,7 @@ namespace KFIRPG.editor {
 				PropertyWriter pOnStep = saver.CreatePropertyFile("maps/" + map.Key + "/onstep.xml");
 
 				for (int l = 0; l < map.Value.layers.Count; ++l) {
-					Map.Layer layer = map.Value.layers[l];
+					LayerGroup layer = map.Value.layers[l];
 					List<string> tileList = new List<string>();
 					List<string> passList = new List<string>();
 					for (int j = 0; j < map.Value.height; ++j) {
@@ -378,6 +383,7 @@ namespace KFIRPG.editor {
 			saver.Save("dialog/windowborder.png", windowBorderFile);
 			saver.Save("dialog/dialog.xml", dialogFile);
 			saver.Save("dialog/" + fontFileName, fontFile);
+#endif
 		}
 	}
 }

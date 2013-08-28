@@ -34,7 +34,7 @@ namespace KFIRPG.editor.Cursors {
 		/// Adds the cursors actions to the current command list.
 		/// </summary>
 		/// <param name="layer">The layer the actions are performed on.</param>
-		protected abstract void Edit(Map.Layer layer);
+		protected abstract void Edit(LayerGroup layer);
 
 		public abstract string Name { get; }
 
@@ -74,7 +74,7 @@ namespace KFIRPG.editor.Cursors {
 		/// <see cref="EndEdit()"/> function is called.
 		/// </summary>
 		/// <param name="layer">The layer the cursor should act on.</param>
-		public void DoEdit(Map.Layer layer) {
+		public void DoEdit(LayerGroup layer) {
 			this.Edit(layer);
 		}
 		/// <summary>

@@ -7,7 +7,8 @@ namespace KFIRPG.editor
 {
 	class SimpleLayerGroup : LayerGroup
 	{
-		public SimpleLayerGroup(Map.Layer layer)
+		public SimpleLayerGroup(string name, Map.Layer layer)
+			: base(name)
 		{
 			base.layers[0] = layer;
 		}

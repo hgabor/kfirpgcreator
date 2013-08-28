@@ -34,11 +34,11 @@ namespace KFIRPG.editor {
 			public string collideScript;
 		}
 
+		// TODO: move to own file
 		public class Layer {
 			public readonly Map Map;
 			public Tile[,] tiles;
 			public Obj[,] objects;
-			public string name;
 			public Layer(int width, int height, string pathBase, Map map, Project project) {
 				this.Map = map;
 				Loader loader = project.loader;
@@ -54,11 +54,9 @@ namespace KFIRPG.editor {
 						tiles[i, j] = new Tile(sheet.GetGfxById(int.Parse(gfxLine[i])), int.Parse(passLine[i]) == 1);
 					}
 				}
-				name = loader.LoadText(string.Format(pathBase, "name")).Trim();
 			}
-			public Layer(int width, int height, string name, Map map) {
+			public Layer(int width, int height, Map map) {
 				this.Map = map;
-				this.name = name;
 				tiles = new Tile[width, height];
 				objects = new Obj[width, height];
 				for (int i = 0; i < width; ++i) {
@@ -89,7 +87,7 @@ namespace KFIRPG.editor {
 			}
 
 			public override string ToString() {
-				return name;
+				return "<Layer>";
 			}
 		}
 
@@ -102,7 +100,39 @@ namespace KFIRPG.editor {
 			}
 		}
 
-		public List<Layer> layers = new List<Layer>();
+		//public List<Layer> layers = new List<Layer>();
+		public List<LayerGroup> layerGroups = new List<LayerGroup>();
+
+		public IList<SimpleLayerGroup> SimpleLayerGroups
+		{
+			get
+			{
+				return layerGroups.
+					FindAll(l => l is SimpleLayerGroup).
+					ConvertAll<SimpleLayerGroup>(l => (SimpleLayerGroup)l);
+			}
+		}
+
+		/// <summary>
+		/// Returns the layer with the absolute i-th index. It should only be used internally,
+		/// when loading or saving the map.
+		/// </summary>
+		/// <param name="i"></param>
+		/// <returns></returns>
+		private Layer Layers(int i)
+		{
+			for (int layer = 0, g = 0; g < layerGroups.Count; ++g)
+			{
+				var group = layerGroups[g];
+				if (i < layer + group.LayerCount)
+				{
+					return group[i - layer];
+				}
+				layer += group.LayerCount;
+			}
+			throw new ArgumentOutOfRangeException();
+		}
+
 		public Ladder[,] ladders;
 		public int width;
 		public int height;
@@ -111,7 +141,7 @@ namespace KFIRPG.editor {
 		public void Resize(int newX, int newY) {
 			width = newX;
 			height = newY;
-			layers.ForEach((Layer l) => l.Resize(newX, newY));
+			layerGroups.ForEach((LayerGroup l) => l.Resize(newX, newY));
 			Ladder[,] newLadders = new Ladder[newX, newY];
 			int oldX = ladders.GetLength(0);
 			int oldY = ladders.GetLength(1);
@@ -127,12 +157,16 @@ namespace KFIRPG.editor {
 			this.name = name;
 			Loader loader = project.loader;
 			PropertyReader info = loader.GetPropertyReader().Select("maps/" + name + "/info.xml");
-			int numLayers = info.GetInt("layers");
+			var groups = info.SelectAll("layers/group");
+			int numLayers = groups.Count;
 			width = info.GetInt("width");
 			height = info.GetInt("height");
-			for (int i = 0; i < numLayers; ++i) {
-				Layer layer = new Layer(width, height, "maps/" + name + "/layers/{0}." + i.ToString(), this, project);
-				layers.Add(layer);
+			for (int i = 0; i < numLayers;) {
+				var layerType = groups[i].GetString("type");
+				var layerName = groups[i].GetString("name");
+				var layerGroup = LayerGroup.Create(layerName, layerType, width, height, "maps/" + name + "/layers/{0}." + i.ToString(), this, project);
+				layerGroups.Add(layerGroup);
+				i += layerGroup.LayerCount;
 			}
 			this.ladders = new Ladder[width, height];
 
@@ -147,7 +181,7 @@ namespace KFIRPG.editor {
 				o.movementAIScript = obj.GetString("movement");
 				o.actionScript = obj.GetString("action");
 				o.collideScript = obj.GetString("collide");
-				layers[layer].objects[x, y] = o;
+				Layers(layer).objects[x, y] = o;
 			}
 
 			PropertyReader events = loader.GetPropertyReader().Select("maps/" + name + "/onstep.xml");
@@ -156,7 +190,7 @@ namespace KFIRPG.editor {
 				int y = e.GetInt("y");
 				int layer = e.GetInt("layer");
 				string script = e.GetString("script");
-				layers[layer].tiles[x, y].onStep = script;
+				Layers(layer).tiles[x, y].onStep = script;
 			}
 
 			PropertyReader ladders = loader.GetPropertyReader().Select("maps/" + name + "/ladders.xml");
@@ -165,7 +199,7 @@ namespace KFIRPG.editor {
 				int y = ladder.GetInt("y");
 				int baseLayer = ladder.GetInt("base");
 				int topLayer = ladder.GetInt("top");
-				this.ladders[x, y] = new Ladder(layers[baseLayer], layers[topLayer]);
+				this.ladders[x, y] = new Ladder(Layers(baseLayer), Layers(topLayer));
 			}
 		}
 
@@ -173,14 +207,13 @@ namespace KFIRPG.editor {
 			this.name = name;
 			width = size.Width;
 			height = size.Height;
-			Layer layer = new Layer(size.Width, size.Height, "layer1", this);
-			layers.Add(layer);
+			Layer layer = new Layer(size.Width, size.Height, this);
+			layerGroups.Add(new SimpleLayerGroup("layer1", layer));
 		}
 
 		internal Layer CreateNewLayer(string name) {
-			int layerId = layers.Count;
-			Layer newLayer = new Layer(width, height, name, this);
-			layers.Add(newLayer);
+			Layer newLayer = new Layer(width, height, this);
+			layerGroups.Add(new SimpleLayerGroup(name, newLayer));
 			return newLayer;
 		}
 	}

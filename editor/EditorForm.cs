@@ -18,12 +18,12 @@ namespace KFIRPG.editor {
 		Map currentMap;
 		int CurrentLayerIndex {
 			get {
-				return currentMap.layers.Count - layers.checkedListBox.SelectedIndex - 1;
+				return currentMap.layerGroups.Count - layers.checkedListBox.SelectedIndex - 1;
 			}
 		}
-		Map.Layer CurrentLayer {
+		LayerGroup CurrentLayer {
 			get {
-				return currentMap.layers[CurrentLayerIndex];
+				return currentMap.layerGroups[CurrentLayerIndex];
 			}
 		}
 		string savePath = null;
@@ -95,7 +95,7 @@ namespace KFIRPG.editor {
 				}
 			};
 			layers.deletebutton.Click += (sender, args) => {
-				if (currentMap.layers.Count == 1) {
+				if (currentMap.layerGroups.Count == 1) {
 					MessageBox.Show("Cannot remove last layer!", "Last layer");
 				}
 				else {
@@ -103,7 +103,7 @@ namespace KFIRPG.editor {
 					for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
 						for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
 							Map.Ladder ladder = currentMap.ladders[i, j];
-							if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) ++count;
+							if (ladder != null && (ladder.baseLayer == CurrentLayer[0] || ladder.topLayer == CurrentLayer[0])) ++count;
 						}
 					}
 					string message;
@@ -117,10 +117,10 @@ namespace KFIRPG.editor {
 						for (int i = 0; i < currentMap.ladders.GetLength(0); ++i) {
 							for (int j = 0; j < currentMap.ladders.GetLength(1); ++j) {
 								Map.Ladder ladder = currentMap.ladders[i, j];
-								if (ladder != null && (ladder.baseLayer == CurrentLayer || ladder.topLayer == CurrentLayer)) currentMap.ladders[i, j] = null;
+								if (ladder != null && (ladder.baseLayer == CurrentLayer[0] || ladder.topLayer == CurrentLayer[0])) currentMap.ladders[i, j] = null;
 							}
 						}
-						currentMap.layers.Remove(CurrentLayer);
+						currentMap.layerGroups.Remove(CurrentLayer);
 						layers.Load(currentMap);
 						mainPanel.Invalidate();
 					}
@@ -129,21 +129,21 @@ namespace KFIRPG.editor {
 			layers.upbutton.Click += (sender, args) => {
 				int index = layers.checkedListBox.SelectedIndex;
 				if (index == 0) return;
-				int lindex = currentMap.layers.Count - index - 1;
-				Map.Layer layer = currentMap.layers[lindex];
-				currentMap.layers.RemoveAt(lindex);
-				currentMap.layers.Insert(lindex + 1, layer);
+				int lindex = currentMap.layerGroups.Count - index - 1;
+				LayerGroup layer = currentMap.layerGroups[lindex];
+				currentMap.layerGroups.RemoveAt(lindex);
+				currentMap.layerGroups.Insert(lindex + 1, layer);
 				layers.Load(currentMap);
 				layers.checkedListBox.SelectedIndex = index - 1;
 				mainPanel.Invalidate();
 			};
 			layers.downbutton.Click += (sender, args) => {
 				int index = layers.checkedListBox.SelectedIndex;
-				if (index == currentMap.layers.Count - 1) return;
-				int lindex = currentMap.layers.Count - index - 1;
-				Map.Layer layer = currentMap.layers[lindex];
-				currentMap.layers.RemoveAt(lindex);
-				currentMap.layers.Insert(lindex - 1, layer);
+				if (index == currentMap.layerGroups.Count - 1) return;
+				int lindex = currentMap.layerGroups.Count - index - 1;
+				LayerGroup layer = currentMap.layerGroups[lindex];
+				currentMap.layerGroups.RemoveAt(lindex);
+				currentMap.layerGroups.Insert(lindex - 1, layer);
 				layers.Load(currentMap);
 				layers.checkedListBox.SelectedIndex = index + 1;
 				mainPanel.Invalidate();
@@ -444,31 +444,44 @@ namespace KFIRPG.editor {
 			int x = -hScrollBar.Value * currentProject.tileSize;
 			int y = -vScrollBar.Value * currentProject.tileSize;
 			int size = currentProject.tileSize;
-			for (int l = 0; l < currentMap.layers.Count; ++l) {
-				if (!layers.checkedListBox.CheckedIndices.Contains(currentMap.layers.Count - l - 1)) continue;
-				bool selectedLayer = layers.checkedListBox.SelectedIndex == currentMap.layers.Count - l - 1;
-				Map.Layer layer = currentMap.layers[l];
-				for (int i = 0; i < currentMap.width; ++i) {
-					for (int j = 0; j < currentMap.height; ++j) {
-						layer.tiles[i, j].gfx.Draw(x + i * size, y + j * size, e.Graphics);
-						if (layer.objects[i, j] != null) {
-							layer.objects[i, j].Gfx.Draw(x + i * size, y + j * size, e.Graphics);
-						}
-
-						if (specialViewComboBox.SelectedIndex == 1 || selectedLayer) {
-
-							if (!layer.tiles[i, j].passable && passabilityButton.Checked) {
-								DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
+			for (int l = 0; l < currentMap.layerGroups.Count; ++l)
+			{
+				if (!layers.checkedListBox.CheckedIndices.Contains(currentMap.layerGroups.Count - l - 1)) continue;
+				bool selectedLayer = layers.checkedListBox.SelectedIndex == currentMap.layerGroups.Count - l - 1;
+				LayerGroup layerGroup = currentMap.layerGroups[l];
+				foreach (var layer in layerGroup)
+				{
+					for (int i = 0; i < currentMap.width; ++i)
+					{
+						for (int j = 0; j < currentMap.height; ++j)
+						{
+							// TODO: layer should paint itself...
+							layer.tiles[i, j].gfx.Draw(x + i * size, y + j * size, e.Graphics);
+							if (layer.objects[i, j] != null)
+							{
+								layer.objects[i, j].Gfx.Draw(x + i * size, y + j * size, e.Graphics);
 							}
 
-							if (!string.IsNullOrEmpty(layer.tiles[i, j].onStep)) {
-								DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
-							}
-							if (!string.IsNullOrEmpty(layer.tiles[i, j].locationName)) {
-								DrawBox(x + i * size, y + j * size, size - 1, size - 1, locationBrush, locationPen, e.Graphics);
-							}
-							if (layer.objects[i, j] != null && !string.IsNullOrEmpty(layer.objects[i, j].actionScript)) {
-								DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
+							if (specialViewComboBox.SelectedIndex == 1 || selectedLayer)
+							{
+
+								if (!layer.tiles[i, j].passable && passabilityButton.Checked)
+								{
+									DrawBox(x + i * size, y + j * size, size - 1, size - 1, passBrush, passPen, e.Graphics);
+								}
+
+								if (!string.IsNullOrEmpty(layer.tiles[i, j].onStep))
+								{
+									DrawBox(x + i * size, y + j * size, size - 1, size - 1, stepEventBrush, stepEventPen, e.Graphics);
+								}
+								if (!string.IsNullOrEmpty(layer.tiles[i, j].locationName))
+								{
+									DrawBox(x + i * size, y + j * size, size - 1, size - 1, locationBrush, locationPen, e.Graphics);
+								}
+								if (layer.objects[i, j] != null && !string.IsNullOrEmpty(layer.objects[i, j].actionScript))
+								{
+									DrawBox(x + i * size, y + j * size, size - 1, size - 1, actionBrush, actionPen, e.Graphics);
+								}
 							}
 						}
 					}
@@ -599,16 +612,16 @@ namespace KFIRPG.editor {
 
 		private void locationMenuItem_Click(object sender, EventArgs e) {
 			using(ComposedForm form = new ComposedForm("Location name", ComposedForm.Parts.Name, ComposedForm.Parts.None)) {
-				string originalName = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName;
+				string originalName = CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName;
 				form.SetName(originalName);
 				if (form.ShowDialog(this) == DialogResult.OK) {
 					var undoName = string.Format("Changed location: {0} -> {1}", originalName, form.GetName());
 					currentProject.Undo.DoCommand(new UndoCommandList(undoName, new UndoCommand(
 					                                  delegate() {
-					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
+														  CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = form.GetName();
 					                                  },
 					                                  delegate() {
-					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = originalName;
+														  CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].locationName = originalName;
 					                                  }
 					                              )));
 				}
@@ -622,15 +635,15 @@ namespace KFIRPG.editor {
 		}
 
 		private void onstepMenuItem_Click(object sender, EventArgs e) {
-			string currentScript = CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep;
+			string currentScript = CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
 					currentProject.Undo.DoCommand(new UndoCommandList("Changed OnStep event", new UndoCommand(
 					                                  delegate() {
-					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
+														  CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = selector.Script;
 					                                  },
 					                                  delegate() {
-					                                      CurrentLayer.tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = currentScript;
+														  CurrentLayer[0].tiles[tileLocation.Value.X, tileLocation.Value.Y].onStep = currentScript;
 					                                  }
 					                              )));
 				}
@@ -638,7 +651,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void onActionToolStripMenuItem_Click(object sender, EventArgs e) {
-			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			Map.Obj obj = CurrentLayer[0].objects[tileLocation.Value.X, tileLocation.Value.Y];
 			string currentScript = obj.actionScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
@@ -655,7 +668,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void onCollideToolStripMenuItem_Click(object sender, EventArgs e) {
-			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			Map.Obj obj = CurrentLayer[0].objects[tileLocation.Value.X, tileLocation.Value.Y];
 			string currentScript = obj.collideScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
@@ -672,7 +685,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void movementScriptToolStripMenuItem_Click(object sender, EventArgs e) {
-			Map.Obj obj = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y];
+			Map.Obj obj = CurrentLayer[0].objects[tileLocation.Value.X, tileLocation.Value.Y];
 			string currentScript = obj.movementAIScript;
 			using(ScriptSelector selector = new ScriptSelector(currentScript, currentProject)) {
 				if (selector.ShowDialog(this) == DialogResult.OK) {
@@ -689,7 +702,7 @@ namespace KFIRPG.editor {
 		}
 
 		private void contextMenu_Opened(object sender, EventArgs e) {
-			bool isObject = CurrentLayer.objects[tileLocation.Value.X, tileLocation.Value.Y] != null;
+			bool isObject = CurrentLayer[0].objects[tileLocation.Value.X, tileLocation.Value.Y] != null;
 			onActionToolStripMenuItem.Enabled = isObject;
 			movementScriptToolStripMenuItem.Enabled = isObject;
 			onCollideToolStripMenuItem.Enabled = isObject;

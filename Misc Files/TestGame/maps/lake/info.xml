@@ -1,6 +1,31 @@
 <?xml version="1.0"?>
 <map>
-  <layers>6</layers>
+  <layers>
+    <group>
+      <type>simple</type>
+      <name>terrain</name>
+    </group>
+    <group>
+      <type>simple</type>
+      <name>water_ladder</name>
+    </group>
+    <group>
+      <type>simple</type>
+      <name>water_moving</name>
+    </group>
+    <group>
+      <type>simple</type>
+      <name>bridges</name>
+    </group>
+    <group>
+      <type>simple</type>
+      <name>movinglayer</name>
+    </group>
+    <group>
+      <type>simple</type>
+      <name>air</name>
+    </group>
+  </layers>
   <width>9</width>
   <height>7</height>
 </map>

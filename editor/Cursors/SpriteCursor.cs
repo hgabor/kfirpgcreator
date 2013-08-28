@@ -23,7 +23,9 @@ namespace KFIRPG.editor.Cursors {
 			gfx = sprite.animation.sheet.GetGfxById(1);
 		}
 
-		protected override void Edit(Map.Layer layer) {
+		protected override void Edit(LayerGroup layerGroup) {
+			if (!(layerGroup is SimpleLayerGroup)) throw new NotSupportedException();
+			Map.Layer layer = layerGroup[0];
 			int tileX = this.tileX;
 			int tileY = this.tileY;
 			if (tileX >= layer.objects.GetLength(0)|| tileY >= layer.objects.GetLength(1)) {

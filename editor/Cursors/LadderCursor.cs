@@ -15,8 +15,11 @@ namespace KFIRPG.editor.Cursors {
 			this.size = project.tileSize;
 		}
 
-		protected override void Edit(Map.Layer layer) {
-			Map map = layer.Map;
+		protected override void Edit(LayerGroup layerGroup)
+		{
+			if (!(layerGroup is SimpleLayerGroup)) throw new NotSupportedException();
+			Map.Layer layer = layerGroup[0];
+			Map map = layerGroup[0].Map;
 			int tileX = this.tileX;
 			int tileY = this.tileY;
 			if (tileX >= map.width || tileY >= map.height || tileY == 0) return;
@@ -44,6 +47,7 @@ namespace KFIRPG.editor.Cursors {
 		}
 	}
 
+	// TODO: move to own file
 	class RemoveLadderCursor: Cursor {
 		Project project;
 
@@ -57,7 +61,10 @@ namespace KFIRPG.editor.Cursors {
 			this.project = project;
 		}
 
-		protected override void Edit(Map.Layer layer) {
+		protected override void Edit(LayerGroup layerGroup)
+		{
+			if (!(layerGroup is SimpleLayerGroup)) throw new NotSupportedException();
+			Map.Layer layer = layerGroup[0];
 			Map map = layer.Map;
 			int tileX = this.tileX;
 			int tileY = this.tileY;

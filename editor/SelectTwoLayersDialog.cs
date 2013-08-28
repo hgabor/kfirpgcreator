@@ -10,7 +10,7 @@ namespace KFIRPG.editor {
 	partial class SelectTwoLayersDialog: Form {
 		private SelectTwoLayersDialog(bool different, Map map) {
 			InitializeComponent();
-			foreach (Map.Layer layer in map.layers) {
+			foreach (var layer in map.SimpleLayerGroups) {
 				baseListBox.Items.Add(layer);
 				topListBox.Items.Add(layer);
 			}
